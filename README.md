@@ -22,7 +22,12 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Requires
+
+```
+  gem 'friendly_id'
+  gem 'babosa'
+```
 
 ## Development
 
