@@ -5,7 +5,10 @@ module C80Estate
   class Atype < ActiveRecord::Base
 
     # http://stackoverflow.com/questions/9382708/rails-3-has-many-changed
-    has_and_belongs_to_many :prop_names, :after_add => :after_add_prop_names, :after_remove => :after_remove_prop_names
+    has_and_belongs_to_many :prop_names,
+                            :join_table => 'c80_estate_atypes_prop_names',
+                            :after_add => :after_add_prop_names,
+                            :after_remove => :after_remove_prop_names
 
     has_many :areas, :dependent => :destroy
     has_many :properties, :dependent => :destroy

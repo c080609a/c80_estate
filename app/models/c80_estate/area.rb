@@ -6,6 +6,7 @@ module C80Estate
     has_many :item_props, :dependent => :destroy
     has_many :aphotos, :dependent => :destroy   # одна или несколько фоток
     has_many :comments, :dependent => :destroy   # площадь можно прокомментировать
-    has_and_belongs_to_many :astatuses          # единственный статус: либо занята, либо свободна
+    has_and_belongs_to_many :astatuses,         # единственный статус: либо занята, либо свободна
+                            :join_table => 'c80_estate_areas_astatuses'
   end
 end

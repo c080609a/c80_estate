@@ -24,11 +24,7 @@ ActiveAdmin.register C80Estate::Atype, :as => 'Atype' do
   index do
     selectable_column
     id_column
-
-    column :title do |str_sub_cat|
-      editable_text_column str_sub_cat, :title
-    end
-
+    column :title
     actions
   end
 

@@ -5,7 +5,7 @@ module C80Estate
 
     # у этой (абстрактной по сути) характеристики есть конкретные порождения - свойства.
     has_many :item_props, :dependent => :destroy
-    has_and_belongs_to_many :atypes
+    has_and_belongs_to_many :atypes, :join_table => 'c80_estate_atypes_prop_names'
 
     # каждое свойство принадлежит какой-то единице измерения
     belongs_to :uom

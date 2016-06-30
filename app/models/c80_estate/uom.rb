@@ -1,5 +1,5 @@
 module C80Estate
   class Uom < ActiveRecord::Base
-    has_one :prop_name
+    has_many :prop_names
   end
 end
