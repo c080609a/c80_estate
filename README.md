@@ -22,6 +22,11 @@ Or install it yourself as:
 
 ## Usage
 
+```
+#= require c80_estate_active_admin
+```
+
+
 ### Requires
 
 ```
