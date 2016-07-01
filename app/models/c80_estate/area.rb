@@ -4,6 +4,15 @@ module C80Estate
     belongs_to :atype
     belongs_to :owner, :polymorphic => true
     has_many :item_props, :dependent => :destroy
+    accepts_nested_attributes_for :item_props,
+                                  :reject_if => lambda { |attributes|
+                                    # puts "attributes:: #{attributes}"
+                                    # attributes:: {"value"=>"", "prop_name_id"=>""}
+                                    !attributes.present? || \
+                                  !attributes[:value].present? || \
+                                  !attributes[:prop_name_id].present?
+                                  },
+                                  :allow_destroy => true
     has_many :aphotos, :dependent => :destroy   # одна или несколько фоток
     accepts_nested_attributes_for :aphotos,
                                   :reject_if => lambda { |attributes|

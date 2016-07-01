@@ -10,7 +10,8 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
                 :owner_type,
                 :atype_id,
                 :property_id,
-                :aphotos_attributes => [:id,:image,:_destroy]
+                :aphotos_attributes => [:id,:image,:_destroy],
+                :item_props_attributes => [:value, :_destroy, :prop_name_id, :id]
 
   config.sort_order = 'id_asc'
 
@@ -38,10 +39,10 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
     f.inputs "Характеристики" do
 
-      # f.has_many :item_props, :allow_destroy => true do |item_prop|
-      #   item_prop.input :prop_name
-      #   item_prop.input :value
-      # end
+      f.has_many :item_props, :allow_destroy => true do |item_prop|
+        item_prop.input :prop_name
+        item_prop.input :value
+      end
 
     end
 
