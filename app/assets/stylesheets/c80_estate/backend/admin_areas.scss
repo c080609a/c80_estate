@@ -1,0 +1,84 @@
+body.admin_areas {
+  &.edit, &.new {
+
+    select {
+      padding: 3px 10px 5px 10px;
+    }
+
+    input {
+      font-size: 12px;
+    }
+
+    // в этом контейнере живут fieldset-ы, каждый из которых соответствует одному свойству предмета
+    li.item_props {
+      padding-top: 0;
+
+      // прячем h3
+      h3 {
+        display: none;
+      }
+      // прячем сразу кнопку "Добавить Item prop"
+      a.has_many_add {
+        display: none;
+      }
+      // прячем кнопку "убрать свойство"
+      a.has_many_remove {
+        display: none;
+      }
+
+      // приводим в табличный вид внешний вид
+      fieldset {
+        margin: 0;
+        @include shdw(0.0);
+        border: none;
+        border-radius: 0;
+
+        // прячем лейблы
+        label {
+          display: none;
+        }
+
+        li.select, li.input {
+          float: left;
+          padding: 3px;
+        }
+
+        select {
+          text-align: right;
+          float: left;
+          &:disabled {
+            color: #4C4C4C;
+          }
+        }
+        input {
+          float: left;
+          width: 400px;
+        }
+      }
+
+    }
+
+    form fieldset > ol > li.boolean {
+      height: auto;
+      &#item_is_main_input {padding-bottom: 20px;padding-top: 0;}
+      &#item_is_sale_input {padding-bottom: 0;}
+      label {
+        font-weight: bold;
+        color: #5E6469;
+      }
+    }
+
+    p.inline-hints {
+      color: #74b1b2;
+      padding-left: 50px;
+    }
+
+    // спрячем артефакт
+    li#area_galleries_input {
+      fieldset.choices {
+        legend.label { display:none; }
+      }
+    }
+
+  }
+}
