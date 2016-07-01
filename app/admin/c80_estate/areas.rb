@@ -7,8 +7,9 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
   permit_params :title,
                 :owner_id,
                 :owner_type,
-                :atype,
-                :property
+                :atype_id,
+                :property_id,
+                :aphotos_attributes => [:id,:image,:_destroy]
 
   config.sort_order = 'id_asc'
 
@@ -23,8 +24,24 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       f.input :title
       f.input :atype
       f.input :property
+      # f.input :desc, :as => :ckeditor
+      f.has_many :aphotos, :allow_destroy => true do |gp|
+        gp.input :image,
+                 :as => :file,
+                 :hint => image_tag(gp.object.image.thumb_512)
+      end
+
       f.input :owner_id, :input_html => { :value => current_admin_user.id }, as: :hidden
       f.input :owner_type, :input_html => { :value => "AdminUser" }, as: :hidden
+    end
+
+    f.inputs "Характеристики" do
+
+      f.has_many :item_props, :allow_destroy => true do |item_prop|
+        item_prop.input :prop_name
+        item_prop.input :value
+      end
+
     end
 
     f.actions

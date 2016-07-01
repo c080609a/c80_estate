@@ -1,0 +1,8 @@
+# rake db:seed:50_fill_uoms
+
+C80Estate::Uom.delete_all
+C80Estate::Uom.create!([
+                           { id:1, title: 'м', comment: 'Метр погонный', is_number: true},
+                           { id:2, title: 'м.кв.', comment: 'Метр квадратный', is_number: true},
+                           { id:3, title: 'руб', comment: 'Рубль', is_number: true}
+                       ])

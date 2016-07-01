@@ -1,0 +1,51 @@
+# rake db:seed:55_fill_prop_names
+
+C80Estate::PropName.delete_all
+
+arr = [
+    {
+        prop_name: {
+            id: 1,
+            title: 'Цена за м.кв.',
+            is_normal_price: true,
+            is_excluded_from_filtering: true
+        },
+        uom: 'руб'
+    },
+    {
+        prop_name: {
+            id: 2,
+            title: 'Высота потолков',
+            is_normal_price: false,
+            is_excluded_from_filtering: false
+        },
+        uom: 'м'
+    },
+    {
+        prop_name: {
+            id: 3,
+            title: 'Шаг колонн',
+            is_normal_price: false,
+            is_excluded_from_filtering: false
+        },
+        uom: 'м'
+    },
+    {
+        prop_name: {
+            id: 4,
+            title: 'Тип ворот',
+            is_normal_price: false,
+            is_excluded_from_filtering: false
+        }
+    }
+]
+
+arr.each do |elem|
+    p = C80Estate::PropName.create!(elem[:prop_name])
+    if elem[:uom].present?
+        u = C80Estate::Uom.where(:title => elem[:uom]).first
+        u.prop_names << p
+        u.save
+    end
+    p.save
+end
