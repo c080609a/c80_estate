@@ -5,6 +5,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
   menu :label => "Площади"
 
   permit_params :title,
+                :desc,
                 :owner_id,
                 :owner_type,
                 :atype_id,
@@ -24,11 +25,11 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       f.input :title
       f.input :atype
       f.input :property
-      # f.input :desc, :as => :ckeditor
+      f.input :desc, :as => :ckeditor
       f.has_many :aphotos, :allow_destroy => true do |gp|
         gp.input :image,
                  :as => :file,
-                 :hint => image_tag(gp.object.image.thumb_512)
+                 :hint => image_tag(gp.object.image.thumb512)
       end
 
       f.input :owner_id, :input_html => { :value => current_admin_user.id }, as: :hidden
@@ -37,10 +38,10 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
     f.inputs "Характеристики" do
 
-      f.has_many :item_props, :allow_destroy => true do |item_prop|
-        item_prop.input :prop_name
-        item_prop.input :value
-      end
+      # f.has_many :item_props, :allow_destroy => true do |item_prop|
+      #   item_prop.input :prop_name
+      #   item_prop.input :value
+      # end
 
     end
 

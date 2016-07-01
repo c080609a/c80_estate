@@ -5,6 +5,7 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
   menu :label => "Объекты недвижимости"
 
   permit_params :title,
+                :desc,
                 :address,
                 :latitude,
                 :longitude,
