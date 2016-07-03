@@ -30,8 +30,19 @@ Or install it yourself as:
 ### Requires
 
 ```
+@import "bootstrap";
+```
+
+```
+#= require bootstrap/dropdown
+#= require bootstrap-select
+```
+
+
+```
   gem 'friendly_id'
   gem 'babosa'
+  gem 'bootstrap-select-rails'
 ```
 
 ### Seeds

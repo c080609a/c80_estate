@@ -67,6 +67,8 @@ var jsinit = {
         // фиксируем контейнер, в котором находятся компоненты для управления свойством C80Estate::Area
         jsinit.$item_props_container = $("li.item_props");
 
+        jsinit.$item_props_container.parent().parent().addClass('fieldset_item_props');
+
         // фиксируем надпись "Характеристики"
         jsinit.$item_props_container_span = jsinit.$item_props_container.parent().parent().find("> legend > span");
 
@@ -378,6 +380,8 @@ var fEdit = function () {
 
         // фиксируем контейнер, в котором находятся компоненты для управления свойством C80Estate::Area
         $item_props_container = $("li.item_props");
+
+        $item_props_container.parent().parent().addClass('fieldset_item_props');
 
         // фиксируем кнопку "Добавить свойство"
         $btn_add_area_prop = $item_props_container.find("a.has_many_add");

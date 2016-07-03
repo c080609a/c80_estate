@@ -2,11 +2,11 @@ body.admin_areas {
   &.edit, &.new {
 
     select {
-      padding: 3px 10px 5px 10px;
+      /*padding: 3px 10px 5px 10px;*/
     }
 
     input {
-      font-size: 12px;
+      /*font-size: 12px;*/
     }
 
     // в этом контейнере живут fieldset-ы, каждый из которых соответствует одному свойству предмета
@@ -78,6 +78,31 @@ body.admin_areas {
       fieldset.choices {
         legend.label { display:none; }
       }
+    }
+
+    li.has_many_container {
+      width: 80%;
+      float: right;
+      padding: 0;
+
+      &.aphotos {
+        fieldset.has_many_fields {
+          background-color: transparent;
+          box-shadow: none;
+          border: 1px solid #dddddd;
+        }
+        h3 {
+          display: none;
+        }
+
+      }
+
+    }
+
+    .fieldset_item_props {
+      background-color: white !important;
+      box-shadow: none !important;
+      legend { display: none !important; }
     }
 
   }

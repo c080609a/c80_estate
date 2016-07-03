@@ -24,9 +24,19 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
     f.inputs 'Свойства' do
       f.input :title
-      f.input :atype
-      f.input :property
+      f.input :atype, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '300px'}
+      f.input :property, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '300px'}
       f.input :desc, :as => :ckeditor
+
+      f.inputs "Характеристики" do
+
+        f.has_many :item_props, :allow_destroy => true do |item_prop|
+          item_prop.input :prop_name
+          item_prop.input :value
+        end
+
+      end
+
       f.has_many :aphotos, :allow_destroy => true do |gp|
         gp.input :image,
                  :as => :file,
@@ -35,15 +45,6 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
       f.input :owner_id, :input_html => { :value => current_admin_user.id }, as: :hidden
       f.input :owner_type, :input_html => { :value => "AdminUser" }, as: :hidden
-    end
-
-    f.inputs "Характеристики" do
-
-      f.has_many :item_props, :allow_destroy => true do |item_prop|
-        item_prop.input :prop_name
-        item_prop.input :value
-      end
-
     end
 
     f.actions

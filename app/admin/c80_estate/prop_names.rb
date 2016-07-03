@@ -34,7 +34,7 @@ ActiveAdmin.register C80Estate::PropName, as: 'PropName' do
 
     f.inputs "Свойства" do
       f.input :title
-      f.input :uom
+      f.input :uom, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '300px'}
       f.input :is_excluded_from_filtering,
               :hint => "Если да, то это свойство не будет фигурировать в списке фильтрации".html_safe
 
