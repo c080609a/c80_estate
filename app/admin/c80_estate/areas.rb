@@ -17,6 +17,9 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
   index do
     column :title
+    column :atype do |area|
+      area.atype.title
+    end
     actions
   end
 

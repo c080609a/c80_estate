@@ -1,0 +1,27 @@
+body.admin_admin_users {
+  &.edit, &.new {
+
+    li.has_many_container {
+
+      &.roles {
+
+        fieldset.has_many_fields {
+          background-color: transparent;
+          box-shadow: none;
+          border: none;
+
+        }
+
+        h3 {
+          display: none;
+        }
+      }
+
+    }
+
+    a.has_many_add {
+      display: none;
+    }
+
+  }
+}

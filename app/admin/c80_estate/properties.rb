@@ -17,6 +17,9 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
 
   index do
     column :title
+    column :atype do |prop|
+      prop.atype.title
+    end
     actions
   end
 
