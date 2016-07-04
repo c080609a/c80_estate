@@ -1,0 +1,17 @@
+@mixin shdw($val) {
+  -webkit-box-shadow: 0 0 7px 0 rgba(0, 0, 0, $val);
+  -moz-box-shadow: 0 0 7px 0 rgba(0, 0, 0, $val);
+  box-shadow: 0 0 7px 0 rgba(0, 0, 0, $val);
+  /* For IE 8 */
+  -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=$val, Direction=135, Color='#000000')";
+  /* For IE 5.5 - 7 */
+  filter: progid:DXImageTransform.Microsoft.Shadow(Strength=$val, Direction=135, Color='#000000');
+}
+
+@mixin opacity($val) {
+  -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=$val)";
+  filter: alpha(opacity=$val);
+  -moz-opacity:$val;
+  -khtml-opacity: $val;
+  opacity: $val;
+}

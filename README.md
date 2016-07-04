@@ -22,7 +22,33 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+#= require c80_estate_active_admin
+```
+
+
+### Requires
+
+```
+@import "bootstrap";
+```
+
+```
+#= require bootstrap/dropdown
+#= require bootstrap-select
+```
+
+
+```
+  gem 'friendly_id'
+  gem 'babosa'
+  gem 'bootstrap-select-rails'
+```
+
+### Seeds
+
+Copy and rename example seeds files.
+
 
 ## Development
 

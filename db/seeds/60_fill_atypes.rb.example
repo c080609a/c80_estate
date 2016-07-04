@@ -1,0 +1,29 @@
+# rake db:seed:60_fill_atypes
+
+arr = [
+    {
+        id: 1,
+        title: 'Здание',
+        props: ['Высота потолков', 'Цена за м.кв.']
+    },
+    {
+        id: 2,
+        title: 'Складское помещение',
+        props: ['Высота потолков', 'Цена за м.кв.', 'Шаг колонн', 'Тип ворот']
+    },
+    {
+        id: 3,
+        title: 'Офис',
+        props: ['Цена за м.кв.']
+    }
+]
+
+C80Estate::Atype.delete_all
+arr.each do |elem|
+  at = C80Estate::Atype.create!({ id:elem[:id], title:elem[:title] })
+  elem[:props].each do |prop_title|
+    p = C80Estate::PropName.where(:title => prop_title).first
+    at.prop_names << p
+  end
+  at.save
+end
