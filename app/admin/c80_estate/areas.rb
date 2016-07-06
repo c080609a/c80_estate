@@ -16,6 +16,10 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
   config.sort_order = 'id_asc'
 
+  scope  "All", :all_areas
+  scope  "Free", :free_areas
+  scope  "Busy", :busy_areas
+
   index do
     selectable_column
     column :title

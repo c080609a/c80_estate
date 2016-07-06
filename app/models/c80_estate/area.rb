@@ -22,5 +22,18 @@ module C80Estate
     has_many :comments, :dependent => :destroy   # площадь можно прокомментировать
     has_and_belongs_to_many :astatuses,         # единственный статус: либо занята, либо свободна
                             :join_table => 'c80_estate_areas_astatuses'
+
+    def self.all_areas
+      self.all
+    end
+
+    def self.free_areas
+      self.joins(:astatuses).where(:c80_estate_astatuses => { tag: 'free'})
+    end
+
+    def self.busy_areas
+      self.joins(:astatuses).where(:c80_estate_astatuses => { tag: 'busy'})
+    end
+
   end
 end
