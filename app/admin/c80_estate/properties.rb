@@ -16,6 +16,7 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
   config.sort_order = 'id_asc'
 
   index do
+    selectable_column
     column :title
     column :atype do |prop|
       prop.atype.title
@@ -27,9 +28,19 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
 
     f.inputs 'Свойства' do
       f.input :title
-      f.input :atype, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '300px'}
+      f.input :atype, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '400px'}
       f.input :owner_id, :input_html => { :value => current_admin_user.id }, as: :hidden
       f.input :owner_type, :input_html => { :value => "AdminUser" }, as: :hidden
+      f.input :address
+      f.input :latitude
+      f.input :longitude
+
+      f.has_many :pphotos, :allow_destroy => true do |gp|
+        gp.input :image,
+                 :as => :file,
+                 :hint => image_tag(gp.object.image.thumb512)
+      end
+
     end
 
     f.actions

@@ -10,15 +10,26 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
                 :owner_type,
                 :atype_id,
                 :property_id,
+                :astatus_ids => [],
                 :aphotos_attributes => [:id,:image,:_destroy],
                 :item_props_attributes => [:value, :_destroy, :prop_name_id, :id]
 
   config.sort_order = 'id_asc'
 
   index do
+    selectable_column
     column :title
     column :atype do |area|
       area.atype.title
+    end
+    column :property do |area|
+      area.property.title
+    end
+    column :astatuses do |area|
+      res = "-"
+      if area.astatuses.count > 0
+        res = area.astatuses.first.title
+      end
     end
     actions
   end
@@ -27,11 +38,13 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
     f.inputs 'Свойства' do
       f.input :title
-      f.input :atype, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '300px'}
-      f.input :property, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '300px'}
+      f.input :atype, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '400px'}
+      f.input :property, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '400px'}
+      f.input :astatuses,
+              :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '400px', :multiple => false}
       f.input :desc, :as => :ckeditor
 
-      f.inputs "Характеристики" do
+      f.inputs "Свойства" do
 
         f.has_many :item_props, :allow_destroy => true do |item_prop|
           item_prop.input :prop_name
