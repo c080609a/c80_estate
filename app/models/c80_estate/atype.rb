@@ -11,7 +11,7 @@ module C80Estate
                             :after_remove => :after_remove_prop_names
 
     has_many :areas, :dependent => :destroy
-    has_many :properties, :dependent => :destroy
+    # has_many :properties, :dependent => :destroy
     has_many :atphotos, :dependent => :destroy   # одна или несколько фоток
 
     extend FriendlyId

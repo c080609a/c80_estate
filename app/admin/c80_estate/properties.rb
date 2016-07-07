@@ -9,7 +9,7 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
                 :address,
                 :latitude,
                 :longitude,
-                :atype_id,
+                # :atype_id,
                 :owner_id,
                 :owner_type
 
@@ -18,9 +18,9 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
   index do
     selectable_column
     column :title
-    column :atype do |prop|
-      prop.atype.title
-    end
+    # column :atype do |prop|
+    #   prop.atype.title
+    # end
     actions
   end
 
@@ -28,7 +28,7 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
 
     f.inputs 'Свойства' do
       f.input :title
-      f.input :atype, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '400px'}
+      # f.input :atype, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '400px'}
       f.input :owner_id, :input_html => { :value => current_admin_user.id }, as: :hidden
       f.input :owner_type, :input_html => { :value => "AdminUser" }, as: :hidden
       f.input :address
