@@ -11,9 +11,9 @@ ActiveAdmin.register C80Estate::Astatus, :as => 'Astatus' do
   #   cache_sweeper :strsubcat_sweeper, :only => [:update,:create,:destroy]
   # end
 
-  # before_filter :skip_sidebar!, :only => :index
+  before_filter :skip_sidebar!, :only => :index
 
-  filter :title
+  # filter :title
 
   # controller do
   #   cache_sweeper :suit_sweeper, :only => [:update,:create,:destroy]

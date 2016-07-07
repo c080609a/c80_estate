@@ -9,10 +9,11 @@ ActiveAdmin.register C80Estate::PropName, as: 'PropName' do
 
   config.sort_order = 'title_asc'
 
-  filter :title
-  filter :atypes
-  filter :is_excluded_from_filtering
-  filter :is_normal_price
+  before_filter :skip_sidebar!, :only => :index
+  # filter :title
+  # filter :atypes
+  # filter :is_excluded_from_filtering
+  # filter :is_normal_price
 
   # controller do
   #   cache_sweeper :suit_sweeper, :only => [:update,:create,:destroy]

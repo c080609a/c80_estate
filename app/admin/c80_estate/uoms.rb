@@ -7,7 +7,8 @@ ActiveAdmin.register C80Estate::Uom, :as => 'Uom' do
 
   config.sort_order = 'title_desc'
 
-  filter :title
+  before_filter :skip_sidebar!, :only => :index
+  # filter :title
 
   index do
     # selectable_column
