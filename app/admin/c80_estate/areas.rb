@@ -21,11 +21,11 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
   filter :title
   filter :property_id,
          :as => :select,
-         :collection => C80Estate::Property.all.map { |p| ["#{p.title}", p.id]},
+         :collection => -> {C80Estate::Property.all.map { |p| ["#{p.title}", p.id]}},
          :input_html => { :class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :assigned_person_id,
          :as => :select,
-         :collection => AdminUser.all.map{|u| ["#{u.email}", u.id]},
+         :collection => -> {AdminUser.all.map{|u| ["#{u.email}", u.id]}},
          :input_html => { :class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :created_at
   filter :updated_at

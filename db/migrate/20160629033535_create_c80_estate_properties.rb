@@ -9,6 +9,8 @@ class CreateC80EstateProperties < ActiveRecord::Migration
       t.string :owner_type
       t.references :owner, index: true
       # t.references :atype, index: true
+      t.string :assigned_person_type
+      t.references :assigned_person, index: true
       t.timestamps
     end
   end

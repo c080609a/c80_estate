@@ -2,7 +2,7 @@ module C80Estate
   class ItemProp < ActiveRecord::Base
 
     belongs_to :area
-    belongs_to :property
+    # belongs_to :property
     belongs_to :prop_name
 
     before_save :before_save_format_value

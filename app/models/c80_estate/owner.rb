@@ -35,6 +35,9 @@ module C80Estate
           # эта взаимосвязь трактуется, как "площадь, назначенная сотруднику"
           has_many :assigned_areas, :as => :assigned_person, :class_name => 'C80Estate::Area', :dependent => :nullify
 
+          # эта взаимосвязь трактуется, как "площадь, назначенная сотруднику"
+          has_many :assigned_properties, :as => :assigned_person, :class_name => 'C80Estate::Property', :dependent => :nullify
+
           after_create :create_role
 
           def create_role
