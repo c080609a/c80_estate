@@ -1,10 +1,9 @@
 # ПОДкатегории строительных материалов
-ActiveAdmin.register C80Estate::RoleType, :as => 'RoleType' do
+ActiveAdmin.register C80Estate::Astatus, :as => 'Astatus' do
 
-  menu :label => "Роли", :parent => "Настройки"
+  menu :label => "Статусы", :parent => "Настройки"
 
-  permit_params :title,
-                :desc
+  permit_params :title
 
   config.sort_order = 'id_asc'
 
@@ -31,7 +30,6 @@ ActiveAdmin.register C80Estate::RoleType, :as => 'RoleType' do
 
     f.inputs "Свойства" do
       f.input :title
-      f.input :desc, input_html: { rows: 3 }
     end
 
     f.actions

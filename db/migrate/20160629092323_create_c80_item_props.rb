@@ -3,7 +3,7 @@ class CreateC80ItemProps < ActiveRecord::Migration
     create_table :c80_estate_item_props, :options => 'COLLATE=utf8_unicode_ci' do |t|
       t.string :value
       t.references :area, index: true
-      t.references :property, index: true
+      # t.references :property, index: true
       t.references :prop_name, index: true
 
       t.timestamps null: false
