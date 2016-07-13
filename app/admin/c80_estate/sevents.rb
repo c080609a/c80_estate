@@ -13,6 +13,10 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
 
   config.sort_order = 'id_asc'
 
+  filter :property_id,
+         :as => :select,
+         :collection => -> { C80Estate::Property.all.map { |p| ["#{p.title}", p.id] } },
+         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :area_id,
          :as => :select,
          :collection => -> { C80Estate::Area.all.map { |p| ["#{p.title}", p.id] } },
@@ -20,10 +24,6 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
   filter :atype_id,
          :as => :select,
          :collection => -> { C80Estate::Atype.all.map { |p| ["#{p.title}", p.id] } },
-         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
-  filter :property_id,
-         :as => :select,
-         :collection => -> { C80Estate::Property.all.map { |p| ["#{p.title}", p.id] } },
          :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :auser_id,
          :as => :select,

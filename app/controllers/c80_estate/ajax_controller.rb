@@ -15,7 +15,9 @@ module C80Estate
 
     def areas_ecoef
 
-      obj = Sevent.ecoef
+      area_id = request.params[:area_id] == "" ? nil:request.params[:area_id]
+
+      obj = Sevent.ecoef(area_id: area_id)
 
       respond_to do |format|
         format.js { render json: obj, status: :ok }
