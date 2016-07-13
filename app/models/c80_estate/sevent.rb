@@ -21,6 +21,7 @@ module C80Estate
 =end
 
     def self.ecoef(prop_id: nil, atype_id: nil, start_date: nil, end_date: nil)
+      result = {}
 
       # unless end_date.present?
       #   end_date = Time.now.utc #.to_s(:db)
@@ -37,10 +38,9 @@ module C80Estate
       # если ничего не подано - выбираем всё и считаем среднее
       if prop_id.nil? && atype_id.nil? && start_date.nil? && end_date.nil?
 
-        # хэш, где ключ - area_id
+        # в result соберём хэш, где ключ - area_id
         # а значение - объект вида {time_free, time_busy} -
         # время, сколько площадь была в аренде или была свободна
-        result = {}
 
         # раскидаем все sevents по area_id related спискам
         self.all.each do |sevent|
@@ -63,16 +63,30 @@ module C80Estate
           a = result[area_id]
 
           # переберём area related sevents
-          a.sevents.each_with_index do |sevent, index|
+          a[:sevents].each_with_index do |sevent, index|
 
             # если это первый элемент (т.е. до меня нет никого)
             if index == 0
+
+            # если это последний элемент - то добавляем, сколько времени площадь в последнем известном статусе ДО текущего момента
+            elsif index == a[:sevents].count - 1
+
+              # фиксируем текущее время
+              tnow = Time.now
+              d = tnow - sevent.created_at
+
+              case sevent.astatus.tag
+                when 'free'
+                  a[:time_free] += d
+                when 'busy'
+                  a[:time_busy] += d
+              end
 
             # если перед элементом есть кто-то
             else
 
               # фиксируем предыдущий элемент
-              prev_sevent = a.sevents[index-1]
+              prev_sevent = a[:sevents][index-1]
 
               # и считаем его длительность
               d = sevent.created_at - prev_sevent.created_at
@@ -90,13 +104,21 @@ module C80Estate
         # теперь имеется result в котором посчитаны time_free и time_busy
         # каждой площади
         # пробежимся по нему и посчитаем коэф-ты
+        k = 0
+        summ = 0
         result.each_key do |area_id|
           a = result[area_id]
-          a[:ecoef] = a[:time_busy] / a[:time_busy] + a[:time_free]
+          a[:ecoef] = a[:time_busy] / (a[:time_busy] + a[:time_free])
           Rails.logger.debug "<ecoef> area_id=#{area_id}, time_free=#{a[:time_free]}, time_busy=#{a[:time_busy]}, ecoef=#{a[:ecoef]}"
+          k += 1
+          summ += a[:ecoef]
         end
 
+        result[:average_value] = sprintf "%.2f%", summ/k*100
+
       end
+
+      result
 
     end
 

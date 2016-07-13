@@ -13,5 +13,15 @@ module C80Estate
 
     end
 
+    def areas_ecoef
+
+      obj = Sevent.ecoef
+
+      respond_to do |format|
+        format.js { render json: obj, status: :ok }
+        # format.json
+      end
+    end
+
   end
 end

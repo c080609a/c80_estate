@@ -1,0 +1,53 @@
+body.admin_sevents {
+
+  &.index {
+
+    div#main_content {
+      opacity: 0;
+
+      -webkit-transition: opacity .2s ease-in;
+      -moz-transition: opacity .2s ease-in;
+      -ms-transition: opacity .2s ease-in;
+      -o-transition: opacity .2s ease-in;
+      transition: opacity .2s ease-in;      
+
+      div#index_adds {
+        height: 200px;
+        margin-bottom: 15px;
+
+        > div {
+          float: left;
+          height: 200px;
+
+          &#ecoef {
+            width: 200px;
+            background-color: #eaeaea;
+            text-align: center;
+
+            > p {
+              width: 100%;
+
+              &.val {
+                margin-top: 45px;
+                font-size: 50px;
+              }
+
+              &.comment {
+                font-size: 14px;
+              }
+
+            }
+          }
+
+          &#graph {
+            width: calc(100% - 200px);
+            background-color: #dedede;
+          }
+        }
+      }
+
+    }
+
+  }
+
+}
