@@ -48,6 +48,17 @@ body.admin_sevents {
 
     }
 
+    .batch_actions_selector {
+      display: none;
+    }
+
+    a.delete_link {
+      display: none;
+    }
+
+    .col-actions {
+      text-align: right;
+    }
   }
 
 }

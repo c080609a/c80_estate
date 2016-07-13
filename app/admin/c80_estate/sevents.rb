@@ -37,7 +37,7 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
   # scope  "Busy", :busy_areas
 
   index do
-    selectable_column
+    # selectable_column
     column :area do |sevent|
       sevent.area_title
     end
@@ -45,7 +45,7 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
       sevent.astatus_title
     end
     column :created_at do |sevent|
-      "#{ local_time(sevent.created_at, format: '%y/%m/%d %H:%M:%S') }".html_safe
+      "#{ local_time(sevent.created_at, format: '%Y/%m/%d %H:%M:%S') }".html_safe
     end
     column :property do |sevent|
       sevent.property_title
