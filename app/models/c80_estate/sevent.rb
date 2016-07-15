@@ -220,7 +220,7 @@ module C80Estate
     private
 
     def self._calc_busy_time(a)
-
+      Rails.logger.debug "<Sevent._calc_busy_time> START ---"
       # {
       #     time_free: 0,
       #     time_busy: 0,
@@ -246,54 +246,65 @@ module C80Estate
           if a[:sevents].count == 1
 
             # считаем его статус до текущего времени
-            tnow = Time.now
-            d = tnow - sevent.created_at
-
-            case sevent.astatus.tag
-              when 'free'
-                res[:time_free] += d
-              when 'busy'
-                res[:time_busy] += d
-            end
+            res = _calc_busy_time_las(res,sevent,index)
 
           end
 
-          # если это последний элемент - то добавляем, сколько времени площадь в последнем известном статусе ДО текущего момента
+        # если это последний элемент - то добавляем, сколько времени была площадь в последнем известном статусе ДО текущего момента
         elsif index == a[:sevents].count - 1
+          # TODO_MY:: учитывать end_date и передавать соответствующий mark_calc_to_now
+          res = _calc_busy_time_las(res,sevent,index)
 
-          # TODO_MY:: добавить аргумент mark_to_now и фиксировать текущее время по условию
-          # TODO_MY:: или добавить обработчик end_date и учитывать его
-          # фиксируем текущее время
-          tnow = Time.now
-          d = tnow - sevent.created_at
-
-          case sevent.astatus.tag
-            when 'free'
-              res[:time_free] += d
-            when 'busy'
-              res[:time_busy] += d
+          # в случае массива из 2 элементов
+          if a[:sevents].count == 2
+            prev_sevent = a[:sevents][index-1]
+            res = _calc_busy_time_bef(res,sevent,prev_sevent,index)
           end
 
-          # если перед элементом есть кто-то
+         # если перед элементом есть кто-то
         else
-
-          # фиксируем предыдущий элемент
           prev_sevent = a[:sevents][index-1]
-
-          # и считаем его длительность
-          d = sevent.created_at - prev_sevent.created_at
-
-          case prev_sevent.astatus.tag
-            when 'free'
-              res[:time_free] += d
-            when 'busy'
-              res[:time_busy] += d
-          end
+          res = _calc_busy_time_bef(res,sevent,prev_sevent,index)
         end
       end
 
       res[:ecoef] = res[:time_busy] / (res[:time_busy] + res[:time_free])
+      Rails.logger.debug "<Sevent._calc_busy_time> END ---"
 
+      res
+    end
+
+    def self._calc_busy_time_las(res,sevent, index, mark_calc_to_now=true)
+      # TODO_MY:: добавить аргумент mark_to_now и фиксировать текущее время по условию
+      # TODO_MY:: или добавить обработчик end_date и учитывать его
+      # фиксируем текущее время
+      tnow = Time.now
+      d = tnow - sevent.created_at
+      Rails.logger.debug "\t\t i=#{index}, last: #{sevent.astatus.tag}, dur: #{d}"
+
+      case sevent.astatus.tag
+        when 'free'
+          res[:time_free] += d
+        when 'busy'
+          res[:time_busy] += d
+      end
+      Rails.logger.debug "\t\t time_free=#{res[:time_free]}, time_busy = #{res[:time_busy]}"
+      res
+    end
+
+    def self._calc_busy_time_bef(res,sevent,prev_sevent,index)
+
+      # и считаем его длительность
+      d = sevent.created_at - prev_sevent.created_at
+      Rails.logger.debug "\t\t i=#{index}, prev_sevent: #{prev_sevent.astatus.tag}, dur: #{d}"
+
+      case prev_sevent.astatus.tag
+        when 'free'
+          res[:time_free] += d
+        when 'busy'
+          res[:time_busy] += d
+      end
+      Rails.logger.debug "\t\t time_free=#{res[:time_free]}, time_busy = #{res[:time_busy]}"
       res
     end
 

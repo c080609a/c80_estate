@@ -27,6 +27,7 @@ module C80Estate
     has_many :sevents, :dependent => :destroy
 
     after_create :create_initial_sevent
+    after_update :check_and_generate_sevent
 
     def self.all_areas
       self.all
@@ -92,6 +93,7 @@ module C80Estate
 
     # при создании площади генерится начальное событие
     def create_initial_sevent
+      Rails.logger.debug "<Area.create_initial_sevent>"
 
       Sevent.create!({
                          area_id: self.id,
@@ -101,6 +103,28 @@ module C80Estate
                          auser_id: self.owner_id, # инициатор события - создатель Площади
                          auser_type: 'AdminUser'
                      })
+
+    end
+
+    def check_and_generate_sevent
+      Rails.logger.debug "<Area.check_and_generate_sevent>"
+
+      # находим последнее известное событие
+      # фиксируем его статус
+      last_known_sevent = self.sevents.last.astatus.tag
+
+      # если статус этого события отличен
+      # от нового статуса - генерим событие
+      if last_known_sevent != self.astatuses.first.tag
+        Sevent.create!({
+                           area_id: self.id,
+                           atype_id: self.atype_id,
+                           property_id: self.property_id,
+                           astatus_id: self.astatus_id,
+                           auser_id: self.owner_id, # инициатор события - редактор Площади
+                           auser_type: 'AdminUser'
+                       })
+      end
 
     end
 
