@@ -54,9 +54,21 @@ body.admin_sevents {
           }
 
           &#graph {
-            width: calc(100% - 200px - 400px - 30px);
-            background-color: #dedede;
+            /*width: calc(100% - 200px - 400px - 30px - 30px);*/
+            width: 100%;
+            height: 200px;
+            margin-top: 15px;
+
+            /*margin-left: 30px;*/
+            padding: 0;
             display: none;
+            opacity: 0;
+
+            -webkit-transition: opacity .2s ease-in;
+            -moz-transition: opacity .2s ease-in;
+            -ms-transition: opacity .2s ease-in;
+            -o-transition: opacity .2s ease-in;
+            transition: opacity .2s ease-in;
           }
 
         }

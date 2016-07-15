@@ -44,9 +44,7 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
     column :astatus do |sevent|
       sevent.astatus_title
     end
-    column :created_at do |sevent|
-      "#{ local_time(sevent.created_at, format: '%Y/%m/%d %H:%M:%S') }".html_safe
-    end
+    column :created_at
     column :property do |sevent|
       sevent.property_title
     end

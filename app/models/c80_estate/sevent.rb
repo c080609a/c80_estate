@@ -52,6 +52,8 @@ module C80Estate
                 time_free: 0,
                 time_busy: 0,
                 ecoef: 0,
+                start_date:self.first.created_at,
+                end_date:Time.now,
                 sevents: []
             }
           end
@@ -144,33 +146,54 @@ module C80Estate
         # sevents = self.where(:area_id => area_id).where(:created_at => used_start_date..used_end_date)
         sevents = self.where(:area_id => area_id).where("created_at BETWEEN ? AND ?", used_start_date, used_end_date)
 
+        # если в этот промежуток небыло событий - значит промежуток целиком попал в какое-то событие
+        # найдем его
+        # заодно поднимем вспомогательный флаг, который обработаем во view
+        mark_whole = false
+        if sevents.count == 0
+          sevents = [self.where(:area_id => area_id).where("created_at < ?", used_start_date).last]
+          mark_whole = true
+          # sevents.each do |se|
+          #   Rails.logger.debug "\t\t\t #{used_start_date - se.created_at}"
+          # end
+        end
+
         t = _calc_busy_time({
                                 time_free: 0,
                                 time_busy: 0,
                                 ecoef: 0,
-                                sevents: sevents#,
-                                # start_date:start_date,
-                                # end_date:end_date
+                                sevents: sevents,
+                                start_date:used_start_date,
+                                end_date:used_end_date
                             })
 
         result[area_id] = {
             time_free: t[:time_free],
             time_busy: t[:time_busy],
             ecoef: t[:ecoef],
-            sevents: self.where(:area_id => area_id)
+            # sevents: self.where(:area_id => area_id)
+            sevents: sevents
         }
 
         result[:average_value] = sprintf "%.2f%", result[area_id][:ecoef]*100
         result[:comment] = "<abbr title='Период рассчёта коэф-та эффективности'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
         result[:abbr] = 'Коэф-т эффективности площади за указанный период'
         result[:title] = "Статистика - #{area.title}"
+        result[:graph] = _parse_for_js_graph(sevents)
+
+        if mark_whole
+          if t[:time_busy] == 0
+            t[:time_free] = used_end_date - used_start_date
+          end
+        end
+
         result[:props] = [
             { tag: 'title', val: "#{area.title}" },
             { tag: 'atype', val: "Тип: #{area.atype_title}" },
-            { tag: 'born_date', val: "Дата создания: #{area.created_at.in_time_zone('Moscow')}" },
-            { tag: 'busy_time', val: "Времени занята: #{time_duration(t[:time_busy])}" },
-            { tag: 'free_time', val: "Времени свободна: #{time_duration(t[:time_free])}" },
-            { tag: 'all_time', val: "Времени всего: #{time_duration(t[:time_busy] + t[:time_free])}" },
+            # { tag: 'born_date', val: "Дата создания: #{area.created_at.in_time_zone('Moscow')}" },
+            { tag: 'busy_time', val: "<abbr title='В указанный период'>Времени занята</abbr>: #{time_duration(t[:time_busy])}" },
+            { tag: 'free_time', val: "<abbr title='В указанный период'>Времени свободна</abbr>: #{time_duration(t[:time_free])}" },
+            { tag: 'all_time', val: "<abbr title='В указанный период'>Времени всего</abbr>: #{time_duration(t[:time_busy] + t[:time_free])}" },
             { tag: 'assigned_person_title', val: "Ответственный: #{area.assigned_person_title}" },
             { tag: 'property_title', val: "Объект: #{area.property_title}" }
         ]
@@ -250,14 +273,14 @@ module C80Estate
           if a[:sevents].count == 1
 
             # считаем его статус до текущего времени
-            res = _calc_busy_time_las(res,sevent,index)
+            res = _calc_busy_time_las(res,sevent,index,a[:end_date])
 
           end
 
         # если это последний элемент - то добавляем, сколько времени была площадь в последнем известном статусе ДО текущего момента
         elsif index == a[:sevents].count - 1
           # TODO_MY:: учитывать end_date и передавать соответствующий mark_calc_to_now
-          res = _calc_busy_time_las(res,sevent,index)
+          res = _calc_busy_time_las(res,sevent,index,a[:end_date])
 
           # в случае массива из 2 элементов
           if a[:sevents].count == 2
@@ -278,11 +301,13 @@ module C80Estate
       res
     end
 
-    def self._calc_busy_time_las(res,sevent, index, mark_calc_to_now=true)
+    def self._calc_busy_time_las(res,sevent, index, end_date)
+
       # TODO_MY:: добавить аргумент mark_to_now и фиксировать текущее время по условию
       # TODO_MY:: или добавить обработчик end_date и учитывать его
       # фиксируем текущее время
-      tnow = Time.now
+      # tnow = Time.now
+      tnow = end_date
       d = tnow - sevent.created_at
       Rails.logger.debug "\t\t i=#{index}, last: #{sevent.astatus.tag}, dur: #{d}"
 
@@ -318,6 +343,25 @@ module C80Estate
       dd, hh = hh.divmod(24)           #=> [3, 3]
       # puts "%d days, %d hours, %d minutes and %d seconds" % [dd, hh, mm, ss]
       "%dд %dч %dмин % dс" % [dd,hh,mm,ss]
+    end
+
+    def self._parse_for_js_graph(sevents)
+      # res = [
+      #     ['Year', 'Sales', 'Expenses'],
+      #     ['2013',  1000,      400],
+      #     ['2014',  1170,      460],
+      #     ['2015',  660,       1120],
+      #     ['2016/12/12',  1030,      540]
+      # ]
+      res = []
+      sevents.each do |sevent|
+        v = 0
+        if sevent.astatus.tag == 'free'
+          v = 1
+        end
+        res << [ sevent.created_at.strftime('%Y/%m/%d'), v ]
+      end
+      res
     end
 
   end

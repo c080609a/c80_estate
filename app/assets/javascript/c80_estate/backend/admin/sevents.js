@@ -47,7 +47,7 @@ var fSeventsIndex = function () {
         $div_ecoef.append($p_ecoef_comment);
 
         $div_area_text_stats = $("<div id='text_stats'></div>");
-        $ul_props = $("<ul><li id='title'></li><li id='atype'></li><li id='born_date'></li><li id='busy_time'></li><li id='free_time'></li><li id='all_time'></li><li id='assigned_person_title'></li><li id='property_title'></li><li id='all_areas_count'></li><li id='free_areas_count'></li><li id='busy_areas_count'></li></ul>");
+        $ul_props = $("<ul><li id='title'></li><li id='atype'></li><li id='born_date' class='hidden'></li><li id='busy_time'></li><li id='free_time'></li><li id='all_time'></li><li id='assigned_person_title'></li><li id='property_title'></li><li id='all_areas_count'></li><li id='free_areas_count'></li><li id='busy_areas_count'></li></ul>");
         $div_area_text_stats.append($ul_props);
 
         $div_graph = $("<div id='graph'></div>");
@@ -59,7 +59,7 @@ var fSeventsIndex = function () {
         $main_content.prepend($div_index_adds);
 
         // теперь покажем
-        $main_content.css('opacity','1.0');
+        $main_content.css('opacity', '1.0');
     };
 
     var fRequest = function () {
@@ -72,16 +72,16 @@ var fSeventsIndex = function () {
         var end_date = $input_end_date.val();
 
         $.ajax({
-            url:'/estate/areas_ecoef',
-            type:'POST',
-            dataType:'json',
+            url: '/estate/areas_ecoef',
+            type: 'POST',
+            dataType: 'json',
             data: {
-                area_id:area_id,
-                atype_id:atype_id,
-                property_id:property_id,
-                auser_id:auser_id,
-                start_date:start_date,
-                end_date:end_date
+                area_id: area_id,
+                atype_id: atype_id,
+                property_id: property_id,
+                auser_id: auser_id,
+                start_date: start_date,
+                end_date: end_date
             }
         }).done(function (data, result) {
             if (result == 'success') {
@@ -94,18 +94,22 @@ var fSeventsIndex = function () {
                 if (data["props"] != undefined) {
 
                     var i, iob, itag, ival, $ili;
-                    for (i=0; i< data["props"].length; i++) {
+                    for (i = 0; i < data["props"].length; i++) {
                         iob = data["props"][i];
                         itag = iob["tag"];
                         ival = iob["val"];
                         $ili = $ul_props.find("#" + itag);
-                        $ili.text(ival);
+                        $ili.html(ival);
                     }
 
                 }
 
+                if (data["graph"] != undefined) {
+                    fDrawChart(data["graph"]);
+                }
+
                 $h2_page_title.text(data["title"]);
-                $h2_page_title.css('opacity','1.0');
+                $h2_page_title.css('opacity', '1.0');
                 $(document).attr('title', data["title"]);
 
             } else {
@@ -120,6 +124,56 @@ var fSeventsIndex = function () {
     var fInit = function () {
         fBuild();
         fRequest();
+    };
+
+    var fDrawChart = function (data_array_rows) {
+        //data_array = [
+        //    ['Director (Year)',  'Rotten Tomatoes', 'IMDB'],
+        //    ['Alfred Hitchcock (1935)', 8.4,         7.9],
+        //    ['Ralph Thomas (1959)',     6.9,         6.5],
+        //    ['Don Sharp (1978)',        6.5,         6.4],
+        //    ['James Hawes (2008)',      4.4,         6.2]
+        //]
+
+        google.charts.load('current', {'packages': ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+
+            //var data = google.visualization.arrayToDataTable(data_array_rows);
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', ''); // Implicit domain column.
+            data.addColumn('number', ''); // Implicit data column.
+            //data.addColumn({type:'number', role:'interval'});
+            //data.addColumn({type:'number', role:'interval'});
+            //data.addColumn('number', 'Expenses');
+
+            var i, iob, yearValue, monthValue, dayValue;
+            for (i=0; i<data_array_rows.length; i++) {
+                iob = data_array_rows[i];
+                yearValue = iob[0].substr(0,4);
+                monthValue = iob[0].substr(5,2)-1;
+                dayValue = iob[0].substr(8,2);
+                console.log(iob + " => " + yearValue + "/" + monthValue + "/" + dayValue ); // + ": " + data_array_rows[i][0]
+                data_array_rows[i][0] = new Date(parseInt(yearValue),parseInt(monthValue),parseInt(dayValue));
+            }
+
+            data.addRows(data_array_rows);
+
+            var options = {
+                title: 'График занята/свободна',
+                vAxis: { title: '', ticks: [0,1] },
+                ignoreBounds: true,
+                isStacked: false
+            };
+
+            var chart = new google.visualization.SteppedAreaChart(document.getElementById('graph'));
+
+            chart.draw(data, options);
+        }
+
+        $('#graph').css('opacity','1.0').css('display','block');
+
     };
 
     fInit();
