@@ -14,7 +14,11 @@ var fSeventsIndex = function () {
     // компонент "над таблицей"
     var $div_index_adds;
     var $div_ecoef;
-    var $p_ecoef_val;
+    var $p_ecoef_val;           // здесь выводим число - коэф-т эффективности
+    var $p_ecoef_mess;          // здесь вешаем hint на подпись "эффективность"
+    var $p_ecoef_comment;       // здесь выводим комментарий
+    var $div_area_text_stats;
+    var $ul_props;
     var $div_graph;
 
     var fBuild = function () {
@@ -30,11 +34,26 @@ var fSeventsIndex = function () {
 
         // построим компонент "над таблицей"
         $div_index_adds = $("<div id='index_adds'></div>");
-        $div_ecoef = $("<div id='ecoef'><p class='val'></p><p><abbr title='Среднее значение по всем площадям'>Эффективность</abbr></p></div>");
-        $p_ecoef_val = $div_ecoef.find('p.val');
+
+        $div_ecoef = $("<div id='ecoef'></div>");
+        $p_ecoef_val = $("<p class='val'></p>");
+        $p_ecoef_mess = $("<p class='title'><abbr class='abbr_ecoef' title='TITLE'>Эффективность</abbr></p>");
+        $p_ecoef_comment = $("<p class='comment'></p>");
+
+        $div_ecoef.append($p_ecoef_val);
+        $div_ecoef.append($p_ecoef_mess);
+        $div_ecoef.append($p_ecoef_comment);
+
+        $div_area_text_stats = $("<div id='text_stats'></div>");
+        $ul_props = $("<ul><li id='title'></li><li id='atype'></li><li id='born_date'></li><li id='busy_time'></li><li id='free_time'></li><li id='all_time'></li><li id='assigned_person_title'></li><li id='property_title'></li><li id='all_areas_count'></li></ul>");
+        $div_area_text_stats.append($ul_props);
+
         $div_graph = $("<div id='graph'></div>");
+
         $div_index_adds.append($div_ecoef);
+        $div_index_adds.append($div_area_text_stats);
         $div_index_adds.append($div_graph);
+
         $main_content.prepend($div_index_adds);
 
         // теперь покажем
@@ -65,7 +84,24 @@ var fSeventsIndex = function () {
         }).done(function (data, result) {
             if (result == 'success') {
                 console.log(data);
+
                 $p_ecoef_val.text(data["average_value"]);
+                $p_ecoef_comment.html(data["comment"]);
+                $p_ecoef_mess.find('.abbr_ecoef').attr('title', data["abbr"]);
+
+                if (data["props"] != undefined) {
+
+                    var i, iob, itag, ival, $ili;
+                    for (i=0; i< data["props"].length; i++) {
+                        iob = data["props"][i];
+                        itag = iob["tag"];
+                        ival = iob["val"];
+                        $ili = $ul_props.find("#" + itag);
+                        $ili.text(ival);
+                    }
+
+                }
+
             } else {
                 alert('fail: /estate/areas_ecoef');
             }

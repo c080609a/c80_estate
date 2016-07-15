@@ -16,8 +16,10 @@ module C80Estate
     def areas_ecoef
 
       area_id = request.params[:area_id] == "" ? nil:request.params[:area_id]
+      start_date = request.params[:start_date] == "" ? nil:request.params[:start_date]
+      end_date = request.params[:end_date] == "" ? nil:request.params[:end_date]
 
-      obj = Sevent.ecoef(area_id: area_id)
+      obj = Sevent.ecoef(area_id: area_id, start_date: start_date, end_date: end_date)
 
       respond_to do |format|
         format.js { render json: obj, status: :ok }

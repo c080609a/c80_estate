@@ -12,37 +12,52 @@ body.admin_sevents {
       transition: opacity .2s ease-in;      
 
       div#index_adds {
-        height: 200px;
-        margin-bottom: 15px;
+        height: calc(183px + 15px);
+        min-height: calc(183px + 15px);
+        margin-bottom: 0;
 
         > div {
           float: left;
-          height: 200px;
+          padding: 10px;
+          border-radius: 2px;
+          border: 2px solid #f1f1f1;
+          height: 183px;
 
           &#ecoef {
             width: 200px;
-            background-color: #eaeaea;
             text-align: center;
 
-            > p {
+            p {
               width: 100%;
 
               &.val {
-                margin-top: 45px;
-                font-size: 50px;
-              }
-
-              &.comment {
-                font-size: 14px;
+                margin-top: 15px;
+                margin-bottom: 0;
+                font-size: 40px;
               }
 
             }
           }
 
+          &#text_stats {
+            width: 400px;
+            margin-left: 30px;
+
+            ul {
+              padding: 0 5px;
+              list-style: none;
+              #title {
+                font-weight: bold;
+              }
+            }
+
+          }
+
           &#graph {
-            width: calc(100% - 200px);
+            width: calc(100% - 200px - 400px - 30px);
             background-color: #dedede;
           }
+
         }
       }
 
@@ -58,6 +73,10 @@ body.admin_sevents {
 
     .col-actions {
       text-align: right;
+    }
+
+    a.edit_link {
+      display: none;
     }
   }
 
