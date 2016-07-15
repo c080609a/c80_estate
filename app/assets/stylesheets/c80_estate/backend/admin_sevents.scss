@@ -68,6 +68,10 @@ body.admin_sevents {
       display: none;
     }
 
+    .action_items {
+      display: none;
+    }
+
     a.delete_link {
       display: none;
     }
@@ -79,6 +83,17 @@ body.admin_sevents {
     a.edit_link {
       display: none;
     }
+
+    h2#page_title {
+      opacity: 0;
+
+      -webkit-transition: opacity .2s ease-in;
+      -moz-transition: opacity .2s ease-in;
+      -ms-transition: opacity .2s ease-in;
+      -o-transition: opacity .2s ease-in;
+      transition: opacity .2s ease-in;
+    }
+
   }
 
 }

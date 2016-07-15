@@ -10,6 +10,7 @@ var fSeventsIndex = function () {
     var $select_auser;          // фильтр auser
     var $input_start_date;      // фильтр "дата начала периода"
     var $input_end_date;        // фильтр "дата конца периода"
+    var $h2_page_title;         // заголовок страницы
 
     // компонент "над таблицей"
     var $div_index_adds;
@@ -31,6 +32,7 @@ var fSeventsIndex = function () {
         $select_auser = $("#q_auser_id");
         $input_start_date = $("#q_created_at_gteq");
         $input_end_date = $("#q_created_at_lteq");
+        $h2_page_title = $("h2#page_title");
 
         // построим компонент "над таблицей"
         $div_index_adds = $("<div id='index_adds'></div>");
@@ -45,7 +47,7 @@ var fSeventsIndex = function () {
         $div_ecoef.append($p_ecoef_comment);
 
         $div_area_text_stats = $("<div id='text_stats'></div>");
-        $ul_props = $("<ul><li id='title'></li><li id='atype'></li><li id='born_date'></li><li id='busy_time'></li><li id='free_time'></li><li id='all_time'></li><li id='assigned_person_title'></li><li id='property_title'></li><li id='all_areas_count'></li></ul>");
+        $ul_props = $("<ul><li id='title'></li><li id='atype'></li><li id='born_date'></li><li id='busy_time'></li><li id='free_time'></li><li id='all_time'></li><li id='assigned_person_title'></li><li id='property_title'></li><li id='all_areas_count'></li><li id='free_areas_count'></li><li id='busy_areas_count'></li></ul>");
         $div_area_text_stats.append($ul_props);
 
         $div_graph = $("<div id='graph'></div>");
@@ -101,6 +103,10 @@ var fSeventsIndex = function () {
                     }
 
                 }
+
+                $h2_page_title.text(data["title"]);
+                $h2_page_title.css('opacity','1.0');
+                $(document).attr('title', data["title"]);
 
             } else {
                 alert('fail: /estate/areas_ecoef');
