@@ -14,6 +14,8 @@ module C80Estate
     # has_many :properties, :dependent => :destroy
     has_many :atphotos, :dependent => :destroy   # одна или несколько фоток
 
+    has_many :sevents, :dependent => :nullify
+
     extend FriendlyId
     friendly_id :slug_candidates, :use => :slugged
 

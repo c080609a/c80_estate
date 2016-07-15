@@ -12,6 +12,7 @@ module C80Estate
                                   :allow_destroy => true
     has_many :areas, :dependent => :destroy
     has_many :comments, :dependent => :destroy
+    has_many :sevents, :dependent => :destroy
 
     def assigned_person_title
       res = "-"

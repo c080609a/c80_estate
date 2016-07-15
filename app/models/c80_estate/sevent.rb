@@ -116,6 +116,9 @@ module C80Estate
             used_start_date = area_created_at
             Rails.logger.debug("start_date: используем время рождения Площади: #{area_created_at}")
           end
+        else
+          used_start_date = area_created_at
+          Rails.logger.debug("start_date: используем время рождения Площади: #{area_created_at}")
         end
         used_start_date_str = used_start_date.strftime('%Y/%m/%d')
 
@@ -128,6 +131,9 @@ module C80Estate
             used_end_date = time_now
             Rails.logger.debug("end_date: используем текущее время")
           end
+        else
+          used_end_date = time_now
+          Rails.logger.debug("end_date: используем текущее время")
         end
         used_end_date_str = used_end_date.strftime('%Y/%m/%d')
 
@@ -236,10 +242,27 @@ module C80Estate
         # если это первый элемент (т.е. до меня нет никого)
         if index == 0
 
+          # если это единственный элемент
+          if a[:sevents].count == 1
+
+            # считаем его статус до текущего времени
+            tnow = Time.now
+            d = tnow - sevent.created_at
+
+            case sevent.astatus.tag
+              when 'free'
+                res[:time_free] += d
+              when 'busy'
+                res[:time_busy] += d
+            end
+
+          end
+
           # если это последний элемент - то добавляем, сколько времени площадь в последнем известном статусе ДО текущего момента
         elsif index == a[:sevents].count - 1
 
-          # TODO_MY:: добавить аргумент mark_to_now
+          # TODO_MY:: добавить аргумент mark_to_now и фиксировать текущее время по условию
+          # TODO_MY:: или добавить обработчик end_date и учитывать его
           # фиксируем текущее время
           tnow = Time.now
           d = tnow - sevent.created_at

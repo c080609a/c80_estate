@@ -24,6 +24,10 @@ module C80Estate
     has_and_belongs_to_many :astatuses,         # единственный статус: либо занята, либо свободна
                             :join_table => 'c80_estate_areas_astatuses'
 
+    has_many :sevents, :dependent => :destroy
+
+    after_create :create_initial_sevent
+
     def self.all_areas
       self.all
     end
@@ -60,12 +64,44 @@ module C80Estate
       res
     end
 
+    def astatus_id
+      res = -1
+      if astatuses.count > 0
+        res = astatuses.first.id
+      end
+      res
+    end
+
     def assigned_person_title
       res = "-"
       if assigned_person.present?
         res = assigned_person.email
       end
       res
+    end
+
+    def owner_id
+      res = -1
+      if owner.present?
+        res = owner.id
+      end
+      res
+    end
+
+    protected
+
+    # при создании площади генерится начальное событие
+    def create_initial_sevent
+
+      Sevent.create!({
+                         area_id: self.id,
+                         atype_id: self.atype_id,
+                         property_id: self.property_id,
+                         astatus_id: self.astatus_id,
+                         auser_id: self.owner_id, # инициатор события - создатель Площади
+                         auser_type: 'AdminUser'
+                     })
+
     end
 
   end

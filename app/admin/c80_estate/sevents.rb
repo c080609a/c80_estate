@@ -13,22 +13,22 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
 
   config.sort_order = 'id_asc'
 
-  filter :property_id,
-         :as => :select,
-         :collection => -> { C80Estate::Property.all.map { |p| ["#{p.title}", p.id] } },
-         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
+  # filter :property_id,
+  #        :as => :select,
+  #        :collection => -> { C80Estate::Property.all.map { |p| ["#{p.title}", p.id] } },
+  #        :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :area_id,
          :as => :select,
          :collection => -> { C80Estate::Area.all.map { |p| ["#{p.title}", p.id] } },
          :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
-  filter :atype_id,
-         :as => :select,
-         :collection => -> { C80Estate::Atype.all.map { |p| ["#{p.title}", p.id] } },
-         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
-  filter :auser_id,
-         :as => :select,
-         :collection => -> { AdminUser.all.map { |u| ["#{u.email}", u.id] } },
-         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
+  # filter :atype_id,
+  #        :as => :select,
+  #        :collection => -> { C80Estate::Atype.all.map { |p| ["#{p.title}", p.id] } },
+  #        :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
+  # filter :auser_id,
+  #        :as => :select,
+  #        :collection => -> { AdminUser.all.map { |u| ["#{u.email}", u.id] } },
+  #        :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :created_at
   # filter :updated_at
 
@@ -37,7 +37,7 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
   # scope  "Busy", :busy_areas
 
   index do
-    # selectable_column
+    selectable_column
     column :area do |sevent|
       sevent.area_title
     end

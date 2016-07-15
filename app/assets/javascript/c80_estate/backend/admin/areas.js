@@ -59,7 +59,7 @@ var jsinit = {
 
     go: function () {
         //jsinit._log("[go]");
-        alert('go');
+        //alert('go');
 
         // фиксируем селект "Тип площади"
         jsinit.$select_atype = $("select#area_atype_id");
