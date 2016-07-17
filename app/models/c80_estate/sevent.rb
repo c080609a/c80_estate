@@ -5,6 +5,7 @@ module C80Estate
     belongs_to :property
     belongs_to :astatus
     belongs_to :auser, :polymorphic => true
+    has_many :pstats, :dependent => :destroy
 
 =begin
     def self.all_areas

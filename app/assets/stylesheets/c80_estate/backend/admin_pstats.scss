@@ -1,4 +1,4 @@
-body.admin_sevents {
+body.admin_pstats {
 
   &.index {
 
@@ -9,7 +9,7 @@ body.admin_sevents {
       -moz-transition: opacity .2s ease-in;
       -ms-transition: opacity .2s ease-in;
       -o-transition: opacity .2s ease-in;
-      transition: opacity .2s ease-in;      
+      transition: opacity .2s ease-in;
 
       div#index_adds {
         height: calc(183px + 15px);
@@ -23,7 +23,7 @@ body.admin_sevents {
           border: 2px solid #f1f1f1;
           height: 183px;
 
-          &#ecoef {
+          &#coef {
             width: 200px;
             text-align: center;
 
@@ -90,6 +90,7 @@ body.admin_sevents {
 
     .col-actions {
       text-align: right;
+      width: 99px !important;
     }
 
     a.edit_link {

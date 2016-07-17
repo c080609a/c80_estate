@@ -37,8 +37,18 @@ module C80Estate
       self.joins(:astatuses).where(:c80_estate_astatuses => { tag: 'free'})
     end
 
+    # посчитает кол-во свободных метров
+    def self.free_areas_sq
+      1
+    end
+
     def self.busy_areas
       self.joins(:astatuses).where(:c80_estate_astatuses => { tag: 'busy'})
+    end
+
+    # посчитает кол-во занятых метров
+    def self.busy_areas_sq
+      1
     end
 
     def atype_title
@@ -111,12 +121,16 @@ module C80Estate
 
       # находим последнее известное событие
       # фиксируем его статус
-      last_known_sevent = self.sevents.last.astatus.tag
+      last_known_sevent = ""
+      if self.sevents.count > 0
+        last_known_sevent = self.sevents.last.astatus.tag
+      end
 
       # если статус этого события отличен
-      # от нового статуса - генерим событие
+      # от нового статуса - генерим события
       if last_known_sevent != self.astatuses.first.tag
-        Sevent.create!({
+
+        s = Sevent.create!({
                            area_id: self.id,
                            atype_id: self.atype_id,
                            property_id: self.property_id,
@@ -124,6 +138,16 @@ module C80Estate
                            auser_id: self.owner_id, # инициатор события - редактор Площади
                            auser_type: 'AdminUser'
                        })
+
+        # генерим запись с общими данными
+        # связываем её с Sevent
+        # чтобы можно было удалить как dependent => destroy
+        Pstat.create!({
+                          atype_id: nil,
+                          property_id: self.property_id,
+                          sevent_id: s.id
+                      })
+
       end
 
     end
