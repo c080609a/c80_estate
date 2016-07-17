@@ -71,7 +71,7 @@ var fPstatsIndex = function () {
             dataType: 'json',
             data: {
                 atype_id: atype_id,
-                property_id: property_id,
+                prop_id: property_id,
                 start_date: start_date,
                 end_date: end_date
             }
