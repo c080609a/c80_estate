@@ -50,16 +50,17 @@ module C80Estate
         # если фильтруем по property
       elsif prop_id.present?
 
-        # фиксируем area
+        # фиксируем property
         property = Property.find(prop_id)
 
+        # работаем с ней, если только есть площади
         if property.areas.count > 0
 
           # обозначим диапазон фильтрации
           area_created_at = Time.at(property.areas.first.created_at)
           time_now = Time.now
-          Rails.logger.debug("area_created_at = #{area_created_at}")
-          Rails.logger.debug("time_now = #{time_now}")
+          # Rails.logger.debug("area_created_at = #{area_created_at}")
+          # Rails.logger.debug("time_now = #{time_now}")
 
           # если подана нижняя граница диапазона и она позже, чем время создания самой первой площади объекта,
           # выравниваем период рассчета коэф-та по этой нижней границе диапазона
@@ -67,14 +68,14 @@ module C80Estate
             start_date_tt = Time.parse(start_date)
             if start_date_tt > area_created_at
               used_start_date = start_date_tt
-              Rails.logger.debug("start_date: используем аргумент: #{start_date_tt}")
+              # Rails.logger.debug("start_date: используем аргумент: #{start_date_tt}")
             else
               used_start_date = area_created_at
-              Rails.logger.debug("start_date: используем время рождения Площади: #{area_created_at}")
+              # Rails.logger.debug("start_date: используем время рождения Площади: #{area_created_at}")
             end
           else
             used_start_date = area_created_at
-            Rails.logger.debug("start_date: используем время рождения Площади: #{area_created_at}")
+            # Rails.logger.debug("start_date: используем время рождения Площади: #{area_created_at}")
           end
           used_start_date_str = used_start_date.strftime('%Y/%m/%d')
 
@@ -93,9 +94,14 @@ module C80Estate
           end
           used_end_date_str = used_end_date.strftime('%Y/%m/%d')
 
-          Rails.logger.debug("start_date = #{start_date}; end_date = #{end_date}; used_start_date = #{used_start_date}; used_end_date = #{used_end_date}")
+          # Rails.logger.debug("start_date = #{start_date}; end_date = #{end_date}; used_start_date = #{used_start_date}; used_end_date = #{used_end_date}")
           # sevents = self.where(:area_id => area_id).where(:created_at => used_start_date..used_end_date)
-          pstats = self.where(:property_id => prop_id).where("created_at BETWEEN ? AND ?", used_start_date, used_end_date)
+          pstats = self.where(:property_id => prop_id)
+                       .where("created_at BETWEEN ? AND ?", used_start_date, used_end_date)
+
+          if atype_id.present?
+            pstats = pstats.where(:atype_id => atype_id)
+          end
 
           # если в этот промежуток небыло событий - значит промежуток целиком попал в какое-то событие
           # найдем его
@@ -109,26 +115,21 @@ module C80Estate
             # end
           end
 
-          # t = _calc_busy_time({
-          #                         time_free: 0,
-          #                         time_busy: 0,
-          #                         ecoef: 0,
-          #                         sevents: pstats,
-          #                         start_date:used_start_date,
-          #                         end_date:used_end_date
-          #                     })
+          # если сортируем по типу, то берём последнюю запись,
+          # иначе - берём последнюю запись с общими данными
+          if atype_id.nil?
+            free_areas_atnow = pstats.where(:atype_id => nil).last.free_areas
+            busy_areas_atnow = pstats.where(:atype_id => nil).last.busy_areas
+          else
+            free_areas_atnow = pstats.last.free_areas
+            busy_areas_atnow = pstats.last.busy_areas
+          end
 
-          # result[prop_id] = {
-          #     time_free: t[:time_free],
-          #     time_busy: t[:time_busy],
-          #     ecoef: t[:ecoef],
-          # sevents: self.where(:area_id => area_id)
-          # sevents: pstats
-          # }
+          Rails.logger.debug("\t\t atype_id = #{atype_id}")
+          Rails.logger.debug("\t\t free_areas_atnow = #{free_areas_atnow}")
+          Rails.logger.debug("\t\t busy_areas_atnow = #{busy_areas_atnow}")
 
-          free_areas_atnow = pstats.where(:atype_id => nil).last.free_areas
-          busy_areas_atnow = pstats.where(:atype_id => nil).last.busy_areas
-
+          # защищаемся от деления на ноль
           if free_areas_atnow + busy_areas_atnow == 0
             bcoef = 0.0
           else
@@ -138,8 +139,12 @@ module C80Estate
           result[:busy_coef] = sprintf "%.2f%", bcoef
           result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
           result[:abbr] = 'Занятость объекта за указанный период'
-          result[:title] = "Статистика - Объект недвижимости - #{property.title}"
+          result[:title] = "Статистика - Объект - #{property.title}"
           result[:graph] = _parse_for_js_graph(pstats)
+
+          # if atype_id.present?
+          #   result[:title] += " (#{Atype.find(atype_id).title})"
+          # end
 
           dc_str = property.areas.first.created_at.in_time_zone('Moscow').strftime('%Y/%m/%d')
           dc_abbr = 'За дату создания объекта недвижимости при рассчетах берётся дата создания первой площади объекта'
@@ -151,6 +156,10 @@ module C80Estate
               {tag: 'free_areas_count', val: "<abbr title='В конце указанного периода'>Свободных площадей</abbr>: #{ free_areas_atnow }"},
               {tag: 'busy_areas_count', val: "<abbr title='В конце указанного периода'>Занятых площадей</abbr>: #{ busy_areas_atnow }"}
           ]
+
+          if atype_id.present?
+            result[:props] << {tag: 'atype_filter', val: "Фильтр по типу площади: #{ Atype.find(atype_id).title }"}
+          end
 
         else
           result[:props] = [

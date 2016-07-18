@@ -43,7 +43,7 @@ var fPstatsIndex = function () {
         $div_busy_coef.append($p_ecoef_comment);
 
         $div_area_text_stats = $("<div id='text_stats'></div>");
-        $ul_props = $("<ul><li id='title'></li><li id='born_date'></li><li id='all_areas_count'></li><li id='free_areas_count'></li><li id='busy_areas_count'></li></ul>");
+        $ul_props = $("<ul><li id='title'></li><li id='born_date'></li><li id='atype_filter'></li><li id='all_areas_count'></li><li id='free_areas_count'></li><li id='busy_areas_count'></li></ul>");
         $div_area_text_stats.append($ul_props);
 
         $div_graph = $("<div id='graph'></div>");
