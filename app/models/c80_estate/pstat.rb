@@ -33,7 +33,7 @@ module C80Estate
           ddd = Time.at(self.first.created_at).strftime('%Y/%m/%d')
         end
 
-        result[:busy_coef] = sprintf "%.2f%", busy_areas_count/all_areas_count*100
+        result[:busy_coef] = sprintf "%.2f%", busy_areas_count*1.0/all_areas_count*100.0
         result[:comment] = "<abbr title='Период рассчёта занятости: с момента самого первого известного события до текущего дня'>C #{ddd} по #{Time.now.year}/#{sprintf "%02d", Time.now.month}/#{sprintf "%02d", Time.now.day}</abbr>"
         result[:abbr] = 'Показана занятость для всех площадей всех объектов недвижимости за весь период'
         result[:title] = 'Статистика - Все объекты недвижимости'
@@ -43,6 +43,9 @@ module C80Estate
             {tag: 'busy_areas_count', val: "Площадей занято: #{busy_areas_count}"}
         ]
 
+        Rails.logger.debug "<Pstat.busy_coef> busy_areas_count = #{ busy_areas_count }"
+        Rails.logger.debug "<Pstat.busy_coef> all_areas_count = #{ all_areas_count }"
+        Rails.logger.debug "<Pstat.busy_coef> result[:busy_coef] = #{ result[:busy_coef] }"
 
         # если фильтруем по property
       elsif prop_id.present?
@@ -123,9 +126,14 @@ module C80Estate
           # sevents: pstats
           # }
 
-          free_areas_atnow = pstats.last.free_areas
-          busy_areas_atnow = pstats.last.busy_areas
-          bcoef = busy_areas_atnow / (free_areas_atnow + busy_areas_atnow) * 100
+          free_areas_atnow = pstats.where(:atype_id => nil).last.free_areas
+          busy_areas_atnow = pstats.where(:atype_id => nil).last.busy_areas
+
+          if free_areas_atnow + busy_areas_atnow == 0
+            bcoef = 0.0
+          else
+            bcoef = busy_areas_atnow*1.0 / (free_areas_atnow + busy_areas_atnow) * 100.0
+          end
 
           result[:busy_coef] = sprintf "%.2f%", bcoef
           result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
