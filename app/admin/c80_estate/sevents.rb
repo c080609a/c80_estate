@@ -19,7 +19,9 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
   #        :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :area_id,
          :as => :select,
-         :collection => -> { C80Estate::Area.all.map { |p| ["#{p.title}", p.id] } },
+         :collection => -> { C80Estate::Area.all.map { |a|
+           ["#{a.property.title}: #{a.title}", a.id]
+         } },
          :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   # filter :atype_id,
   #        :as => :select,
