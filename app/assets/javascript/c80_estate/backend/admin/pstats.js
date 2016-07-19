@@ -187,11 +187,11 @@ var fPstatsIndex = function () {
         }
 
         if (data_array_rows_radial != undefined) {
-            $('#graph').css('opacity', '1.0'); //.css('display', 'block');
+            $('#graph').css('opacity', '1.0').css('display', 'block');
         }
 
         if (data_array_rows_dynamic != undefined) {
-            $('#graph2').css('opacity', '1.0'); //.css('display', 'block');
+            $('#graph2').css('opacity', '1.0').css('display', 'block');
         }
 
     };

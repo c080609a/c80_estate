@@ -7,6 +7,8 @@ module C80Estate
     belongs_to :auser, :polymorphic => true
     has_many :pstats, :dependent => :destroy
 
+    after_create :generate_pstat
+
 =begin
     def self.all_areas
       self.all
@@ -373,6 +375,20 @@ module C80Estate
         res << [ sevent.created_at.strftime('%Y/%m/%d'), v ]
       end
       res
+    end
+
+    protected
+
+    def generate_pstat
+
+      # pparams = {
+      #     atype_id: nil,
+      #     property_id: self.property_id,
+      #     sevent_id: self.id,
+      #     created_at: self.created_at
+      # }
+      # Pstat.create!(pparams)
+
     end
 
   end
