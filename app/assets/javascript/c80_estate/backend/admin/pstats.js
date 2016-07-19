@@ -19,6 +19,7 @@ var fPstatsIndex = function () {
     var $div_area_text_stats;
     var $ul_props;              // здесь выводим текстовые свойства
     var $div_graph;             // в этом div живет график
+    var $div_graph2;             // в этом div живет график
 
     var fBuild = function () {
 
@@ -47,10 +48,12 @@ var fPstatsIndex = function () {
         $div_area_text_stats.append($ul_props);
 
         $div_graph = $("<div id='graph'></div>");
+        $div_graph2 = $("<div id='graph2'></div>");
 
         $div_index_adds.append($div_busy_coef);
         $div_index_adds.append($div_area_text_stats);
         $div_index_adds.append($div_graph);
+        $div_index_adds.append($div_graph2);
 
         $main_content.prepend($div_index_adds);
 
@@ -97,7 +100,7 @@ var fPstatsIndex = function () {
                 }
 
                 if (data["graph"] != undefined) {
-                    fDrawChart(data["graph"]);
+                    fDrawChart(data["graph"], data["graph_dynamic"]);
                 }
 
                 $h2_page_title.text(data["title"]);
@@ -118,24 +121,78 @@ var fPstatsIndex = function () {
         fRequest();
     };
 
-    var fDrawChart = function (data_array_rows) {
+    var fDrawChart = function (data_array_rows_radial, data_array_rows_dynamic) {
 
-        google.charts.load('current', {'packages':['corechart']});
+        google.charts.load('current', {'packages': ['corechart']});
         google.charts.setOnLoadCallback(drawChart);
+
         function drawChart() {
 
-            var data = google.visualization.arrayToDataTable(data_array_rows);
+            var data, options, chart;
 
-            var options = {
-                title: ''
-            };
+            if (data_array_rows_radial != undefined) {
+                data = google.visualization.arrayToDataTable(data_array_rows_radial);
 
-            var chart = new google.visualization.PieChart(document.getElementById('graph'));
+                options = {
+                    title: ''
+                };
 
-            chart.draw(data, options);
+                chart = new google.visualization.PieChart(document.getElementById('graph'));
+
+                chart.draw(data, options);
+            }
+
+            if (data_array_rows_dynamic != undefined) {
+                //data_array = [
+                //    ['Director (Year)',  'Rotten Tomatoes', 'IMDB'],
+                //    ['Alfred Hitchcock (1935)', 8.4,         7.9],
+                //    ['Ralph Thomas (1959)',     6.9,         6.5],
+                //    ['Don Sharp (1978)',        6.5,         6.4],
+                //    ['James Hawes (2008)',      4.4,         6.2]
+                //]
+
+                //var data = google.visualization.arrayToDataTable(data_array_rows_dynamic);
+
+                data = new google.visualization.DataTable();
+                data.addColumn('date', ''); // Implicit domain column.
+                data.addColumn('number', ''); // Implicit data column.
+                //data.addColumn({type:'number', role:'interval'});
+                //data.addColumn({type:'number', role:'interval'});
+                //data.addColumn('number', 'Expenses');
+
+                var i, iob, yearValue, monthValue, dayValue;
+                for (i = 0; i < data_array_rows_dynamic.length; i++) {
+                    iob = data_array_rows_dynamic[i];
+                    yearValue = iob[0].substr(0, 4);
+                    monthValue = iob[0].substr(5, 2) - 1;
+                    dayValue = iob[0].substr(8, 2);
+                    console.log(iob + " => " + yearValue + "/" + monthValue + "/" + dayValue); // + ": " + data_array_rows_dynamic[i][0]
+                    data_array_rows_dynamic[i][0] = new Date(parseInt(yearValue), parseInt(monthValue), parseInt(dayValue));
+                }
+
+                data.addRows(data_array_rows_dynamic);
+
+                options = {
+                    title: 'Занятость',
+                    vAxis: {title: '', ticks: [0, 1]},
+                    ignoreBounds: true,
+                    isStacked: false
+                };
+
+                chart = new google.visualization.SteppedAreaChart(document.getElementById('graph2'));
+
+                chart.draw(data, options);
+            }
+
         }
 
-        $('#graph').css('opacity','1.0').css('display','block');
+        if (data_array_rows_radial != undefined) {
+            $('#graph').css('opacity', '1.0'); //.css('display', 'block');
+        }
+
+        if (data_array_rows_dynamic != undefined) {
+            $('#graph2').css('opacity', '1.0'); //.css('display', 'block');
+        }
 
     };
 
