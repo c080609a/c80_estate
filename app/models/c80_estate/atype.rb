@@ -16,6 +16,8 @@ module C80Estate
 
     has_many :sevents, :dependent => :nullify
 
+    has_many :pstats, :dependent => :nullify
+
     extend FriendlyId
     friendly_id :slug_candidates, :use => :slugged
 

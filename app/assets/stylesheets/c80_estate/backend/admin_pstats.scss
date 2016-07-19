@@ -1,4 +1,4 @@
-body.admin_sevents {
+body.admin_pstats {
 
   &.index {
 
@@ -9,7 +9,7 @@ body.admin_sevents {
       -moz-transition: opacity .2s ease-in;
       -ms-transition: opacity .2s ease-in;
       -o-transition: opacity .2s ease-in;
-      transition: opacity .2s ease-in;      
+      transition: opacity .2s ease-in;
 
       div#index_adds {
         height: calc(183px + 15px);
@@ -23,7 +23,7 @@ body.admin_sevents {
           border: 2px solid #f1f1f1;
           height: 183px;
 
-          &#ecoef {
+          &#coef {
             width: 200px;
             text-align: center;
 
@@ -54,12 +54,12 @@ body.admin_sevents {
           }
 
           &#graph {
-            /*width: calc(100% - 200px - 400px - 30px - 30px);*/
-            width: 100%;
-            height: 200px;
-            margin-top: 15px;
+            width: calc(100% - 200px - 400px - 30px - 30px);
+            /*width: 100%;*/
+            /*height: 200px;*/
+            /*margin-top: 15px;*/
 
-            /*margin-left: 30px;*/
+            margin-left: 30px;
             padding: 0;
             display: none;
             opacity: 0;
@@ -69,6 +69,21 @@ body.admin_sevents {
             -ms-transition: opacity .2s ease-in;
             -o-transition: opacity .2s ease-in;
             transition: opacity .2s ease-in;
+          }
+
+          &#graph2 {
+            width: 100%;
+            margin-top: 15px;
+            padding: 0;
+            display: none;
+            opacity: 0;
+
+            -webkit-transition: opacity .2s ease-in;
+            -moz-transition: opacity .2s ease-in;
+            -ms-transition: opacity .2s ease-in;
+            -o-transition: opacity .2s ease-in;
+            transition: opacity .2s ease-in;
+
           }
 
         }
@@ -90,6 +105,7 @@ body.admin_sevents {
 
     .col-actions {
       text-align: right;
+      width: 99px !important;
     }
 
     a.edit_link {

@@ -5,6 +5,9 @@ module C80Estate
     belongs_to :property
     belongs_to :astatus
     belongs_to :auser, :polymorphic => true
+    has_many :pstats, :dependent => :destroy
+
+    after_create :generate_pstat
 
 =begin
     def self.all_areas
@@ -146,6 +149,10 @@ module C80Estate
         # sevents = self.where(:area_id => area_id).where(:created_at => used_start_date..used_end_date)
         sevents = self.where(:area_id => area_id).where("created_at BETWEEN ? AND ?", used_start_date, used_end_date)
 
+        # if atype_id.present?
+        #   sevents = sevents.where(:atype_id => atype_id)
+        # end
+
         # если в этот промежуток небыло событий - значит промежуток целиком попал в какое-то событие
         # найдем его
         # заодно поднимем вспомогательный флаг, который обработаем во view
@@ -197,6 +204,12 @@ module C80Estate
             { tag: 'assigned_person_title', val: "Ответственный: #{area.assigned_person_title}" },
             { tag: 'property_title', val: "Объект: #{area.property_title}" }
         ]
+
+        # if atype_id.present?
+        #   result[:props] << {tag: 'atype_filter', val: "Фильтр по типу площади: #{ Atype.find(atype_id).title }"}
+        # end
+
+      elsif prop_id.present?
 
       end
 
@@ -362,6 +375,20 @@ module C80Estate
         res << [ sevent.created_at.strftime('%Y/%m/%d'), v ]
       end
       res
+    end
+
+    protected
+
+    def generate_pstat
+
+      # pparams = {
+      #     atype_id: nil,
+      #     property_id: self.property_id,
+      #     sevent_id: self.id,
+      #     created_at: self.created_at
+      # }
+      # Pstat.create!(pparams)
+
     end
 
   end

@@ -37,8 +37,18 @@ module C80Estate
       self.joins(:astatuses).where(:c80_estate_astatuses => { tag: 'free'})
     end
 
+    # посчитает кол-во свободных метров
+    def self.free_areas_sq
+      1
+    end
+
     def self.busy_areas
       self.joins(:astatuses).where(:c80_estate_astatuses => { tag: 'busy'})
+    end
+
+    # посчитает кол-во занятых метров
+    def self.busy_areas_sq
+      1
     end
 
     def atype_title
@@ -93,37 +103,95 @@ module C80Estate
 
     # при создании площади генерится начальное событие
     def create_initial_sevent
-      Rails.logger.debug "<Area.create_initial_sevent>"
+      Rails.logger.debug "<Area.create_initial_sevent> self.astatuses.count = #{self.astatuses.count}"
 
-      Sevent.create!({
-                         area_id: self.id,
-                         atype_id: self.atype_id,
-                         property_id: self.property_id,
-                         astatus_id: self.astatus_id,
-                         auser_id: self.owner_id, # инициатор события - создатель Площади
-                         auser_type: 'AdminUser'
-                     })
+      # [**]
+      if self.astatuses.count > 0
+        Rails.logger.debug "<Area.create_initial_sevent> aga: self.astatuses.first.title = #{self.astatuses.first.title}"
 
-    end
-
-    def check_and_generate_sevent
-      Rails.logger.debug "<Area.check_and_generate_sevent>"
-
-      # находим последнее известное событие
-      # фиксируем его статус
-      last_known_sevent = self.sevents.last.astatus.tag
-
-      # если статус этого события отличен
-      # от нового статуса - генерим событие
-      if last_known_sevent != self.astatuses.first.tag
-        Sevent.create!({
+        s = Sevent.create!({
                            area_id: self.id,
                            atype_id: self.atype_id,
                            property_id: self.property_id,
                            astatus_id: self.astatus_id,
-                           auser_id: self.owner_id, # инициатор события - редактор Площади
-                           auser_type: 'AdminUser'
+                           auser_id: self.owner_id, # инициатор события - создатель Площади
+                           auser_type: 'AdminUser',
+                           created_at: self.created_at
                        })
+
+        # см [*]
+        # if last_known_sevent == ''
+        #   pparams[:created_at] = self.created_at
+        # end
+        #
+        # pparams = {
+        #     atype_id: nil,
+        #     property_id: self.property_id,
+        #     sevent_id: s.id
+        # }
+
+        # генерим запись с общими данными
+        # связываем её с Sevent
+        # чтобы можно было удалить как dependent => destroy
+        # Pstat.create!(pparams)
+
+      end
+
+    end
+
+    def check_and_generate_sevent
+
+      # находим последнее известное событие
+      # фиксируем его статус
+      last_known_sevent = ""
+      if self.sevents.count > 0
+        last_known_sevent = self.sevents.last.astatus.tag
+      end
+
+      # если статус этого события отличен
+      # от нового статуса - генерим события
+      Rails.logger.debug "<Area.check_and_generate_sevent> last_known_sevent = #{last_known_sevent}, self.astatuses.first.tag = #{self.astatuses.first.tag}"
+
+      if last_known_sevent != self.astatuses.first.tag
+        Rails.logger.debug "<Area.check_and_generate_sevent> aga"
+        sparams = {
+            area_id: self.id,
+            atype_id: self.atype_id,
+            property_id: self.property_id,
+            astatus_id: self.astatus_id,
+            auser_id: self.owner_id, # инициатор события - редактор Площади
+            auser_type: 'AdminUser'
+        }
+
+        # если неизвестен статус последнего события,
+        # значит событий изменения статуса площади ещё не было
+        # значит нужно создать первое событие и дату его создания
+        # приравнять дате создания площади [*]
+        # такая штука случается, когда заполняем данными из seed файла,
+        # и при создании не получилось фишка с передачей :astatus_ids => [1] в create!({..})
+        # по-этому и появился этот код. Также по теме код из [**]
+        if last_known_sevent == ''
+          sparams[:created_at] = self.created_at
+        end
+
+        s = Sevent.create!(sparams)
+
+        pparams = {
+            atype_id: nil,
+            property_id: self.property_id,
+            sevent_id: s.id
+        }
+
+        # см [*]
+        if last_known_sevent == ''
+          pparams[:created_at] = self.created_at
+        end
+
+        # генерим запись с общими данными
+        # связываем её с Sevent
+        # чтобы можно было удалить как dependent => destroy
+        Pstat.create!(pparams)
+
       end
 
     end
