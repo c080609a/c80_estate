@@ -140,7 +140,7 @@ module C80Estate
           result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
           result[:abbr] = 'Занятость объекта за указанный период'
           result[:title] = "Статистика - Объект - #{property.title}"
-          result[:graph] = _parse_for_js_graph(pstats)
+          result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
 
           # if atype_id.present?
           #   result[:title] += " (#{Atype.find(atype_id).title})"
@@ -244,19 +244,27 @@ module C80Estate
       end
     end
 
-    def self._parse_for_js_graph(pstats)
+    def self._parse_for_js_radial_graph(free_areas_atnow, busy_areas_atnow)
       # res = [
       #     ['Year', 'Sales', 'Expenses'],
       #     ['2013',  1000,      400],
       #     ['2014',  1170,      460],
       #     ['2015',  660,       1120],
       #     ['2016/12/12',  1030,      540]
+      #
       # ]
-      res = []
-      pstats.each do |pstat|
-        res << [pstat.created_at.strftime('%Y/%m/%d'), pstat.coef_busy]
-      end
+      # [
+      #     ['', ''],
+      #     ['Свободно',     11],
+      #     ['Занято',      2]
+      # ]
+
+      res = [['','']]
+      res << ['Свободно', free_areas_atnow]
+      res << ['Занято', busy_areas_atnow]
+      Rails.logger.debug "<_parse_for_js_radial_graph> res: #{res}"
       res
+
     end
 
   end

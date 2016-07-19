@@ -207,6 +207,8 @@ module C80Estate
         #   result[:props] << {tag: 'atype_filter', val: "Фильтр по типу площади: #{ Atype.find(atype_id).title }"}
         # end
 
+      elsif prop_id.present?
+
       end
 
       result

@@ -119,6 +119,24 @@ var fPstatsIndex = function () {
     };
 
     var fDrawChart = function (data_array_rows) {
+
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+
+            var data = google.visualization.arrayToDataTable(data_array_rows);
+
+            var options = {
+                title: ''
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('graph'));
+
+            chart.draw(data, options);
+        }
+
+        $('#graph').css('opacity','1.0').css('display','block');
+
     };
 
     fInit();
