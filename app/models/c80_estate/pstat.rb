@@ -40,13 +40,14 @@ module C80Estate
         end
 
         pstats = self.where("created_at BETWEEN ? AND ?", tcut[:used_start_date], tcut[:used_end_date])
+                     .where(:atype_id => nil)
 
         # если в этот промежуток небыло событий - значит промежуток целиком попал в какое-то событие
         # найдем его
         # заодно поднимем вспомогательный флаг, который обработаем во view
         mark_whole = false
         if pstats.count == 0
-          pstats = [self.where(:property_id => prop_id).where("created_at < ?", tcut[:used_start_date]).last]
+          pstats = [self.where(:atype_id => nil).where("created_at < ?", tcut[:used_start_date]).last]
           mark_whole = true
           # sevents.each do |se|
           #   Rails.logger.debug "\t\t\t #{used_start_date - se.created_at}"
@@ -55,9 +56,11 @@ module C80Estate
 
         # Занятость
 
-        free_areas_atnow = pstats.where(:atype_id => nil).last.free_areas
-        busy_areas_atnow = pstats.where(:atype_id => nil).last.busy_areas
-        graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+        tt = _calc_free_busy_areas(pstats)
+
+        free_areas_atnow = tt[:sum_free_areas] #*1.0/all_props.count #pstats.last.free_areas
+        busy_areas_atnow = tt[:sum_busy_areas] #*1.0/all_props.count #pstats.last.busy_areas
+        graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
 
         # защищаемся от деления на ноль
         if free_areas_atnow + busy_areas_atnow == 0
@@ -335,8 +338,10 @@ module C80Estate
 
         # Занятость
 
-        free_areas_atnow = pstats.last.free_areas
-        busy_areas_atnow = pstats.last.busy_areas
+        tt = _calc_free_busy_areas(pstats)
+
+        free_areas_atnow = tt[:sum_free_areas] #*1.0/all_props.count #pstats.last.free_areas
+        busy_areas_atnow = tt[:sum_busy_areas] #*1.0/all_props.count #pstats.last.busy_areas
         graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
 
         # Rails.logger.debug("\t\t atype_id = #{atype_id}")
@@ -637,6 +642,21 @@ module C80Estate
           used_end_date_str: used_end_date_str
       }
 
+    end
+
+    def self._calc_free_busy_areas(pstats)
+      sum_free_areas = 0
+      sum_busy_areas = 0
+      all_props = Property.all
+      all_props.each do |prop|
+        ppstats = pstats.where(:property_id => prop.id).ordered_by_created_at.last
+        sum_free_areas += ppstats.free_areas
+        sum_busy_areas += ppstats.busy_areas
+      end
+      {
+          sum_free_areas:sum_free_areas,
+          sum_busy_areas:sum_busy_areas
+      }
     end
 
   end

@@ -173,7 +173,7 @@ var fPstatsIndex = function () {
             data:{atype_id: atype_id},
             dataType:'script'
         }).done(function (data, result) {
-            alert(result);
+            //alert(result);
         });
     }
 
