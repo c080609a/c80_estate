@@ -178,7 +178,7 @@ var fSeventsIndex = function () {
 
     };
 
-    var fDrawChart = function (data) {
+    var fDrawChart_chart_js = function (data) {
 
         if (data != undefined) {
             var ctx = $("#graph_canvas");
@@ -232,6 +232,76 @@ var fSeventsIndex = function () {
         }
 
     };
+
+    var fDrawChart = function (data) {
+        if (data != undefined) {
+
+            var dataPoints = [];
+            //[
+            //    {x: new Date(2012,0), y: 8.3} ,
+            //    {x: new Date(2012,1), y: 8.3} ,
+            //    {x: new Date(2012,2), y: 8.2} ,
+            //    {x: new Date(2012,3), y: 8.1} ,
+            //    {x: new Date(2012,4), y: 8.2} ,
+            //    {x: new Date(2012,5), y: 8.2} ,
+            //    {x: new Date(2012,6), y: 8.2} ,
+            //    {x: new Date(2012,7), y: 8.1} ,
+            //    {x: new Date(2012,8), y: 7.8} ,
+            //    {x: new Date(2012,9), y: 7.9} ,
+            //    {x: new Date(2012,10), y:7.8} ,
+            //    {x: new Date(2012,11), y:7.8} ,
+            //    {x: new Date(2013,0), y:7.9} ,
+            //    {x: new Date(2013,1), y:7.7} ,
+            //    {x: new Date(2013,2), y:7.6} ,
+            //    {x: new Date(2013,3), y:7.5}
+            //]
+
+            var i, iob;
+            for (i = 0; i < data.length; i ++) {
+                iob = data[i];
+                dataPoints.push({
+                    x: new Date(iob["year"], iob["month"], iob["day"]),
+                    y: iob["val"]
+                })
+            }
+
+            var chart = new CanvasJS.Chart("graph",
+                {
+                    title:{
+                        text: "График занята/свободна"
+                    },
+                    animationEnabled: true,
+                    axisY:{
+                        includeZero: false,
+                        interval: .25,
+                        valueFormatString: ""
+                    },
+                    toolTip:{
+                        contentFormatter: function ( e ) {
+                            var res = "Свободна";
+                            if (e.entries[0].dataPoint.y == 1) {
+                                res = "Занята"
+                            }
+                            return res;
+                        }
+                    },
+                    data: [
+                        {
+                            type: "stepLine",
+                            //toolTipContent: "{x}: {y}%",
+                            markerSize: 5,
+                            dataPoints: dataPoints
+                        }
+
+                    ]
+                });
+
+            $('#graph').css('opacity','1.0').css('display','block');
+            chart.render();
+
+
+        }
+    }
 
     fInit();
 

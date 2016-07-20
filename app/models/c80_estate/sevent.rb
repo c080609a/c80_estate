@@ -378,7 +378,7 @@ module C80Estate
       res
     end
 
-    def self._parse_for_js_graph(sevents)
+    def self._parse_for_js_graph_graphjs(sevents)
 
 
       # res = {
@@ -405,19 +405,53 @@ module C80Estate
 
     end
 
+    def self._parse_for_js_graph(sevents)
+
+      # res: [
+      #     {
+      #         year
+      #         month
+      #         day
+      #         val
+      #     }
+      # ]
+
+      res = []
+
+      sevents.each do |sevent|
+
+        v = 1
+        if sevent.astatus.tag == 'free'
+          v = 0
+        end
+
+        res << {
+            year: sevent.created_at.strftime('%Y'),
+            month: sevent.created_at.strftime('%m').to_i-1,
+            day: sevent.created_at.strftime('%d'),
+            val: v
+        }
+
+      end
+
+      Rails.logger.debug "<Sevent.parse_for_js_graph> res = #{res}"
+      res
+
+    end
+
     protected
 
     # раскомментировать перед исполнением rake db:seed:85_fill_sevents
     # после - закомментить обратно
     def generate_pstat
 
-      pparams = {
-          atype_id: nil,
-          property_id: self.property_id,
-          sevent_id: self.id,
-          created_at: self.created_at
-      }
-      Pstat.create!(pparams)
+      # pparams = {
+      #     atype_id: nil,
+      #     property_id: self.property_id,
+      #     sevent_id: self.id,
+      #     created_at: self.created_at
+      # }
+      # Pstat.create!(pparams)
 
     end
 
