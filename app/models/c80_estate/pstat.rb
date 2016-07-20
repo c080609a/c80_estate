@@ -200,21 +200,21 @@ module C80Estate
 
           self.free_areas = self.property.areas.free_areas.count
           self.busy_areas = self.property.areas.busy_areas.count
-          self.coef_busy = self.busy_areas / (self.free_areas + self.busy_areas) * 100
+          self.coef_busy = self.busy_areas*1.0 / (self.free_areas + self.busy_areas) * 100.0
 
           self.free_areas_sq = self.property.areas.free_areas_sq
           self.busy_areas_sq = self.property.areas.busy_areas_sq
-          self.coef_busy_sq = self.busy_areas_sq / (self.free_areas_sq + self.busy_areas_sq) * 100
+          self.coef_busy_sq = self.busy_areas_sq*1.0 / (self.free_areas_sq + self.busy_areas_sq) * 100.0
 
         # здесь считаем коэф-ты для 'atype related записей'
         else
           self.free_areas = self.property.areas.where(:atype_id => self.atype.id).free_areas.count
           self.busy_areas = self.property.areas.where(:atype_id => self.atype.id).busy_areas.count
-          self.coef_busy = (self.free_areas + self.busy_areas == 0) ? 0:self.busy_areas / (self.free_areas + self.busy_areas) * 100
+          self.coef_busy = (self.free_areas + self.busy_areas == 0) ? 0:self.busy_areas*1.0 / (self.free_areas + self.busy_areas) * 100.0
 
           self.free_areas_sq = self.property.areas.where(:atype_id => self.atype.id).free_areas_sq
           self.busy_areas_sq = self.property.areas.where(:atype_id => self.atype.id).busy_areas_sq
-          self.coef_busy_sq = (self.free_areas_sq + self.busy_areas_sq == 0) ? 0:self.busy_areas_sq / (self.free_areas_sq + self.busy_areas_sq) * 100
+          self.coef_busy_sq = (self.free_areas_sq + self.busy_areas_sq == 0) ? 0:self.busy_areas_sq*1.0 / (self.free_areas_sq + self.busy_areas_sq) * 100.0
         end
       end
     end

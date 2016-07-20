@@ -7,6 +7,7 @@ module C80Estate
     belongs_to :auser, :polymorphic => true
     has_many :pstats, :dependent => :destroy
 
+    # нужен только при заполнении из rake db:seed:85_fill_sevents
     after_create :generate_pstat
 
 =begin
@@ -379,15 +380,17 @@ module C80Estate
 
     protected
 
+    # раскомментировать перед исполнением rake db:seed:85_fill_sevents
+    # после - закомментить обратно
     def generate_pstat
 
-      # pparams = {
-      #     atype_id: nil,
-      #     property_id: self.property_id,
-      #     sevent_id: self.id,
-      #     created_at: self.created_at
-      # }
-      # Pstat.create!(pparams)
+      pparams = {
+          atype_id: nil,
+          property_id: self.property_id,
+          sevent_id: self.id,
+          created_at: self.created_at
+      }
+      Pstat.create!(pparams)
 
     end
 
