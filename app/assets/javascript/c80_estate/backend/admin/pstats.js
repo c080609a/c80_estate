@@ -50,7 +50,7 @@ var fPstatsIndex = function () {
 
         $div_graph = $("<div id='graph'></div>");
         $div_graph2 = $("<div id='graph2'></div>");
-        $div_graph2canvas = $("<canvas id='graph2canvas'></canvas>").appendTo($div_graph2);
+        $div_graph2canvas = $("<canvas id='graph2canvas' height='50'></canvas>").appendTo($div_graph2);
 
         $div_index_adds.append($div_busy_coef);
         $div_index_adds.append($div_area_text_stats);
