@@ -65,6 +65,17 @@ module C80Estate
       sum
     end
 
+    def self.all_areas_sq
+      sum = 0
+      self.all.each do |area|
+        area_prop_square = area.item_props.where(:prop_name_id => 9)
+        if area_prop_square.present?
+          sum += area_prop_square.first.value.to_i
+        end
+      end
+      sum
+    end
+
     def atype_title
       res = "-"
       if atype.present?

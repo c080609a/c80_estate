@@ -12,12 +12,26 @@ var fPstatsIndex = function () {
 
     // компонент "над таблицей"
     var $div_index_adds;
-    var $div_busy_coef;
-    var $p_busy_coef;           // здесь выводим число - коэф-т эффективности
-    var $p_ecoef_mess;          // здесь вешаем hint на подпись "эффективность"
-    var $p_ecoef_comment;       // здесь выводим комментарий
-    var $div_area_text_stats;
-    var $ul_props;              // здесь выводим текстовые свойства
+
+    // блок ЗАНЯТОСТЬ
+    var $div_busy_coef,
+        $p_busy_coef,               // здесь выводим число - занятость
+        $p_busy_coef_mess,          // здесь вешаем hint на подпись "занятость"
+        $p_busy_coef_comment;       // здесь выводим комментарий
+
+    // блок ЗАНЯТОСТЬ (В М.КВ)
+    var $div_busy_coef_sq,
+        $p_busy_coef_sq,                // здесь выводим число - занятость в м.кв
+        $p_busy_coef_mess_sq,          // здесь вешаем hint на подпись "занятость в м"
+        $p_busy_coef_comment_sq;       // здесь выводим комментарий
+
+    var $div_area_text_stats,
+        $ul_props;              // здесь выводим текстовые свойства
+
+    var $div_area_text_stats_sq,
+        $ul_props_sq;              // здесь выводим текстовые свойства занятости в метрах
+
+
     var $div_graph;             // в этом div живет график
     var $div_graph2;             // в этом div живет график
     var $div_graph2canvas;
@@ -35,28 +49,28 @@ var fPstatsIndex = function () {
         // построим компонент "над таблицей"
         $div_index_adds = $("<div id='index_adds'></div>");
 
-        $div_busy_coef = $("<div id='coef'></div>");
-        $p_busy_coef = $("<p class='val'></p>");
-        $p_ecoef_mess = $("<p class='title'><abbr class='abbr_ecoef' title='TITLE'>Занятость</abbr></p>");
-        $p_ecoef_comment = $("<p class='comment'></p>");
+        $div_busy_coef = $("<div id='coef'></div>").appendTo($div_index_adds);
+            $p_busy_coef = $("<p class='val'></p>").appendTo($div_busy_coef);
+            $p_busy_coef_mess = $("<p class='title'><abbr class='abbr_busy_coef' title='TITLE'>Занятость</abbr></p>").appendTo($div_busy_coef);
+            $p_busy_coef_comment = $("<p class='comment'></p>").appendTo($div_busy_coef);
+        
+        $div_area_text_stats = $("<div id='text_stats'></div>").appendTo($div_index_adds);
+            $ul_props = $("<ul><li id='title'></li><li id='born_date'></li><li id='atype_filter'></li><li id='all_areas_count'></li><li id='free_areas_count'></li><li id='busy_areas_count'></li></ul>");
+            $div_area_text_stats.append($ul_props);
 
-        $div_busy_coef.append($p_busy_coef);
-        $div_busy_coef.append($p_ecoef_mess);
-        $div_busy_coef.append($p_ecoef_comment);
+        $div_busy_coef_sq = $("<div id='coef_sq'></div>").appendTo($div_index_adds);
+        $p_busy_coef_sq = $("<p class='val'></p>").appendTo($div_busy_coef_sq);
+        $p_busy_coef_mess_sq = $("<p class='title'><abbr class='abbr_busy_coef_sq' title='TITLE'>Занятость (в м.кв.)</abbr></p>").appendTo($div_busy_coef_sq);
+        $p_busy_coef_comment_sq = $("<p class='comment'></p>").appendTo($div_busy_coef_sq);
 
-        $div_area_text_stats = $("<div id='text_stats'></div>");
-        $ul_props = $("<ul><li id='title'></li><li id='born_date'></li><li id='atype_filter'></li><li id='all_areas_count'></li><li id='free_areas_count'></li><li id='busy_areas_count'></li></ul>");
-        $div_area_text_stats.append($ul_props);
+        $div_area_text_stats_sq = $("<div id='text_stats_sq'></div>").appendTo($div_index_adds);
+        $ul_props_sq = $("<ul><li id='all_areas_count_sq'></li><li id='free_areas_count_sq'></li><li id='busy_areas_count_sq'></li></ul>");
+        $div_area_text_stats_sq.append($ul_props_sq);
 
-        $div_graph = $("<div id='graph'></div>");
-        $div_graph2 = $("<div id='graph2'></div>");
-        $div_graph2canvas = $("<canvas id='graph2canvas' height='50'></canvas>").appendTo($div_graph2);
-
-        $div_index_adds.append($div_busy_coef);
-        $div_index_adds.append($div_area_text_stats);
-        $div_index_adds.append($div_graph);
-        $div_index_adds.append($div_graph2);
-
+        //$div_graph = $("<div id='graph'></div>").appendTo($div_index_adds);
+        $div_graph2 = $("<div id='graph2'></div>").appendTo($div_index_adds);
+            $div_graph2canvas = $("<canvas id='graph2canvas' height='50'></canvas>").appendTo($div_graph2);
+        
         $main_content.prepend($div_index_adds);
 
         // теперь покажем
@@ -82,20 +96,38 @@ var fPstatsIndex = function () {
             }
         }).done(function (data, result) {
             if (result == 'success') {
+
                 console.log(data);
 
+                var i, iob, itag, ival, $ili;
+
                 $p_busy_coef.text(data["busy_coef"]);
-                $p_ecoef_comment.html(data["comment"]);
-                $p_ecoef_mess.find('.abbr_ecoef').attr('title', data["abbr"]);
+                $p_busy_coef_comment.html(data["comment"]);
+                $p_busy_coef_mess.find('.abbr_busy_coef').attr('title', data["abbr"]);
+
+                $p_busy_coef_sq.text(data["busy_coef_sq"]);
+                $p_busy_coef_comment_sq.html(data["comment_sq"]);
+                $p_busy_coef_mess_sq.find('.abbr_busy_coef').attr('title', data["abbr_sq"]);
 
                 if (data["props"] != undefined) {
 
-                    var i, iob, itag, ival, $ili;
                     for (i = 0; i < data["props"].length; i++) {
                         iob = data["props"][i];
                         itag = iob["tag"];
                         ival = iob["val"];
                         $ili = $ul_props.find("#" + itag);
+                        $ili.html(ival);
+                    }
+
+                }
+
+                if (data["props_sq"] != undefined) {
+
+                    for (i = 0; i < data["props_sq"].length; i++) {
+                        iob = data["props_sq"][i];
+                        itag = iob["tag"];
+                        ival = iob["val"];
+                        $ili = $ul_props_sq.find("#" + itag);
                         $ili.html(ival);
                     }
 
@@ -133,15 +165,15 @@ var fPstatsIndex = function () {
             var data, options, chart;
 
             if (data_array_rows_radial != undefined) {
-                data = google.visualization.arrayToDataTable(data_array_rows_radial);
+                //data = google.visualization.arrayToDataTable(data_array_rows_radial);
+                //
+                //options = {
+                //    title: ''
+                //};
 
-                options = {
-                    title: ''
-                };
-
-                chart = new google.visualization.PieChart(document.getElementById('graph'));
-
-                chart.draw(data, options);
+                //chart = new google.visualization.PieChart(document.getElementById('graph'));
+                //
+                //chart.draw(data, options);
             }
 
             if (data_array_rows_dynamic != undefined && false) {

@@ -26,31 +26,52 @@ module C80Estate
       # если ничего не подано - просто выберем все занятые площади и поделим на все известные площади
       if prop_id.nil? && atype_id.nil? && start_date.nil? && end_date.nil?
 
-        all_areas_count = Area.all.count
-        free_areas_count = Area.free_areas.count
-        busy_areas_count = Area.busy_areas.count
+        # prepare
 
         ddd = '-'
         if self.count > 0
           ddd = Time.at(self.first.created_at).strftime('%Y/%m/%d')
         end
 
+        # Занятость
+
+        all_areas_count = Area.all.count
+        free_areas_count = Area.free_areas.count
+        busy_areas_count = Area.busy_areas.count
+
         result[:busy_coef] = sprintf "%.2f%", busy_areas_count*1.0/all_areas_count*100.0
         result[:comment] = "<abbr title='Период рассчёта занятости: с момента самого первого известного события до текущего дня'>C #{ddd} по #{Time.now.year}/#{sprintf "%02d", Time.now.month}/#{sprintf "%02d", Time.now.day}</abbr>"
         result[:abbr] = 'Показана занятость для всех площадей всех объектов недвижимости за весь период'
-        result[:title] = 'Статистика - Все объекты недвижимости'
         result[:props] = [
             {tag: 'all_areas_count', val: "Площадей всего: #{all_areas_count}"},
             {tag: 'free_areas_count', val: "Площадей свободно: #{free_areas_count}"},
             {tag: 'busy_areas_count', val: "Площадей занято: #{busy_areas_count}"}
         ]
 
-        result[:graph] = _parse_for_js_radial_graph(free_areas_count,busy_areas_count)
-        result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(self.where(:atype_id => nil).ordered_by_created_at)
-
         Rails.logger.debug "<Pstat.busy_coef> busy_areas_count = #{ busy_areas_count }"
         Rails.logger.debug "<Pstat.busy_coef> all_areas_count = #{ all_areas_count }"
         Rails.logger.debug "<Pstat.busy_coef> result[:busy_coef] = #{ result[:busy_coef] }"
+
+        # Занятость в метрах
+
+        all_areas_count_sq = Area.all_areas_sq
+        free_areas_count_sq = Area.free_areas_sq
+        busy_areas_count_sq = Area.busy_areas_sq
+
+        result[:busy_coef_sq] = sprintf "%.2f%", busy_areas_count_sq*1.0/all_areas_count_sq*100.0
+        result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ: с момента самого первого известного события до текущего дня'>C #{ddd} по #{Time.now.year}/#{sprintf "%02d", Time.now.month}/#{sprintf "%02d", Time.now.day}</abbr>"
+        result[:abbr_sq] = 'Показана занятость в МЕТРАХ для всех площадей всех объектов недвижимости за весь период'
+        result[:props_sq] = [
+            {tag: 'all_areas_count_sq', val: "Кв.м. всего: #{all_areas_count_sq}"},
+            {tag: 'free_areas_count_sq', val: "Свободных: #{free_areas_count_sq}"},
+            {tag: 'busy_areas_count_sq', val: "Занятых: #{busy_areas_count_sq}"}
+        ]
+
+        # common
+
+        result[:title] = 'Статистика - Все объекты недвижимости'
+        result[:graph] = _parse_for_js_radial_graph(free_areas_count,busy_areas_count)
+        result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(self.where(:atype_id => nil).ordered_by_created_at)
 
         # если фильтруем по property
       elsif prop_id.present?
