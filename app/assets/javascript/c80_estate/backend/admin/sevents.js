@@ -273,7 +273,7 @@ var fSeventsIndex = function () {
                     animationEnabled: true,
                     axisY:{
                         includeZero: false,
-                        interval: .25,
+                        interval: 1,
                         valueFormatString: ""
                     },
                     toolTip:{
@@ -299,9 +299,8 @@ var fSeventsIndex = function () {
             $('#graph').css('opacity','1.0').css('display','block');
             chart.render();
 
-
         }
-    }
+    };
 
     fInit();
 

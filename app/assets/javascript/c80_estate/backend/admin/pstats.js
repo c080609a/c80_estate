@@ -188,51 +188,60 @@ var fPstatsIndex = function () {
 
             if (data_array_rows_dynamic) {
 
-                var ctx = $("#graph2canvas");
 
-                var chartInstance = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: data_array_rows_dynamic["labels"],
-                        datasets: [
+                var dataPoints = [];
+                //[
+                //    {x: new Date(2012,0), y: 8.3} ,
+                //    {x: new Date(2012,1), y: 8.3} ,
+                //    {x: new Date(2012,2), y: 8.2} ,
+                //    {x: new Date(2012,3), y: 8.1} ,
+                //    {x: new Date(2012,4), y: 8.2} ,
+                //    {x: new Date(2012,5), y: 8.2} ,
+                //    {x: new Date(2012,6), y: 8.2} ,
+                //    {x: new Date(2012,7), y: 8.1} ,
+                //    {x: new Date(2012,8), y: 7.8} ,
+                //    {x: new Date(2012,9), y: 7.9} ,
+                //    {x: new Date(2012,10), y:7.8} ,
+                //    {x: new Date(2012,11), y:7.8} ,
+                //    {x: new Date(2013,0), y:7.9} ,
+                //    {x: new Date(2013,1), y:7.7} ,
+                //    {x: new Date(2013,2), y:7.6} ,
+                //    {x: new Date(2013,3), y:7.5}
+                //]
+
+                var i, iob;
+                for (i = 0; i < data_array_rows_dynamic.length; i ++) {
+                    iob = data_array_rows_dynamic[i];
+                    dataPoints.push({
+                        x: new Date(iob["year"], iob["month"], iob["day"]),
+                        y: iob["val"]
+                    })
+                }
+
+                var chart = new CanvasJS.Chart("graph2",
+                    {
+                        title:{
+                            text: "Коэф-т занятости (в шт.)"
+                        },
+                        animationEnabled: true,
+                        axisY:{
+                            includeZero: false,
+                            interval: 10,
+                            valueFormatString: ""
+                        },
+                        data: [
                             {
-                                label: "Занятость",
-                                fill: false,
-                                lineTension: 0.01,
-                                steppedLine: true,
-                                backgroundColor: "rgba(75,192,192,0.4)",
-                                borderColor: "rgba(75,192,192,1)",
-                                borderCapStyle: 'butt',
-                                borderDash: [],
-                                borderDashOffset: 0.0,
-                                borderJoinStyle: 'miter',
-                                pointBorderColor: "rgba(75,192,192,1)",
-                                pointBackgroundColor: "#fff",
-                                pointBorderWidth: 1,
-                                pointHoverRadius: 5,
-                                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                                pointHoverBorderColor: "rgba(220,220,220,1)",
-                                pointHoverBorderWidth: 2,
-                                pointRadius: 1,
-                                pointHitRadius: 10,
-                                data: data_array_rows_dynamic["points"]
+                                type: "stepLine",
+                                toolTipContent: "{x}: {y}%",
+                                markerSize: 5,
+                                dataPoints: dataPoints
                             }
-                        ]
-                    },
-                    options: {
-                        scales: {
-                            xAxes: [{
-                                type: 'time',
-                                time: {
-                                    displayFormats: {
-                                        quarter: 'YYYY/MM/DD'
-                                    }
-                                }
-                            }]
-                        }
-                    }
-                });
 
+                        ]
+                    });
+
+                $('#graph2').css('opacity','1.0').css('display','block');
+                chart.render();
             }
 
         }

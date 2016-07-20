@@ -44,7 +44,7 @@ module C80Estate
             {tag: 'free_areas_count', val: "Площадей свободно: #{free_areas_count}"},
             {tag: 'busy_areas_count', val: "Площадей занято: #{busy_areas_count}"}
         ]
-        result[:graph_dynamic] = _parse_for_js_dynamic_graph_chartjs(self.where(:atype_id => nil).ordered_by_created_at)
+        result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(self.where(:atype_id => nil).ordered_by_created_at)
 
         Rails.logger.debug "<Pstat.busy_coef> busy_areas_count = #{ busy_areas_count }"
         Rails.logger.debug "<Pstat.busy_coef> all_areas_count = #{ all_areas_count }"
@@ -123,11 +123,11 @@ module C80Estate
           if atype_id.nil?
             free_areas_atnow = pstats.where(:atype_id => nil).last.free_areas
             busy_areas_atnow = pstats.where(:atype_id => nil).last.busy_areas
-            graph_data = _parse_for_js_dynamic_graph_chartjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+            graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
           else
             free_areas_atnow = pstats.last.free_areas
             busy_areas_atnow = pstats.last.busy_areas
-            graph_data = _parse_for_js_dynamic_graph_chartjs(pstats.ordered_by_created_at)
+            graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
           end
 
           Rails.logger.debug("\t\t atype_id = #{atype_id}")
@@ -143,7 +143,7 @@ module C80Estate
 
           result[:busy_coef] = sprintf "%.2f%", bcoef
           result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-          result[:abbr] = 'Занятость объекта за указанный период'
+          result[:abbr] = 'Занятость объекта за указанный период: число b/N, где b - кол-во свободных, N - всего площадей'
           result[:title] = "Статистика - Объект - #{property.title}"
           result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
           result[:graph_dynamic] = graph_data
@@ -310,6 +310,33 @@ module C80Estate
       end
       res
 
+    end
+
+    def self._parse_for_js_dynamic_graph_canvasjs(pstats)
+      # res: [
+      #     {
+      #         year
+      #         month
+      #         day
+      #         val
+      #     }
+      # ]
+
+      res = []
+
+      pstats.each do |pstat|
+
+        res << {
+            year: pstat.created_at.strftime('%Y'),
+            month: pstat.created_at.strftime('%m').to_i-1,
+            day: pstat.created_at.strftime('%d'),
+            val: pstat.coef_busy
+        }
+
+      end
+
+      Rails.logger.debug "<Pstat.parse_for_js_graph> res = #{res}"
+      res
     end
 
   end
