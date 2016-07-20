@@ -32,9 +32,12 @@ var fPstatsIndex = function () {
         $ul_props_sq;              // здесь выводим текстовые свойства занятости в метрах
 
 
-    var $div_graph;             // в этом div живет график
-    var $div_graph2;             // в этом div живет график
-    var $div_graph2canvas;
+    var $div_graph;             // в этом div живет график занятости
+    var $div_graph2,             // в этом div живет график занятости
+        $div_graph2canvas;
+
+    var $div_graph3,             // в этом div живет график занятости в метрах
+        $div_graph3canvas;
 
     var fBuild = function () {
 
@@ -69,8 +72,9 @@ var fPstatsIndex = function () {
 
         //$div_graph = $("<div id='graph'></div>").appendTo($div_index_adds);
         $div_graph2 = $("<div id='graph2'></div>").appendTo($div_index_adds);
-            $div_graph2canvas = $("<canvas id='graph2canvas' height='50'></canvas>").appendTo($div_graph2);
-        
+
+        $div_graph3 = $("<div id='graph3'></div>").appendTo($div_index_adds);
+
         $main_content.prepend($div_index_adds);
 
         // теперь покажем
@@ -135,6 +139,10 @@ var fPstatsIndex = function () {
 
                 if (data["graph"] != undefined || data["graph_dynamic"] != undefined) {
                     fDrawChart(data["graph"], data["graph_dynamic"]);
+                }
+
+                if (data["graph_dynamic_sq"] != undefined) {
+                    fDrawChartSq(data["graph_dynamic_sq"]);
                 }
 
                 $h2_page_title.text(data["title"]);
@@ -285,6 +293,65 @@ var fPstatsIndex = function () {
         if (data_array_rows_dynamic != undefined) {
             $('#graph2').css('opacity', '1.0').css('display', 'block');
         }
+
+    };
+
+    var fDrawChartSq = function (data) {
+
+
+        var dataPoints = [];
+        //[
+        //    {x: new Date(2012,0), y: 8.3} ,
+        //    {x: new Date(2012,1), y: 8.3} ,
+        //    {x: new Date(2012,2), y: 8.2} ,
+        //    {x: new Date(2012,3), y: 8.1} ,
+        //    {x: new Date(2012,4), y: 8.2} ,
+        //    {x: new Date(2012,5), y: 8.2} ,
+        //    {x: new Date(2012,6), y: 8.2} ,
+        //    {x: new Date(2012,7), y: 8.1} ,
+        //    {x: new Date(2012,8), y: 7.8} ,
+        //    {x: new Date(2012,9), y: 7.9} ,
+        //    {x: new Date(2012,10), y:7.8} ,
+        //    {x: new Date(2012,11), y:7.8} ,
+        //    {x: new Date(2013,0), y:7.9} ,
+        //    {x: new Date(2013,1), y:7.7} ,
+        //    {x: new Date(2013,2), y:7.6} ,
+        //    {x: new Date(2013,3), y:7.5}
+        //]
+
+        var i, iob;
+        for (i = 0; i < data.length; i ++) {
+            iob = data[i];
+            dataPoints.push({
+                x: new Date(iob["year"], iob["month"], iob["day"]),
+                y: iob["val"]
+            })
+        }
+
+        var chart = new CanvasJS.Chart("graph3",
+            {
+                title:{
+                    text: "Занятость в м.кв."
+                },
+                animationEnabled: true,
+                axisY:{
+                    includeZero: false,
+                    interval: 10,
+                    valueFormatString: ""
+                },
+                data: [
+                    {
+                        type: "stepArea",
+                        toolTipContent: "{x}: {y}%",
+                        markerSize: 5,
+                        dataPoints: dataPoints
+                    }
+
+                ]
+            });
+
+        $('#graph3').css('opacity','1.0').css('display','block');
+        chart.render();
 
     };
 

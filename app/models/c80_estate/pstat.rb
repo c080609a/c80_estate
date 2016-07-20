@@ -58,6 +58,8 @@ module C80Estate
         free_areas_count_sq = Area.free_areas_sq
         busy_areas_count_sq = Area.busy_areas_sq
 
+        result[:graph_dynamic_sq] = _parse_for_js_dynamic_graph3_canvasjs(self.where(:atype_id => nil).ordered_by_created_at)
+
         result[:busy_coef_sq] = sprintf "%.2f%", busy_areas_count_sq*1.0/all_areas_count_sq*100.0
         result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ: с момента самого первого известного события до текущего дня'>C #{ddd} по #{Time.now.year}/#{sprintf "%02d", Time.now.month}/#{sprintf "%02d", Time.now.day}</abbr>"
         result[:abbr_sq] = 'Показана занятость в МЕТРАХ для всех площадей всех объектов недвижимости за весь период'
@@ -175,11 +177,11 @@ module C80Estate
           if atype_id.nil?
             free_areas_atnow_sq = pstats.where(:atype_id => nil).last.free_areas_sq
             busy_areas_atnow_sq = pstats.where(:atype_id => nil).last.busy_areas_sq
-            # graph_data = _parse_for_js_dynamic_graph3_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+            graph_data_sq = _parse_for_js_dynamic_graph3_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
           else
             free_areas_atnow_sq = pstats.last.free_areas_sq
             busy_areas_atnow_sq = pstats.last.busy_areas_sq
-            # graph_data = _parse_for_js_dynamic_graph3_canvasjs(pstats.ordered_by_created_at)
+            graph_data_sq = _parse_for_js_dynamic_graph3_canvasjs(pstats.ordered_by_created_at)
           end
 
           # защищаемся от деления на ноль
@@ -203,6 +205,7 @@ module C80Estate
           result[:title] = "Статистика - Объект - #{property.title}"
           # result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
           result[:graph_dynamic] = graph_data
+          result[:graph_dynamic_sq] = graph_data_sq
 
           # if atype_id.present?
           #   result[:title] += " (#{Atype.find(atype_id).title})"
@@ -267,15 +270,15 @@ module C80Estate
           self.busy_areas_sq = self.property.areas.busy_areas_sq
           self.coef_busy_sq = self.busy_areas_sq*1.0 / (self.free_areas_sq + self.busy_areas_sq) * 100.0
 
-        # здесь считаем коэф-ты для 'atype related записей'
+          # здесь считаем коэф-ты для 'atype related записей'
         else
           self.free_areas = self.property.areas.where(:atype_id => self.atype.id).free_areas.count
           self.busy_areas = self.property.areas.where(:atype_id => self.atype.id).busy_areas.count
-          self.coef_busy = (self.free_areas + self.busy_areas == 0) ? 0:self.busy_areas*1.0 / (self.free_areas + self.busy_areas) * 100.0
+          self.coef_busy = (self.free_areas + self.busy_areas == 0) ? 0 : self.busy_areas*1.0 / (self.free_areas + self.busy_areas) * 100.0
 
           self.free_areas_sq = self.property.areas.where(:atype_id => self.atype.id).free_areas_sq
           self.busy_areas_sq = self.property.areas.where(:atype_id => self.atype.id).busy_areas_sq
-          self.coef_busy_sq = (self.free_areas_sq + self.busy_areas_sq == 0) ? 0:self.busy_areas_sq*1.0 / (self.free_areas_sq + self.busy_areas_sq) * 100.0
+          self.coef_busy_sq = (self.free_areas_sq + self.busy_areas_sq == 0) ? 0 : self.busy_areas_sq*1.0 / (self.free_areas_sq + self.busy_areas_sq) * 100.0
         end
       end
     end
@@ -321,7 +324,7 @@ module C80Estate
       #     ['Занято',      2]
       # ]
 
-      res = [['','']]
+      res = [['', '']]
       res << ['Свободно', free_areas_atnow]
       res << ['Занято', busy_areas_atnow]
       Rails.logger.debug "<_parse_for_js_radial_graph> res: #{res}"
@@ -337,8 +340,8 @@ module C80Estate
       # }
 
       res = {
-          labels:[],
-          points:[]
+          labels: [],
+          points: []
       }
       pstats.each do |pstat|
         label = pstat.created_at.strftime('%Y/%m/%d')
@@ -362,7 +365,7 @@ module C80Estate
 
       res = []
       pstats.each do |pstat|
-        res << [ pstat.created_at.strftime('%Y/%m/%d'), pstat.coef_busy ]
+        res << [pstat.created_at.strftime('%Y/%m/%d'), pstat.coef_busy]
       end
       res
 
@@ -392,6 +395,30 @@ module C80Estate
       end
 
       Rails.logger.debug "<Pstat.parse_for_js_graph> res = #{res}"
+      res
+    end
+
+    def self._parse_for_js_dynamic_graph3_canvasjs(pstats)
+      # res: [
+      #     {
+      #         year
+      #         month
+      #         day
+      #         val
+      #     }
+      # ]
+
+      res = []
+
+      pstats.each do |pstat|
+
+        res << {
+            year: pstat.created_at.strftime('%Y'),
+            month: pstat.created_at.strftime('%m').to_i-1,
+            day: pstat.created_at.strftime('%d'),
+            val: pstat.coef_busy_sq
+        }
+      end
       res
     end
 
