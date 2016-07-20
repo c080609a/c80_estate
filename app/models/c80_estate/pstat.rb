@@ -44,6 +44,8 @@ module C80Estate
             {tag: 'free_areas_count', val: "Площадей свободно: #{free_areas_count}"},
             {tag: 'busy_areas_count', val: "Площадей занято: #{busy_areas_count}"}
         ]
+
+        result[:graph] = _parse_for_js_radial_graph(free_areas_count,busy_areas_count)
         result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(self.where(:atype_id => nil).ordered_by_created_at)
 
         Rails.logger.debug "<Pstat.busy_coef> busy_areas_count = #{ busy_areas_count }"

@@ -221,7 +221,7 @@ var fPstatsIndex = function () {
                 var chart = new CanvasJS.Chart("graph2",
                     {
                         title:{
-                            text: "Коэф-т занятости (в шт.)"
+                            text: "Занятость"
                         },
                         animationEnabled: true,
                         axisY:{
@@ -231,7 +231,7 @@ var fPstatsIndex = function () {
                         },
                         data: [
                             {
-                                type: "stepLine",
+                                type: "stepArea",
                                 toolTipContent: "{x}: {y}%",
                                 markerSize: 5,
                                 dataPoints: dataPoints
