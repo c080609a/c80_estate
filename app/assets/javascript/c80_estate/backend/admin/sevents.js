@@ -21,6 +21,7 @@ var fSeventsIndex = function () {
     var $div_area_text_stats;
     var $ul_props;
     var $div_graph;
+    var $div_graph_canvas;
 
     var fBuild = function () {
 
@@ -51,6 +52,7 @@ var fSeventsIndex = function () {
         $div_area_text_stats.append($ul_props);
 
         $div_graph = $("<div id='graph'></div>");
+        $div_graph_canvas = $("<canvas id='graph_canvas' height='50'></canvas>").appendTo($div_graph);
 
         $div_index_adds.append($div_ecoef);
         $div_index_adds.append($div_area_text_stats);
@@ -126,7 +128,7 @@ var fSeventsIndex = function () {
         fRequest();
     };
 
-    var fDrawChart = function (data_array_rows) {
+    var fDrawChart_google = function (data_array_rows) {
         //data_array = [
         //    ['Director (Year)',  'Rotten Tomatoes', 'IMDB'],
         //    ['Alfred Hitchcock (1935)', 8.4,         7.9],
@@ -173,6 +175,61 @@ var fSeventsIndex = function () {
         }
 
         $('#graph').css('opacity','1.0').css('display','block');
+
+    };
+
+    var fDrawChart = function (data) {
+
+        if (data != undefined) {
+            var ctx = $("#graph_canvas");
+
+            var chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data["labels"],
+                    datasets: [
+                        {
+                            label: "График занята/свободна",
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)',
+                                'rgba(255, 206, 86, 0.2)',
+                                'rgba(75, 192, 192, 0.2)',
+                                'rgba(153, 102, 255, 0.2)',
+                                'rgba(255, 159, 64, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255,99,132,1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1,
+                            barPercentage: 1.0,
+                            categoryPercentage: 0,
+                            data: data["points"]
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            type: 'time',
+                            time: {
+                                displayFormats: {
+                                    quarter: 'YYYY/MM/DD'
+                                }
+                            }
+                        }]
+                    }
+                }
+            });
+
+            $('#graph').css('opacity','1.0');
+
+        }
 
     };
 

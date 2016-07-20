@@ -359,7 +359,7 @@ module C80Estate
       "%dд %dч %dмин % dс" % [dd,hh,mm,ss]
     end
 
-    def self._parse_for_js_graph(sevents)
+    def self._parse_for_js_graph_google(sevents)
       # res = [
       #     ['Year', 'Sales', 'Expenses'],
       #     ['2013',  1000,      400],
@@ -376,6 +376,33 @@ module C80Estate
         res << [ sevent.created_at.strftime('%Y/%m/%d'), v ]
       end
       res
+    end
+
+    def self._parse_for_js_graph(sevents)
+
+
+      # res = {
+      #     labels: ['2016/12/22',...]
+      #     points: [12,13,...]
+      # }
+
+      res = {
+          labels:[],
+          points:[]
+      }
+      sevents.each do |sevent|
+        label = sevent.created_at.strftime('%Y/%m/%d')
+        v = 1
+        if sevent.astatus.tag == 'free'
+          v = 0
+        end
+        res[:labels] << label
+        res[:points] << v
+        Rails.logger.debug "<Sevent.parse_for_js_graph> label = #{label}, point = #{v}"
+      end
+      res
+
+
     end
 
     protected
