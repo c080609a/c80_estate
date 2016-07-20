@@ -20,7 +20,7 @@ module C80Estate
 
     def self.busy_coef(prop_id: nil, atype_id: nil, start_date: nil, end_date: nil)
       # start_date: строка вида 2015-12-12
-
+      # Rails.logger.debug "<Pstat.busy_coef> prop_id = #{prop_id}, atype_id = #{atype_id}"
       result = {}
 
       # обозначим диапазон фильтрации
@@ -78,6 +78,10 @@ module C80Estate
             {tag: 'free_areas_count', val: "Площадей свободно: #{free_areas_atnow}"},
             {tag: 'busy_areas_count', val: "Площадей занято: #{busy_areas_atnow}"}
         ]
+        result[:raw_props] = {}
+        result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
+        result[:raw_props][:free_areas_count] = free_areas_atnow
+        result[:raw_props][:busy_areas_atnow] = busy_areas_atnow
         result[:graph_dynamic] = graph_data
 
         # Rails.logger.debug "<Pstat.busy_coef> busy_areas_count = #{ busy_areas_count }"
@@ -179,7 +183,7 @@ module C80Estate
             # end
           end
 
-          # Занятость
+          # Занятость -----
 
           # если сортируем по типу, то берём последнюю запись,
           # иначе - берём последнюю запись с общими данными
@@ -193,9 +197,9 @@ module C80Estate
             graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
           end
 
-          Rails.logger.debug("\t\t atype_id = #{atype_id}")
-          Rails.logger.debug("\t\t free_areas_atnow = #{free_areas_atnow}")
-          Rails.logger.debug("\t\t busy_areas_atnow = #{busy_areas_atnow}")
+          # Rails.logger.debug("\t\t atype_id = #{atype_id}")
+          # Rails.logger.debug("\t\t free_areas_atnow = #{free_areas_atnow}")
+          # Rails.logger.debug("\t\t busy_areas_atnow = #{busy_areas_atnow}")
 
           # защищаемся от деления на ноль
           if free_areas_atnow + busy_areas_atnow == 0
@@ -208,7 +212,12 @@ module C80Estate
           result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
           result[:abbr] = 'Занятость объекта за указанный период: число b/N, где b - кол-во свободных, N - всего площадей'
 
-          # Занятость в метрах
+          result[:raw_props] = {}
+          result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
+          result[:raw_props][:free_areas_count] = free_areas_atnow
+          result[:raw_props][:busy_areas_atnow] = busy_areas_atnow
+
+          # Занятость в метрах ------
 
           if atype_id.nil?
             free_areas_atnow_sq = pstats.where(:atype_id => nil).last.free_areas_sq
@@ -345,6 +354,11 @@ module C80Estate
         result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
         result[:abbr] = 'Занятость объекта за указанный период: число b/N, где b - кол-во свободных, N - всего площадей'
 
+        result[:raw_props] = {}
+        result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
+        result[:raw_props][:free_areas_count] = free_areas_atnow
+        result[:raw_props][:busy_areas_atnow] = busy_areas_atnow
+
         # Занятость в метрах
 
         free_areas_atnow_sq = pstats.last.free_areas_sq
@@ -388,6 +402,8 @@ module C80Estate
             {tag: 'free_areas_count', val: "<abbr title='В конце указанного периода'>Свободных площадей</abbr>: #{ free_areas_atnow }"},
             {tag: 'busy_areas_count', val: "<abbr title='В конце указанного периода'>Занятых площадей</abbr>: #{ busy_areas_atnow }"}
         ]
+
+        # Rails.logger.debug "result ============= #{result}"
 
       end
 
