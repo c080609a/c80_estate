@@ -20,6 +20,7 @@ var fPstatsIndex = function () {
     var $ul_props;              // здесь выводим текстовые свойства
     var $div_graph;             // в этом div живет график
     var $div_graph2;             // в этом div живет график
+    var $div_graph2canvas;
 
     var fBuild = function () {
 
@@ -49,6 +50,7 @@ var fPstatsIndex = function () {
 
         $div_graph = $("<div id='graph'></div>");
         $div_graph2 = $("<div id='graph2'></div>");
+        $div_graph2canvas = $("<canvas id='graph2canvas'></canvas>").appendTo($div_graph2);
 
         $div_index_adds.append($div_busy_coef);
         $div_index_adds.append($div_area_text_stats);
@@ -99,7 +101,7 @@ var fPstatsIndex = function () {
 
                 }
 
-                if (data["graph"] != undefined) {
+                if (data["graph"] != undefined || data["graph_dynamic"] != undefined) {
                     fDrawChart(data["graph"], data["graph_dynamic"]);
                 }
 
@@ -142,7 +144,7 @@ var fPstatsIndex = function () {
                 chart.draw(data, options);
             }
 
-            if (data_array_rows_dynamic != undefined) {
+            if (data_array_rows_dynamic != undefined && false) {
                 //data_array = [
                 //    ['Director (Year)',  'Rotten Tomatoes', 'IMDB'],
                 //    ['Alfred Hitchcock (1935)', 8.4,         7.9],
@@ -182,6 +184,54 @@ var fPstatsIndex = function () {
                 chart = new google.visualization.SteppedAreaChart(document.getElementById('graph2'));
 
                 chart.draw(data, options);
+            }
+
+            if (data_array_rows_dynamic) {
+
+                var ctx = $("#graph2canvas");
+
+                var chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data_array_rows_dynamic["labels"],
+                        datasets: [
+                            {
+                                label: "Занятость",
+                                fill: false,
+                                lineTension: 0.1,
+                                backgroundColor: "rgba(75,192,192,0.4)",
+                                borderColor: "rgba(75,192,192,1)",
+                                borderCapStyle: 'butt',
+                                borderDash: [],
+                                borderDashOffset: 0.0,
+                                borderJoinStyle: 'miter',
+                                pointBorderColor: "rgba(75,192,192,1)",
+                                pointBackgroundColor: "#fff",
+                                pointBorderWidth: 1,
+                                pointHoverRadius: 5,
+                                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                                pointHoverBorderColor: "rgba(220,220,220,1)",
+                                pointHoverBorderWidth: 2,
+                                pointRadius: 1,
+                                pointHitRadius: 10,
+                                data: data_array_rows_dynamic["points"]
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            xAxes: [{
+                                type: 'time',
+                                time: {
+                                    displayFormats: {
+                                        quarter: 'YYYY/MM/DD'
+                                    }
+                                }
+                            }]
+                        }
+                    }
+                });
+
             }
 
         }

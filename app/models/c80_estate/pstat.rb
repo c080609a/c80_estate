@@ -10,6 +10,8 @@ module C80Estate
     belongs_to :parent, :class_name => 'C80Estate::Pstat'
     has_many :pstats, :foreign_key => 'parent_id', :dependent => :destroy
 
+    scope :ordered_by_created_at, -> { order(created_at: :asc) }
+
     # рассчитаем коэф-ты занятости
     before_create :calc_busy_coefs
 
@@ -42,6 +44,7 @@ module C80Estate
             {tag: 'free_areas_count', val: "Площадей свободно: #{free_areas_count}"},
             {tag: 'busy_areas_count', val: "Площадей занято: #{busy_areas_count}"}
         ]
+        result[:graph_dynamic] = _parse_for_js_dynamic_graph_chartjs(self.where(:atype_id => nil).ordered_by_created_at)
 
         Rails.logger.debug "<Pstat.busy_coef> busy_areas_count = #{ busy_areas_count }"
         Rails.logger.debug "<Pstat.busy_coef> all_areas_count = #{ all_areas_count }"
@@ -120,9 +123,11 @@ module C80Estate
           if atype_id.nil?
             free_areas_atnow = pstats.where(:atype_id => nil).last.free_areas
             busy_areas_atnow = pstats.where(:atype_id => nil).last.busy_areas
+            graph_data = _parse_for_js_dynamic_graph_chartjs(pstats.where(:atype_id => nil).ordered_by_created_at)
           else
             free_areas_atnow = pstats.last.free_areas
             busy_areas_atnow = pstats.last.busy_areas
+            graph_data = _parse_for_js_dynamic_graph_chartjs(pstats.ordered_by_created_at)
           end
 
           Rails.logger.debug("\t\t atype_id = #{atype_id}")
@@ -141,7 +146,7 @@ module C80Estate
           result[:abbr] = 'Занятость объекта за указанный период'
           result[:title] = "Статистика - Объект - #{property.title}"
           result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
-          result[:graph_dynamic] = _parse_for_js_dynamic_graph(pstats)
+          result[:graph_dynamic] = graph_data
 
           # if atype_id.present?
           #   result[:title] += " (#{Atype.find(atype_id).title})"
@@ -268,7 +273,29 @@ module C80Estate
 
     end
 
-    def self._parse_for_js_dynamic_graph(pstats)
+    def self._parse_for_js_dynamic_graph_chartjs(pstats)
+
+      # res = {
+      #     labels: ['2016/12/22',...]
+      #     points: [12,13,...]
+      # }
+
+      res = {
+          labels:[],
+          points:[]
+      }
+      pstats.each do |pstat|
+        label = pstat.created_at.strftime('%Y/%m/%d')
+        point = pstat.coef_busy
+        res[:labels] << label
+        res[:points] << point
+        Rails.logger.debug "<_parse_for_js_dynamic_graph_chartjs> label = #{label}, point = #{point}"
+      end
+      res
+
+    end
+
+    def self._parse_for_js_dynamic_graph_google_charts(pstats)
       # res = [
       #     ['Year', 'Sales', 'Expenses'],
       #     ['2013',  1000,      400],
