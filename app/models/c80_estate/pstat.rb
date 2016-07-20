@@ -70,7 +70,7 @@ module C80Estate
         # common
 
         result[:title] = 'Статистика - Все объекты недвижимости'
-        result[:graph] = _parse_for_js_radial_graph(free_areas_count,busy_areas_count)
+        # result[:graph] = _parse_for_js_radial_graph(free_areas_count,busy_areas_count)
         result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(self.where(:atype_id => nil).ordered_by_created_at)
 
         # если фильтруем по property
@@ -141,6 +141,8 @@ module C80Estate
             # end
           end
 
+          # Занятость
+
           # если сортируем по типу, то берём последнюю запись,
           # иначе - берём последнюю запись с общими данными
           if atype_id.nil?
@@ -167,8 +169,39 @@ module C80Estate
           result[:busy_coef] = sprintf "%.2f%", bcoef
           result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
           result[:abbr] = 'Занятость объекта за указанный период: число b/N, где b - кол-во свободных, N - всего площадей'
+
+          # Занятость в метрах
+
+          if atype_id.nil?
+            free_areas_atnow_sq = pstats.where(:atype_id => nil).last.free_areas_sq
+            busy_areas_atnow_sq = pstats.where(:atype_id => nil).last.busy_areas_sq
+            # graph_data = _parse_for_js_dynamic_graph3_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+          else
+            free_areas_atnow_sq = pstats.last.free_areas_sq
+            busy_areas_atnow_sq = pstats.last.busy_areas_sq
+            # graph_data = _parse_for_js_dynamic_graph3_canvasjs(pstats.ordered_by_created_at)
+          end
+
+          # защищаемся от деления на ноль
+          if busy_areas_atnow_sq + free_areas_atnow_sq == 0
+            bcoef_sq = 0.0
+          else
+            bcoef_sq = busy_areas_atnow_sq*1.0/(busy_areas_atnow_sq + free_areas_atnow_sq)*100.0
+          end
+
+          result[:busy_coef_sq] = sprintf "%.2f%", bcoef_sq
+          result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ КВ'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
+          result[:abbr_sq] = 'Занятость объекта в МЕТРАХ за указанный период: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
+          result[:props_sq] = [
+              {tag: 'all_areas_count_sq', val: "Кв.м. всего: #{busy_areas_atnow_sq + free_areas_atnow_sq}"},
+              {tag: 'free_areas_count_sq', val: "Свободных: #{free_areas_atnow_sq}"},
+              {tag: 'busy_areas_count_sq', val: "Занятых: #{busy_areas_atnow_sq}"}
+          ]
+
+          # common
+
           result[:title] = "Статистика - Объект - #{property.title}"
-          result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
+          # result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
           result[:graph_dynamic] = graph_data
 
           # if atype_id.present?
