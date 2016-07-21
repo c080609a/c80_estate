@@ -13,24 +13,24 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
 
   config.sort_order = 'id_asc'
 
-  # filter :property_id,
-  #        :as => :select,
-  #        :collection => -> { C80Estate::Property.all.map { |p| ["#{p.title}", p.id] } },
-  #        :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
+  filter :property_id,
+         :as => :select,
+         :collection => -> { C80Estate::Property.all.map { |p| ["#{p.title}", p.id] } },
+         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :area_id,
          :as => :select,
          :collection => -> { C80Estate::Area.all.map { |a|
            ["#{a.property.title}: #{a.title}", a.id]
          } },
          :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
-  # filter :atype_id,
-  #        :as => :select,
-  #        :collection => -> { C80Estate::Atype.all.map { |p| ["#{p.title}", p.id] } },
-  #        :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
-  # filter :auser_id,
-  #        :as => :select,
-  #        :collection => -> { AdminUser.all.map { |u| ["#{u.email}", u.id] } },
-  #        :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
+  filter :atype_id,
+         :as => :select,
+         :collection => -> { C80Estate::Atype.all.map { |p| ["#{p.title}", p.id] } },
+         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
+  filter :auser_id,
+         :as => :select,
+         :collection => -> { AdminUser.all.map { |u| ["#{u.email}", u.id] } },
+         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :created_at
   # filter :updated_at
 
@@ -45,6 +45,12 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
     end
     column :astatus do |sevent|
       sevent.astatus_title
+    end
+    column :atype do |sevent|
+      sevent.atype.title
+    end
+    column :auser do |sevent|
+      sevent.auser_title
     end
     column :created_at
     column :property do |sevent|

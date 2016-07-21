@@ -1,0 +1,25 @@
+<table border="0" cellspacing="0" cellpadding="0" id="index_table_sevents" class="index_table index" paginator="true">
+  <thead>
+  <tr>
+    <th class="col col-prop">Объект</th>
+    <th class="col col-coef">Занятость в м.кв.</th>
+    <th class="col col-all">Всего м.кв.</th>
+    <th class="col col-free">Свободно</th>
+    <th class="col col-busy">Занято</th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <% list.each do |obj| %>
+  <%# Rails.logger.debug "#{obj}" %>
+    <tr>
+      <td><%= obj[:title] %></td>
+      <td><%= obj[:busy_coef] %></td>
+      <% obj[:props].each_key do |key| %>
+        <td><%= obj[:props][key] %></td>
+      <% end %>
+    </tr>
+  <% end %>
+
+  </tbody>
+</table>

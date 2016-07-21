@@ -69,6 +69,11 @@ body.admin_sevents {
             -ms-transition: opacity .2s ease-in;
             -o-transition: opacity .2s ease-in;
             transition: opacity .2s ease-in;
+
+            #graph_canvas {
+              width: 100%;
+            }
+
           }
 
         }

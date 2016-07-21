@@ -7,6 +7,7 @@ module C80Estate
     belongs_to :auser, :polymorphic => true
     has_many :pstats, :dependent => :destroy
 
+    # нужен только при заполнении из rake db:seed:85_fill_sevents
     after_create :generate_pstat
 
 =begin
@@ -358,7 +359,7 @@ module C80Estate
       "%dд %dч %dмин % dс" % [dd,hh,mm,ss]
     end
 
-    def self._parse_for_js_graph(sevents)
+    def self._parse_for_js_graph_google(sevents)
       # res = [
       #     ['Year', 'Sales', 'Expenses'],
       #     ['2013',  1000,      400],
@@ -377,8 +378,71 @@ module C80Estate
       res
     end
 
+    def self._parse_for_js_graph_graphjs(sevents)
+
+
+      # res = {
+      #     labels: ['2016/12/22',...]
+      #     points: [12,13,...]
+      # }
+
+      res = {
+          labels:[],
+          points:[]
+      }
+      sevents.each do |sevent|
+        label = sevent.created_at.strftime('%Y/%m/%d')
+        v = 1
+        if sevent.astatus.tag == 'free'
+          v = 0
+        end
+        res[:labels] << label
+        res[:points] << v
+        Rails.logger.debug "<Sevent.parse_for_js_graph> label = #{label}, point = #{v}"
+      end
+      res
+
+
+    end
+
+    def self._parse_for_js_graph(sevents)
+
+      # res: [
+      #     {
+      #         year
+      #         month
+      #         day
+      #         val
+      #     }
+      # ]
+
+      res = []
+
+      sevents.each do |sevent|
+
+        v = 1
+        if sevent.astatus.tag == 'free'
+          v = 0
+        end
+
+        res << {
+            year: sevent.created_at.strftime('%Y'),
+            month: sevent.created_at.strftime('%m').to_i-1,
+            day: sevent.created_at.strftime('%d'),
+            val: v
+        }
+
+      end
+
+      Rails.logger.debug "<Sevent.parse_for_js_graph> res = #{res}"
+      res
+
+    end
+
     protected
 
+    # раскомментировать перед исполнением rake db:seed:85_fill_sevents
+    # после - закомментить обратно
     def generate_pstat
 
       # pparams = {

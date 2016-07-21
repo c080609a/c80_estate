@@ -14,14 +14,14 @@ module C80Estate
                                   !attributes[:prop_name_id].present?
                                   },
                                   :allow_destroy => true
-    has_many :aphotos, :dependent => :destroy   # одна или несколько фоток
+    has_many :aphotos, :dependent => :destroy # одна или несколько фоток
     accepts_nested_attributes_for :aphotos,
                                   :reject_if => lambda { |attributes|
                                     !attributes.present?
                                   },
                                   :allow_destroy => true
-    has_many :comments, :dependent => :destroy   # площадь можно прокомментировать
-    has_and_belongs_to_many :astatuses,         # единственный статус: либо занята, либо свободна
+    has_many :comments, :dependent => :destroy # площадь можно прокомментировать
+    has_and_belongs_to_many :astatuses, # единственный статус: либо занята, либо свободна
                             :join_table => 'c80_estate_areas_astatuses'
 
     has_many :sevents, :dependent => :destroy
@@ -34,21 +34,46 @@ module C80Estate
     end
 
     def self.free_areas
-      self.joins(:astatuses).where(:c80_estate_astatuses => { tag: 'free'})
+      self.joins(:astatuses).where(:c80_estate_astatuses => {tag: 'free'})
     end
 
     # посчитает кол-во свободных метров
     def self.free_areas_sq
-      1
+      sum = 0
+      self.free_areas.each do |area|
+        area_prop_square = area.item_props.where(:prop_name_id => 9)
+        if area_prop_square.present?
+          sum += area_prop_square.first.value.to_i
+        end
+      end
+      sum
     end
 
     def self.busy_areas
-      self.joins(:astatuses).where(:c80_estate_astatuses => { tag: 'busy'})
+      self.joins(:astatuses).where(:c80_estate_astatuses => {tag: 'busy'})
     end
 
     # посчитает кол-во занятых метров
     def self.busy_areas_sq
-      1
+      sum = 0
+      self.busy_areas.each do |area|
+        area_prop_square = area.item_props.where(:prop_name_id => 9)
+        if area_prop_square.present?
+          sum += area_prop_square.first.value.to_i
+        end
+      end
+      sum
+    end
+
+    def self.all_areas_sq
+      sum = 0
+      self.all.each do |area|
+        area_prop_square = area.item_props.where(:prop_name_id => 9)
+        if area_prop_square.present?
+          sum += area_prop_square.first.value.to_i
+        end
+      end
+      sum
     end
 
     def atype_title
@@ -110,14 +135,14 @@ module C80Estate
         Rails.logger.debug "<Area.create_initial_sevent> aga: self.astatuses.first.title = #{self.astatuses.first.title}"
 
         s = Sevent.create!({
-                           area_id: self.id,
-                           atype_id: self.atype_id,
-                           property_id: self.property_id,
-                           astatus_id: self.astatus_id,
-                           auser_id: self.owner_id, # инициатор события - создатель Площади
-                           auser_type: 'AdminUser',
-                           created_at: self.created_at
-                       })
+                               area_id: self.id,
+                               atype_id: self.atype_id,
+                               property_id: self.property_id,
+                               astatus_id: self.astatus_id,
+                               auser_id: self.owner_id, # инициатор события - создатель Площади
+                               auser_type: 'AdminUser',
+                               created_at: self.created_at
+                           })
 
         # см [*]
         # if last_known_sevent == ''

@@ -13,7 +13,9 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
                 :owner_id,
                 :owner_type,
                 :assigned_person_id,
-                :assigned_person_type
+                :assigned_person_type,
+                :pphotos_attributes => [:id,:image,:_destroy],
+                :plogos_attributes => [:id,:image,:_destroy]
 
   config.sort_order = 'id_asc'
 
@@ -60,6 +62,12 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
         gp.input :image,
                  :as => :file,
                  :hint => image_tag(gp.object.image.thumb512)
+      end
+
+      f.has_many :plogos, :allow_destroy => true do |gp|
+        gp.input :image,
+                 :as => :file,
+                 :hint => image_tag(gp.object.image.thumb128)
       end
 
     end
