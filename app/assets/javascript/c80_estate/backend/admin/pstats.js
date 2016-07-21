@@ -39,7 +39,7 @@ var fPstatsIndex = function () {
     var $div_graph3,             // в этом div живет график занятости в метрах
         $div_graph3canvas;
 
-    var $ajax_div;
+    var $ajax_div, $ajax_div2;
 
     var fBuild = function () {
 
@@ -52,6 +52,7 @@ var fPstatsIndex = function () {
         $h2_page_title = $("h2#page_title");
 
         $ajax_div = $("<div id='ajax_div'></div>");
+        $ajax_div2 = $("<div id='ajax_div2'></div>");
 
         // построим компонент "над таблицей"
         $div_index_adds = $("<div id='index_adds'></div>");
@@ -79,6 +80,7 @@ var fPstatsIndex = function () {
 
         $div_graph3 = $("<div id='graph3'></div>").appendTo($div_index_adds);
 
+        $main_content.prepend($ajax_div2);
         $main_content.prepend($ajax_div);
         $main_content.prepend($div_index_adds);
 
@@ -175,7 +177,17 @@ var fPstatsIndex = function () {
         }).done(function (data, result) {
             //alert(result);
         });
-    }
+
+        $.ajax({
+            url:'/estate/table_properties_coef_busy_sq',
+            type:'POST',
+            data:{atype_id: atype_id},
+            dataType:'script'
+        }).done(function (data, result) {
+            //alert(result);
+        });
+
+    };
 
     var fInit = function () {
         fBuild();

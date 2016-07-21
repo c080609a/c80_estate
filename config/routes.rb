@@ -4,5 +4,6 @@ C80Estate::Engine.routes.draw do
   match '/estate/properties_busy_coef', :to => 'ajax#properties_busy_coef', :via => :post
 
   match '/estate/table_properties_coef_busy', :to => 'ajax_view#table_properties_coef_busy', :via => :post
+  match '/estate/table_properties_coef_busy_sq', :to => 'ajax_view#table_properties_coef_busy_sq', :via => :post
 
 end

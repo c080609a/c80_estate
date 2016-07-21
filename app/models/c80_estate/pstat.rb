@@ -112,11 +112,16 @@ module C80Estate
             {tag: 'free_areas_count_sq', val: "Свободных: #{free_areas_atnow_sq}"},
             {tag: 'busy_areas_count_sq', val: "Занятых: #{busy_areas_atnow_sq}"}
         ]
+        result[:raw_props_sq] = {}
+        result[:raw_props_sq][:all_areas_count_sq] = free_areas_atnow_sq + busy_areas_atnow_sq
+        result[:raw_props_sq][:free_areas_count_sq] = free_areas_atnow_sq
+        result[:raw_props_sq][:busy_areas_atnow_sq] = busy_areas_atnow_sq
         result[:graph_dynamic_sq] = graph_data_sq
 
         # common
 
         result[:title] = 'Статистика - Все объекты недвижимости'
+        # Rails.logger.debug "result ============= #{result}"
 
         # если фильтруем по property
       elsif prop_id.present?
@@ -247,6 +252,11 @@ module C80Estate
               {tag: 'free_areas_count_sq', val: "Свободных: #{free_areas_atnow_sq}"},
               {tag: 'busy_areas_count_sq', val: "Занятых: #{busy_areas_atnow_sq}"}
           ]
+
+          result[:raw_props_sq] = {}
+          result[:raw_props_sq][:all_areas_count_sq] = free_areas_atnow_sq + busy_areas_atnow_sq
+          result[:raw_props_sq][:free_areas_count_sq] = free_areas_atnow_sq
+          result[:raw_props_sq][:busy_areas_atnow_sq] = busy_areas_atnow_sq
 
           # common
 
@@ -385,6 +395,11 @@ module C80Estate
             {tag: 'free_areas_count_sq', val: "Свободных: #{free_areas_atnow_sq}"},
             {tag: 'busy_areas_count_sq', val: "Занятых: #{busy_areas_atnow_sq}"}
         ]
+
+        result[:raw_props_sq] = {}
+        result[:raw_props_sq][:all_areas_count_sq] = free_areas_atnow_sq + busy_areas_atnow_sq
+        result[:raw_props_sq][:free_areas_count_sq] = free_areas_atnow_sq
+        result[:raw_props_sq][:busy_areas_atnow_sq] = busy_areas_atnow_sq
 
         # common
 
