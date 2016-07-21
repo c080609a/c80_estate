@@ -1,0 +1,43 @@
+body.admin_dashboard {
+
+  p.title {
+    font-size: 17px;
+  }
+
+  .columns {
+    margin-bottom: 30px;
+  }
+
+  .panel {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+
+    > h3 {
+      background-color: #5e7188 !important;
+      background-image: none !important;
+      text-shadow: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      line-height: 30px !important;;
+      margin-bottom: 0.5em;
+      color: #ffffff !important;
+      padding: 5px 10px 3px 10px;
+    }
+
+    .panel_contents {
+      padding: 10px 0 !important;
+      border-bottom: none !important;
+    }
+
+    table {
+      th {
+        background-color: #ffffff !important;
+        border-bottom: 1px solid #cecece !important;
+        line-height: 5px !important;
+        background-image: none !important;
+        color: #288feb !important;
+      }
+    }
+  }
+
+}

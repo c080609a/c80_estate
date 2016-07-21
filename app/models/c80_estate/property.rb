@@ -10,6 +10,12 @@ module C80Estate
                                     !attributes.present?
                                   },
                                   :allow_destroy => true
+    has_many :plogos, :dependent => :destroy   # одна или несколько фоток
+    accepts_nested_attributes_for :plogos,
+                                  :reject_if => lambda { |attributes|
+                                    !attributes.present?
+                                  },
+                                  :allow_destroy => true
     has_many :areas, :dependent => :destroy
     has_many :comments, :dependent => :destroy
     has_many :sevents, :dependent => :destroy
@@ -21,6 +27,14 @@ module C80Estate
         res = assigned_person.email
       end
       res
+    end
+
+    def logo_path
+      url = 'property_default_logo.png'
+      if plogos.count > 0
+        url = plogos.first.image.thumb256
+      end
+      url
     end
 
   end

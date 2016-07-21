@@ -1,0 +1,29 @@
+a.atype_in_list {
+  display: block;
+  float: left;
+  min-width: 150px;
+  margin-right: 30px;
+  border: 2px solid #ededed;
+  border-radius: 3px;
+  line-height: 44px;
+  padding: 0 20px;
+  margin-bottom: 10px;
+
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none;
+  font-weight: bold;
+  color: #288feb;
+  font-size: 15px;
+
+  &:hover { color: #2990ed; background-color: #e4e4e4; text-decoration: none;}
+  &:active { color: #18558c; }
+  &:focus { color: #164f82; }
+
+  -webkit-transition: all .2s ease-in;
+  -moz-transition: all .2s ease-in;
+  -ms-transition: all .2s ease-in;
+  -o-transition: all .2s ease-in;
+  transition: all .2s ease-in;
+
+}
