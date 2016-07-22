@@ -76,6 +76,37 @@ module C80Estate
       sum
     end
 
+    def self.where_price(v)
+      self.joins(:item_props)
+          .where(c80_estate_item_props: {prop_name_id: 1})
+          .where(c80_estate_item_props: {value: v})
+    end
+
+    def self.where_square(v)
+      C80Estate::Area.joins(:item_props)
+          .where(c80_estate_item_props: {prop_name_id: 9})
+          .where(c80_estate_item_props: {value: v})
+    end
+
+    def self.where_oenter(v)
+      # Rails.logger.debug "\t\t [2]: v = #{v}"
+      r = C80Estate::Area.joins(:item_props)
+              .where(c80_estate_item_props: {prop_name_id: 8})
+      if v.to_i == 11
+        r = r.where(c80_estate_item_props: {value: 1})
+      else
+        r = r.where.not(c80_estate_item_props: {value: 1})
+      end
+      r
+    end
+
+    def self.where_floor(v)
+      # Rails.logger.debug "\t\t [2]: v = #{v}"
+      C80Estate::Area.joins(:item_props)
+          .where(c80_estate_item_props: {prop_name_id: 5})
+          .where(c80_estate_item_props: {value: v})
+    end
+
     def atype_title
       res = "-"
       if atype.present?
@@ -122,6 +153,46 @@ module C80Estate
         res = owner.id
       end
       res
+    end
+
+    ransacker :item_prop_price_val,
+              formatter: proc { |price|
+                results = C80Estate::Area.where_price(price).map(&:id)
+                results = results.present? ? results : nil
+              }, splat_params: true do |parent|
+      parent.table[:id]
+    end
+
+    ransacker :item_prop_square_val,
+              formatter: proc { |square|
+                results = C80Estate::Area.where_square(square).map(&:id)
+                results = results.present? ? results : nil
+              }, splat_params: true do |parent|
+      parent.table[:id]
+    end
+
+    ransacker :item_prop_floor_val,
+              formatter: proc { |v|
+                results = C80Estate::Area.where_floor(v).map(&:id)
+                results = results.present? ? results : nil
+              }, splat_params: true do |parent|
+      parent.table[:id]
+    end
+
+    ransacker :item_prop_oenter,
+              formatter: proc { |option|
+                # Неважно: -1
+                # Да: 1
+                # Нет: 0
+                Rails.logger.debug "\t\t [1]: option = #{option}"
+
+                if option.to_i == 10 || option.to_i == 11
+                  results = C80Estate::Area.where_oenter(option).map(&:id)
+                end
+
+                results = results.present? ? results : nil
+              }, splat_params: true do |parent|
+      parent.table[:id]
     end
 
     protected
