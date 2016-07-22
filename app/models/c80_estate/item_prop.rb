@@ -7,6 +7,11 @@ module C80Estate
 
     before_save :before_save_format_value
 
+    def self.all_uniq_values(prop_name_id)
+      self.where(prop_name_id: prop_name_id)
+          .map { |ip| ip.value }.uniq
+    end
+
     private
 
     def self.capz

@@ -18,12 +18,40 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
   config.sort_order = 'id_asc'
 
-  filter :title
+  filter :atype_id,
+         :label => 'Тип площади',
+         :as => :select,
+         :collection => -> {C80Estate::Atype.all.map { |p| ["#{p.title}", p.id]}},
+         :input_html => { :class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :property_id,
+         :label => 'Объект недвижимости',
          :as => :select,
          :collection => -> {C80Estate::Property.all.map { |p| ["#{p.title}", p.id]}},
          :input_html => { :class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
+
+  filter :item_prop_square_val_in,
+         :as => :string,
+         :label => 'Площадь (м.кв.)'
+
+  filter :item_prop_price_val_in,
+         :as => :string,
+         :label => 'Цена'
+
+  filter :item_prop_oenter_in,
+         :as => :select,
+         :collection => [['Есть',11],['Нет',10]],
+         :label => 'Отдельный вход с улицы',
+         :input_html => { :class => 'selectpicker', 'data-size' => "3", 'data-width' => '100%'}
+
+  filter :item_prop_floor_val_in,
+         :as => :select,
+         :collection => -> { C80Estate::ItemProp.all_uniq_values(5) },
+         :label => 'Этаж',
+         :input_html => { :class => 'selectpicker', 'data-size' => "3", 'data-width' => '100%'}
+
+  # filter :title
   filter :assigned_person_id,
+         :label => 'Назначенный пользователь',
          :as => :select,
          :collection => -> {AdminUser.all.map{|u| ["#{u.email}", u.id]}},
          :input_html => { :class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}

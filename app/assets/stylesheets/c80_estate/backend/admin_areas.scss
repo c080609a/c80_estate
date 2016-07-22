@@ -105,5 +105,9 @@ body.admin_areas {
       legend { display: none !important; }
     }
 
+    a.delete_link {
+      display: none;
+    }
+
   }
 }

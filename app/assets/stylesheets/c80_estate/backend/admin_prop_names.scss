@@ -1,0 +1,18 @@
+body.admin_prop_names {
+
+  &.index {
+
+    a.delete_link {
+      display: none !important;
+    }
+
+  }
+
+
+  &.show {
+    .action_items {
+      display: none !important;
+    }
+  }
+
+}
