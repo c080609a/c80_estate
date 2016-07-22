@@ -1,0 +1,104 @@
+ru:
+  activerecord:
+    models:
+      area:
+        one: "площадь"
+        other: "Площади"
+      c80_news_tz/nphoto: ""
+      c80_news_tz/gallery: ""
+      c80_news_tz/gphoto: "картинку"
+      c80_news_tz/cphoto: ""
+      c80_news_tz/fphoto: ""
+      c80_news_tz/adress: ""
+      property:
+        one: "объект"
+        other: "Объекты"
+      uom:
+        one: 'единицу измерения'
+        other: 'Единицы измерения'
+      prop_name:
+        one: 'имя свойства'
+        other: 'Имена свойств'
+      role_type:
+        one: 'роль'
+        other: 'Роли'
+      astatus:
+        one: 'статус'
+        other: 'Статусы'
+      atype:
+        one: 'тип'
+        other: 'Типы площадей'
+      admin_user:
+        one: 'пользователя'
+        other: 'Пользователи'
+    attributes:
+      c80_estate/area:
+        title: "Название"
+        atype: 'Тип'
+        property: 'Объект'
+        astatus: 'Статус'
+        assigned_person: 'Ответственный'
+        created_at: 'Время создания'
+        updated_at: 'Изменён'
+      c80_news_tz/nphoto:
+        image: 'Файл'
+      c80_news_tz/adress:
+        locality: 'Город'
+        street: 'Улица'
+        telephone_1: 'Телефон №1'
+        telephone_2: 'Телефон №2'
+        telephone_3: 'Телефон №3'
+        latitude: 'Широта'
+        longitude: 'Долгота'
+        email_1: 'Email №1'
+        email_2: 'Email №2'
+        site_1: 'Сайт №1'
+        site_2: 'Сайт №2'
+      c80_news_tz/company:
+        title: 'Название'
+        activity_type: 'Род деятельности'
+        desc: 'Описание'
+        facts: 'Публикации'
+      c80_news_tz/gallery:
+        title: 'Название галереи'
+      c80_news_tz/fact:
+        title: 'Заголовок'
+        created_at: 'Дата создания'
+        short: 'Кратко'
+        rubrics: 'Рубрики'
+        issues: 'Номер'
+        issue: 'Номер'
+        leader_abz: 'Лидер абзац'
+        full: ''
+        companies: ''
+      c80_news_tz/issue:
+        number: 'Номер'
+        pdf: 'PDF'
+        pdfs: 'PDF'
+        facts: 'Публикации'
+      c80_news_tz/rubric:
+        title: 'Название'
+        facts: 'Публикации'
+      c80_news_tz/location:
+        title: 'Название'
+        facts: 'Публикация'
+      c80_news_tz/r_live:
+        title: 'Название'
+        r_advertisers: 'Рекламодатель'
+      c80_news_tz/r_advertiser:
+        title: 'Название'
+        logo: 'Лого'
+        r_blurbs: 'Публикации'
+      c80_news_tz/r_blurb:
+        title: 'Заголовок'
+        created_at: 'Дата создания'
+        short: 'Кратко'
+        rubrics: 'Рубрики'
+        issues: 'Номер'
+        issue: 'Номер'
+        leader_abz: 'Лидер абзац'
+        full: ''
+        r_advertisers: ''
+      c80_news_tz/spot:
+        title: 'Название'
+        rubrics: 'Рубрика'

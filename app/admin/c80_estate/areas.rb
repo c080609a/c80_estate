@@ -19,10 +19,12 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
   config.sort_order = 'id_asc'
 
   filter :atype_id,
+         :label => 'Тип площади',
          :as => :select,
          :collection => -> {C80Estate::Atype.all.map { |p| ["#{p.title}", p.id]}},
          :input_html => { :class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :property_id,
+         :label => 'Объект недвижимости',
          :as => :select,
          :collection => -> {C80Estate::Property.all.map { |p| ["#{p.title}", p.id]}},
          :input_html => { :class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
@@ -49,6 +51,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
   # filter :title
   filter :assigned_person_id,
+         :label => 'Назначенный пользователь',
          :as => :select,
          :collection => -> {AdminUser.all.map{|u| ["#{u.email}", u.id]}},
          :input_html => { :class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
