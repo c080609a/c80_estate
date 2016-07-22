@@ -76,10 +76,11 @@ module C80Estate
       sum
     end
 
-    def self.where_price(v)
+    def self.where_price_range(range)
       self.joins(:item_props)
           .where(c80_estate_item_props: {prop_name_id: 1})
-          .where(c80_estate_item_props: {value: v})
+          .where('c80_estate_item_props.value > ?', range.split(',')[0].to_i-1)
+          .where('c80_estate_item_props.value < ?', range.split(',')[1].to_i+1)
     end
 
     def self.where_square(v)
@@ -156,8 +157,8 @@ module C80Estate
     end
 
     ransacker :item_prop_price_val,
-              formatter: proc { |price|
-                results = C80Estate::Area.where_price(price).map(&:id)
+              formatter: proc { |price_range| # 10,156
+                results = C80Estate::Area.where_price_range(price_range).map(&:id)
                 results = results.present? ? results : nil
               }, splat_params: true do |parent|
       parent.table[:id]

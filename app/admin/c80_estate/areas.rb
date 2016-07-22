@@ -35,7 +35,17 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
   filter :item_prop_price_val_in,
          :as => :string,
-         :label => 'Цена'
+         :label => 'Цена (руб/м.кв в месяц)',
+         :input_html => { data: {
+              provide: 'slider',
+              slider_ticks: C80Estate::ItemProp.all_uniq_values(1).to_json,   #'[0, 1, 2, 3]',
+              slider_labels: C80Estate::ItemProp.all_uniq_values(1).to_json,  #'["none", short", "medium","long"]',
+              slider_min: C80Estate::ItemProp.all_uniq_values(1).last,
+              slider_max: C80Estate::ItemProp.all_uniq_values(1).first,
+              slider_step: 1,
+              slider_value: 0,
+              slider_range: true
+         }}
 
   filter :item_prop_oenter_in,
          :as => :select,
