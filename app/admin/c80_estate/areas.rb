@@ -29,9 +29,23 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
          :collection => -> {C80Estate::Property.all.map { |p| ["#{p.title}", p.id]}},
          :input_html => { :class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
 
+  # filter :item_prop_square_val_in,
+  #        :as => :string,
+  #        :label => 'Площадь (м.кв.)'
+
   filter :item_prop_square_val_in,
          :as => :string,
-         :label => 'Площадь (м.кв.)'
+         :label => 'Площадь (м.кв.)',
+         :input_html => { data: {
+             provide: 'slider',
+             slider_ticks: C80Estate::ItemProp.all_uniq_values(9).to_json,   #'[0, 1, 2, 3]',
+             slider_labels: C80Estate::ItemProp.all_uniq_values(9).to_json,  #'["none", short", "medium","long"]',
+             slider_min: C80Estate::ItemProp.all_uniq_values(9).last,
+             slider_max: C80Estate::ItemProp.all_uniq_values(9).first,
+             slider_step: 1,
+             slider_value: 0,
+             slider_range: true
+         }}
 
   filter :item_prop_price_val_in,
          :as => :string,

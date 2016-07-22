@@ -83,10 +83,11 @@ module C80Estate
           .where('c80_estate_item_props.value < ?', range.split(',')[1].to_i+1)
     end
 
-    def self.where_square(v)
+    def self.where_square_range(range)
       C80Estate::Area.joins(:item_props)
           .where(c80_estate_item_props: {prop_name_id: 9})
-          .where(c80_estate_item_props: {value: v})
+          .where('c80_estate_item_props.value > ?', range.split(',')[0].to_i-1)
+          .where('c80_estate_item_props.value < ?', range.split(',')[1].to_i+1)
     end
 
     def self.where_oenter(v)
@@ -165,8 +166,8 @@ module C80Estate
     end
 
     ransacker :item_prop_square_val,
-              formatter: proc { |square|
-                results = C80Estate::Area.where_square(square).map(&:id)
+              formatter: proc { |square_range|
+                results = C80Estate::Area.where_square_range(square_range).map(&:id)
                 results = results.present? ? results : nil
               }, splat_params: true do |parent|
       parent.table[:id]
