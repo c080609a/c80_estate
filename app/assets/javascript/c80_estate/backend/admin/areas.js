@@ -417,7 +417,20 @@ var fEdit = function () {
     fLoadingShow();
 };
 
+var fAreasIndex = function () {
+
+    //var $input_square_min = $('<input type="text" class="min_text_input"/>')
+    //    .appendTo($("#q_item_prop_square_val_in").parent());
+    //
+    //var $input_square_max = $('<input type="text" class="max_text_input"/>')
+    //    .appendTo($("#q_item_prop_square_val_in").parent());
+
+    
+
+};
+
 YOUR_APP.areas = {
     edit: fEdit,
-    "new": jsinit.go
+    "new": jsinit.go,
+    index: fAreasIndex
 };

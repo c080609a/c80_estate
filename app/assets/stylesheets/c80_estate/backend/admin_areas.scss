@@ -123,5 +123,19 @@ body.admin_areas {
     margin-top: 0 !important;
   }
 
+  &.index {
+
+    .min_text_input {
+      margin-top: 15px;
+      width: 45% !important;
+    }
+
+    .max_text_input {
+      margin-top: 15px;
+      width: 45% !important;
+      margin-left: 10%;
+    }
+
+  }
 
 }
