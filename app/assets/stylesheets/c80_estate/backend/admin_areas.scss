@@ -107,10 +107,6 @@ body.admin_areas {
 
   }
 
-  a.delete_link {
-    display: none;
-  }
-
   .slider.slider-horizontal {
     width: 227px !important;
   }
@@ -135,6 +131,14 @@ body.admin_areas {
       width: 45% !important;
       margin-left: 10%;
     }
+
+    a.delete_link {
+      /*display: none;*/
+    }
+
+  }
+
+  &.show {
 
   }
 

@@ -17,6 +17,16 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
                 :pphotos_attributes => [:id,:image,:_destroy],
                 :plogos_attributes => [:id,:image,:_destroy]
 
+  batch_action :destroy, false
+
+  config.clear_action_items!
+
+  action_item :new_model, :only => :index do
+    if current_admin_user.can_create_properties?
+      link_to I18n.t("active_admin.new_model"), '/admin/properties/new', method: :get
+    end
+  end
+
   config.sort_order = 'id_asc'
 
   filter :title
@@ -40,7 +50,17 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
     # column :atype do |prop|
     #   prop.atype.title
     # end
-    actions
+    # actions
+
+    column '' do |property|
+      link_to I18n.t("active_admin.view"), "/admin/properties/#{property.id}", class: 'member_link'
+    end
+    column '' do |property|
+      if current_admin_user.can_edit_property?(property)
+        link_to I18n.t("active_admin.edit"), "/admin/properties/#{property.id}/edit", class: 'member_link'
+      end
+    end
+
   end
 
   form(:html => {:multipart => true}) do |f|
@@ -52,8 +72,12 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
               :collection => AdminUser.all.map{|u| ["#{u.email}", u.id]}
       f.input :assigned_person_type, :input_html => { :value => "AdminUser" }, as: :hidden
       # f.input :atype, :input_html => { :class => 'selectpicker', 'data-size' => "5", 'data-width' => '400px'}
-      f.input :owner_id, :input_html => { :value => current_admin_user.id }, as: :hidden
-      f.input :owner_type, :input_html => { :value => "AdminUser" }, as: :hidden
+
+      if f.object.new_record?
+        f.input :owner_id, :input_html => { :value => current_admin_user.id }, as: :hidden
+        f.input :owner_type, :input_html => { :value => "AdminUser" }, as: :hidden
+      end
+
       f.input :address
       f.input :latitude
       f.input :longitude
