@@ -136,6 +136,44 @@ body.admin_areas {
       /*display: none;*/
     }
 
+    span.status_free {
+      display: block;
+      position: relative;
+      padding: 0 0 0 17px;
+
+      &:after {
+        display: block;
+        position: absolute;
+        top:0;
+        left:0;
+        width: 20px;
+        height: 20px;
+        font-family: FontAwesome;
+        content: '\f059';
+        color: #51e471;
+      }
+
+    }
+
+    span.status_busy {
+      display: block;
+      position: relative;
+      padding: 0 0 0 17px;
+
+      &:after {
+        display: block;
+        position: absolute;
+        top:0;
+        left:0;
+        width: 20px;
+        height: 20px;
+        font-family: FontAwesome;
+        content: '\f058';
+        color: #ff2d2d;
+      }
+
+    }
+
   }
 
   &.show {

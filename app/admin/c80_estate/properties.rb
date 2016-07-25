@@ -39,6 +39,11 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
 
   index do
     selectable_column
+    column '' do |prop|
+      "<div class='image_vertical properties_index_logo'>
+      <span></span><img src='#{image_path(prop.logo_path)}'>
+      </div>".html_safe
+    end
     column :title
     column :address
     column :gps do |prop|
