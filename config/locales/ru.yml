@@ -4,7 +4,7 @@ ru:
       area:
         one: "площадь"
         other: "Площади"
-      c80_news_tz/nphoto: ""
+      c80_estate/aphoto: "изображение"
       c80_news_tz/gallery: ""
       c80_news_tz/gphoto: "картинку"
       c80_news_tz/cphoto: ""
@@ -31,15 +31,36 @@ ru:
       admin_user:
         one: 'пользователя'
         other: 'Пользователи'
+        email: 'Email'
+        password: 'Пароль'
+        password_confirmation: 'Пароль ещё раз'
+        role: 'роль'
     attributes:
       c80_estate/area:
         title: "Название"
         atype: 'Тип'
         property: 'Объект'
+        desc: 'Описание'
         astatus: 'Статус'
         assigned_person: 'Ответственный'
         created_at: 'Время создания'
         updated_at: 'Изменён'
+        owner: 'Создатель'
+        astatuses: 'Статус'
+      c80_estate/property:
+        title: "Название"
+        address: 'Адрес'
+        gps: 'GPS'
+        desc: 'Описание'
+        latitude: 'Широта'
+        longitude: 'Долгота'
+        assigned_person: 'Ответственный'
+        created_at: 'Время создания'
+        updated_at: 'Изменён'
+        owner: 'Создатель'
+        astatuses: 'Статус'
+      c80_estate/aphoto:
+        image: 'Файл'
       c80_news_tz/nphoto:
         image: 'Файл'
       c80_news_tz/adress:

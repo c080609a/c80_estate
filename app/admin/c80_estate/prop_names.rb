@@ -1,6 +1,6 @@
 ActiveAdmin.register C80Estate::PropName, as: 'PropName' do
 
-  menu :label => "Имена свойств", :parent => "Настройки"
+  menu :label => "Имена свойств", :parent => "Настройки", :if => proc { current_admin_user.can_view_settings? }
 
   permit_params :title,
                 :uom_id,

@@ -48,6 +48,64 @@ module C80Estate
             roles << r
           end
 
+          def can_view_statistics?
+            r1 = roles.where(role_type: 1)
+            r2 = roles.where(role_type: 2)
+            r1.count > 0 || r2.count > 0
+          end
+
+          def can_view_comments?
+            r1 = roles.where(role_type: 1)
+            r2 = roles.where(role_type: 2)
+            r1.count > 0 || r2.count > 0
+          end
+
+          def can_view_settings?
+            r1 = roles.where(role_type: 1)
+            r1.count > 0
+          end
+
+          def can_view_users?
+            r1 = roles.where(role_type: 1)
+            r1.count > 0
+            # true
+          end
+
+          def can_edit_area?(area)
+            r1 = roles.where(role_type: 1)
+            # mark_is_owner = area.owner.id == id
+            mark_is_assigned = area.assigned_person.id == id
+            r1.count > 0 || mark_is_assigned # || mark_is_owner
+            # true
+          end
+
+
+          def can_edit_property?(property)
+            r1 = roles.where(role_type: 1)
+            # mark_is_owner = property.owner.id == id
+            mark_is_assigned = property.assigned_person.id == id
+            r1.count > 0 || mark_is_assigned # || mark_is_owner
+            # true
+          end
+
+          def can_create_areas?
+            r1 = roles.where(role_type: 1)
+            r1.count > 0
+            # true
+          end
+
+          def can_create_properties?
+            r1 = roles.where(role_type: 1)
+            r1.count > 0
+            # true
+          end
+
+          def can_delete_area?
+            r1 = roles.where(role_type: 1)
+            r1.count > 0
+            # true
+          end
+
         end
       end
     end

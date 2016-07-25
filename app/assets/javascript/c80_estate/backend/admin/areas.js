@@ -417,7 +417,37 @@ var fEdit = function () {
     fLoadingShow();
 };
 
+var fAreasIndex = function () {
+
+    //var $input_square_min = $('<input type="text" class="min_text_input"/>')
+    //    .appendTo($("#q_item_prop_square_val_in").parent());
+    //
+    //var $input_square_max = $('<input type="text" class="max_text_input"/>')
+    //    .appendTo($("#q_item_prop_square_val_in").parent());
+
+    // переведём scope надписи
+
+    var $li, $a, $a_span;
+
+    $li = $('li.scope.all');
+    $a = $li.find(".table_tools_button");
+    $a_span = $a.find('span');
+    $a.html('Все <span class="count">' + $a_span.text() + '</span>');
+
+    $li = $('li.scope.free');
+    $a = $li.find(".table_tools_button");
+    $a_span = $a.find('span');
+    $a.html('Свободные <span class="count">' + $a_span.text() + '</span>');
+
+    $li = $('li.scope.busy');
+    $a = $li.find(".table_tools_button");
+    $a_span = $a.find('span');
+    $a.html('Занятые <span class="count">' + $a_span.text() + '</span>');
+
+};
+
 YOUR_APP.areas = {
     edit: fEdit,
-    "new": jsinit.go
+    "new": jsinit.go,
+    index: fAreasIndex
 };

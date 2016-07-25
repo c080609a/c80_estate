@@ -2,7 +2,7 @@ ActiveAdmin.register C80Estate::Pstat, as: 'Pstat' do
 
   # scope_to :current_admin_user, association_method: :sites_list
 
-  menu :label => "Объекты", :parent => 'Статистика'
+  menu :label => "Объекты", :parent => 'Статистика', if: proc{ current_admin_user.can_view_statistics? }
 
   config.sort_order = 'id_asc'
 

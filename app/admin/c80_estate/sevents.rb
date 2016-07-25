@@ -2,7 +2,7 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
 
   # scope_to :current_admin_user, association_method: :sites_list
 
-  menu :label => "Площади", :parent => 'Статистика'
+  menu :label => "Площади", :parent => 'Статистика', if: proc{ current_admin_user.can_view_statistics? }
 
   permit_params :area_id,
                 :atype_id,

@@ -1,7 +1,7 @@
 # ПОДкатегории строительных материалов
 ActiveAdmin.register C80Estate::Atype, :as => 'Atype' do
 
-  menu :label => "Типы", :parent => "Настройки"
+  menu :label => "Типы", :parent => "Настройки", :if => proc { current_admin_user.can_view_settings? }
 
   permit_params :title,
                 :slug,

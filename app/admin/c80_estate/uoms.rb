@@ -1,7 +1,7 @@
 # единицы измерения
 ActiveAdmin.register C80Estate::Uom, :as => 'Uom' do
 
-  menu :label => "Единицы измерения", :parent => "Настройки"
+  menu :label => "Единицы измерения", :parent => "Настройки", :if => proc { current_admin_user.can_view_settings? }
 
   permit_params :title, :comment, :is_number
 

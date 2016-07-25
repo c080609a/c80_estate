@@ -1,7 +1,7 @@
 # ПОДкатегории строительных материалов
 ActiveAdmin.register C80Estate::RoleType, :as => 'RoleType' do
 
-  menu :label => "Роли", :parent => "Настройки"
+  menu :label => "Роли", :parent => "Настройки", :if => proc { current_admin_user.can_view_settings? }
 
   permit_params :title,
                 :desc

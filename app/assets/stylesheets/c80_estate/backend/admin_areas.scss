@@ -107,10 +107,6 @@ body.admin_areas {
 
   }
 
-  a.delete_link {
-    display: none;
-  }
-
   .slider.slider-horizontal {
     width: 227px !important;
   }
@@ -123,5 +119,65 @@ body.admin_areas {
     margin-top: 0 !important;
   }
 
+  &.index {
+
+    .min_text_input {
+      margin-top: 15px;
+      width: 45% !important;
+    }
+
+    .max_text_input {
+      margin-top: 15px;
+      width: 45% !important;
+      margin-left: 10%;
+    }
+
+    a.delete_link {
+      /*display: none;*/
+    }
+
+    span.status_free {
+      display: block;
+      position: relative;
+      padding: 0 0 0 17px;
+
+      &:after {
+        display: block;
+        position: absolute;
+        top:0;
+        left:0;
+        width: 20px;
+        height: 20px;
+        font-family: FontAwesome;
+        content: '\f059';
+        color: #51e471;
+      }
+
+    }
+
+    span.status_busy {
+      display: block;
+      position: relative;
+      padding: 0 0 0 17px;
+
+      &:after {
+        display: block;
+        position: absolute;
+        top:0;
+        left:0;
+        width: 20px;
+        height: 20px;
+        font-family: FontAwesome;
+        content: '\f058';
+        color: #ff2d2d;
+      }
+
+    }
+
+  }
+
+  &.show {
+
+  }
 
 }

@@ -141,6 +141,14 @@ module C80Estate
       res
     end
 
+    def astatus_tag
+      res = -1
+      if astatuses.count > 0
+        res = astatuses.first.tag
+      end
+      res
+    end
+
     def assigned_person_title
       res = "-"
       if assigned_person.present?
