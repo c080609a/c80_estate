@@ -47,6 +47,18 @@ ru:
         updated_at: 'Изменён'
         owner: 'Создатель'
         astatuses: 'Статус'
+      c80_estate/property:
+        title: "Название"
+        address: 'Адрес'
+        gps: 'GPS'
+        desc: 'Описание'
+        latitude: 'Широта'
+        longitude: 'Долгота'
+        assigned_person: 'Ответственный'
+        created_at: 'Время создания'
+        updated_at: 'Изменён'
+        owner: 'Создатель'
+        astatuses: 'Статус'
       c80_estate/aphoto:
         image: 'Файл'
       c80_news_tz/nphoto:

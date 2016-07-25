@@ -54,6 +54,12 @@ module C80Estate
             r1.count > 0 || r2.count > 0
           end
 
+          def can_view_comments?
+            r1 = roles.where(role_type: 1)
+            r2 = roles.where(role_type: 2)
+            r1.count > 0 || r2.count > 0
+          end
+
           def can_view_settings?
             r1 = roles.where(role_type: 1)
             r1.count > 0
