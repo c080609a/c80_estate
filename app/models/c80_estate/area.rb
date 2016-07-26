@@ -109,6 +109,43 @@ module C80Estate
           .where(c80_estate_item_props: {value: v})
     end
 
+    def self.import_excel(file)
+
+      puts "------------------------------------------------------------- self.import [BEGIN] "
+
+      # import_result = ""
+      # spreadsheet = open_spreadsheet(file)
+      # header = spreadsheet.row(1)
+      # (2..spreadsheet.last_row).each do |i|
+      #
+      #   row = Hash[ [header,spreadsheet.row(i)].transpose ]
+      #
+      #   area_where = Area.where(:slug => row["ID"])
+      #   if area_where.count > 0
+      #
+      #     area = Area.where(:slug => row["ID"]).first
+      #     puts "--- Обновляем данные для #{area.id}, #{area.slug}: "
+      #     puts "--- Хотим вставить данные: " + row.to_hash.to_s
+      #     area.price = row["Цена"]
+      #     area.space = row["Площадь"]
+      #     area.save
+      #     puts "."
+      #
+      #   else
+      #     s = "В базе не найден павильон: #{row.to_hash}"
+      #     import_result += s + "\n"
+      #     puts s
+      #
+      #   end
+      #
+      #
+      # end
+
+      puts "------------------------------------------------------------- self.import [END] "
+      # import_result
+
+    end
+
     def atype_title
       res = "-"
       if atype.present?

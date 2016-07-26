@@ -56,5 +56,9 @@ module C80Estate
       end
     end
 
+    def render_upload_areas_excel_form
+      render :partial => 'c80_estate/shared/form_upload_areas_excel'
+    end
+
   end
 end

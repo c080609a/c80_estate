@@ -1,0 +1,6 @@
+<% if @import_result != '' %>
+alert("Данные частично импортированы с ОШИБКАМИ.");
+<% else %>
+alert("Данные импортированы.");
+<% end %>
+$('#form_upload_areas_excel').modal_success();

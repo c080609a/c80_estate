@@ -1,0 +1,37 @@
+<%
+   modal ||= false
+   remote = modal ? true : false
+   form_id = 'form_upload_areas_excel'
+   sufim_caption = "Загрузить"
+   progress_caption = "Загружаем..."
+%>
+
+<%= form_tag '/estate/areas_import_exel', #estate_areas_import_exel_path(:format => "js"),
+             remote: true,
+             id: form_id,
+             role: :form,
+             :multipart => true,
+             'data-model' => 'areas' do
+%>
+
+    <div class="form-group">
+      <%= label_tag "file" ,"Выберите Excel файл для загрузки: ", class: 'control-label' %><br />
+      <%= file_field_tag :file, class: 'btn btn-default' %>
+      <span class="help-block" id="areas_areas_exel"></span>
+    </div>
+
+    <div class="h5px"></div>
+    <%# Added Bootstrap classes %>
+    <div class="actions">
+      <%= submit_tag sufim_caption,
+                     class: 'btn btn-primary',
+                     data: {
+                             disable_with: progress_caption
+                     }
+      %>
+    </div>
+    <!--<div class="progress info striped active">
+      <div class="bar" style="width: 75%"></div>
+    </div>-->
+
+<% end %>
