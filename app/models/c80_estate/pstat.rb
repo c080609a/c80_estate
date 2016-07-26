@@ -86,6 +86,7 @@ module C80Estate
         result[:raw_props][:free_areas_count] = free_areas_atnow
         result[:raw_props][:busy_areas_atnow] = busy_areas_atnow
         result[:graph_dynamic] = graph_data
+        # result[:graph_radial] = graph_radial_data
 
         # Rails.logger.debug "<Pstat.busy_coef> busy_areas_count = #{ busy_areas_count }"
         # Rails.logger.debug "<Pstat.busy_coef> all_areas_count = #{ all_areas_count }"
@@ -117,6 +118,7 @@ module C80Estate
         result[:raw_props_sq][:free_areas_count_sq] = free_areas_atnow_sq
         result[:raw_props_sq][:busy_areas_atnow_sq] = busy_areas_atnow_sq
         result[:graph_dynamic_sq] = graph_data_sq
+        # result[:graph_radial_sq] = graph_radial_data_sq
 
         # common
 

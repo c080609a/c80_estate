@@ -32,7 +32,10 @@ var fPstatsIndex = function () {
         $ul_props_sq;              // здесь выводим текстовые свойства занятости в метрах
 
 
-    var $div_graph;             // в этом div живет график занятости
+    // тут живут круговые графики
+    var $div_graph_radial;
+    var $div_graph_radial_sq;
+    
     var $div_graph2,             // в этом div живет график занятости
         $div_graph2canvas;
 
@@ -66,16 +69,19 @@ var fPstatsIndex = function () {
             $ul_props = $("<ul><li id='title'></li><li id='born_date'></li><li id='atype_filter'></li><li id='all_areas_count'></li><li id='free_areas_count'></li><li id='busy_areas_count'></li></ul>");
             $div_area_text_stats.append($ul_props);
 
+        $div_graph_radial = $("<div id='graph_radial'></div>").appendTo($div_index_adds);
+
         $div_busy_coef_sq = $("<div id='coef_sq'></div>").appendTo($div_index_adds);
-        $p_busy_coef_sq = $("<p class='val'></p>").appendTo($div_busy_coef_sq);
-        $p_busy_coef_mess_sq = $("<p class='title'><abbr class='abbr_busy_coef_sq' title='TITLE'>Занятость (в м.кв.)</abbr></p>").appendTo($div_busy_coef_sq);
-        $p_busy_coef_comment_sq = $("<p class='comment'></p>").appendTo($div_busy_coef_sq);
+            $p_busy_coef_sq = $("<p class='val'></p>").appendTo($div_busy_coef_sq);
+            $p_busy_coef_mess_sq = $("<p class='title'><abbr class='abbr_busy_coef_sq' title='TITLE'>Занятость (в м.кв.)</abbr></p>").appendTo($div_busy_coef_sq);
+            $p_busy_coef_comment_sq = $("<p class='comment'></p>").appendTo($div_busy_coef_sq);
 
         $div_area_text_stats_sq = $("<div id='text_stats_sq'></div>").appendTo($div_index_adds);
-        $ul_props_sq = $("<ul><li id='all_areas_count_sq'></li><li id='free_areas_count_sq'></li><li id='busy_areas_count_sq'></li></ul>");
-        $div_area_text_stats_sq.append($ul_props_sq);
+            $ul_props_sq = $("<ul><li id='all_areas_count_sq'></li><li id='free_areas_count_sq'></li><li id='busy_areas_count_sq'></li></ul>");
+            $div_area_text_stats_sq.append($ul_props_sq);
 
-        //$div_graph = $("<div id='graph'></div>").appendTo($div_index_adds);
+        $div_graph_radial_sq = $("<div id='graph_radial_sq'></div>").appendTo($div_index_adds);
+
         $div_graph2 = $("<div id='graph2'></div>").appendTo($div_index_adds);
 
         $div_graph3 = $("<div id='graph3'></div>").appendTo($div_index_adds);
@@ -205,6 +211,8 @@ var fPstatsIndex = function () {
             var data, options, chart;
 
             if (data_array_rows_radial != undefined) {
+                console.log("<fDrawChart> data_array_rows_radial = " + data_array_rows_radial);
+
                 //data = google.visualization.arrayToDataTable(data_array_rows_radial);
                 //
                 //options = {
