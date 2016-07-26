@@ -477,8 +477,8 @@ var fAreasIndex = function () {
         $input.parent().find('.label').css('margin-bottom','-5px');
 
         // вставляемые инпуты
-        var $input_min = $('<input type="text" class="min_text_input"/>');
-        var $input_max = $('<input type="text" class="max_text_input"/>');
+        var $input_min = $('<input type="text" class="min_text_input" placeholder="от"/>');
+        var $input_max = $('<input type="text" class="max_text_input" placeholder="до"/>');
 
         $trg.before($input_min);
         $trg.before($input_max);
