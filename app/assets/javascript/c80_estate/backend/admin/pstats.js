@@ -30,17 +30,14 @@ var fPstatsIndex = function () {
 
     var $div_area_text_stats_sq,
         $ul_props_sq;              // здесь выводим текстовые свойства занятости в метрах
-
-
+    
     // тут живут круговые графики
     var $div_graph_radial;
     var $div_graph_radial_sq;
     
-    var $div_graph2,             // в этом div живет график занятости
-        $div_graph2canvas;
-
-    var $div_graph3,             // в этом div живет график занятости в метрах
-        $div_graph3canvas;
+    // тут живут динамические графики
+    var $div_graph_dynamic,
+        $div_graph_dynamic_sq;
 
     var $ajax_div, $ajax_div2;
 
@@ -82,9 +79,9 @@ var fPstatsIndex = function () {
 
         $div_graph_radial_sq = $("<div id='graph_radial_sq'></div>").appendTo($div_index_adds);
 
-        $div_graph2 = $("<div id='graph2'></div>").appendTo($div_index_adds);
+        $div_graph_dynamic = $("<div id='graph2'></div>").appendTo($div_index_adds);
 
-        $div_graph3 = $("<div id='graph3'></div>").appendTo($div_index_adds);
+        $div_graph_dynamic_sq = $("<div id='graph3'></div>").appendTo($div_index_adds);
 
         $main_content.prepend($ajax_div2);
         $main_content.prepend($ajax_div);
@@ -150,12 +147,12 @@ var fPstatsIndex = function () {
 
                 }
 
-                if (data["graph"] != undefined || data["graph_dynamic"] != undefined) {
-                    fDrawChart(data["graph"], data["graph_dynamic"]);
+                if (data["graph_dynamic"] != undefined) {
+                    fDrawChartDynamic(data["graph_dynamic"]);
                 }
 
                 if (data["graph_dynamic_sq"] != undefined) {
-                    fDrawChartSq(data["graph_dynamic_sq"]);
+                    fDrawChartDynamicSq(data["graph_dynamic_sq"]);
                 }
 
                 $h2_page_title.text(data["title"]);
@@ -201,143 +198,67 @@ var fPstatsIndex = function () {
         fRequestCharts();
     };
 
-    var fDrawChart = function (data_array_rows_radial, data_array_rows_dynamic) {
+    // рисуем динамический график занятости
+    var fDrawChartDynamic = function (data_array_rows_dynamic) {
 
-        google.charts.load('current', {'packages': ['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+        var dataPoints = [];
+        //[
+        //    {x: new Date(2012,0), y: 8.3} ,
+        //    {x: new Date(2012,1), y: 8.3} ,
+        //    {x: new Date(2012,2), y: 8.2} ,
+        //    {x: new Date(2012,3), y: 8.1} ,
+        //    {x: new Date(2012,4), y: 8.2} ,
+        //    {x: new Date(2012,5), y: 8.2} ,
+        //    {x: new Date(2012,6), y: 8.2} ,
+        //    {x: new Date(2012,7), y: 8.1} ,
+        //    {x: new Date(2012,8), y: 7.8} ,
+        //    {x: new Date(2012,9), y: 7.9} ,
+        //    {x: new Date(2012,10), y:7.8} ,
+        //    {x: new Date(2012,11), y:7.8} ,
+        //    {x: new Date(2013,0), y:7.9} ,
+        //    {x: new Date(2013,1), y:7.7} ,
+        //    {x: new Date(2013,2), y:7.6} ,
+        //    {x: new Date(2013,3), y:7.5}
+        //]
 
-        function drawChart() {
+        var i, iob;
+        for (i = 0; i < data_array_rows_dynamic.length; i ++) {
+            iob = data_array_rows_dynamic[i];
+            dataPoints.push({
+                x: new Date(iob["year"], iob["month"], iob["day"]),
+                y: iob["val"]
+            })
+        }
 
-            var data, options, chart;
-
-            if (data_array_rows_radial != undefined) {
-                console.log("<fDrawChart> data_array_rows_radial = " + data_array_rows_radial);
-
-                //data = google.visualization.arrayToDataTable(data_array_rows_radial);
-                //
-                //options = {
-                //    title: ''
-                //};
-
-                //chart = new google.visualization.PieChart(document.getElementById('graph'));
-                //
-                //chart.draw(data, options);
-            }
-
-            if (data_array_rows_dynamic != undefined && false) {
-                //data_array = [
-                //    ['Director (Year)',  'Rotten Tomatoes', 'IMDB'],
-                //    ['Alfred Hitchcock (1935)', 8.4,         7.9],
-                //    ['Ralph Thomas (1959)',     6.9,         6.5],
-                //    ['Don Sharp (1978)',        6.5,         6.4],
-                //    ['James Hawes (2008)',      4.4,         6.2]
-                //]
-
-                //var data = google.visualization.arrayToDataTable(data_array_rows_dynamic);
-
-                data = new google.visualization.DataTable();
-                data.addColumn('date', ''); // Implicit domain column.
-                data.addColumn('number', ''); // Implicit data column.
-                //data.addColumn({type:'number', role:'interval'});
-                //data.addColumn({type:'number', role:'interval'});
-                //data.addColumn('number', 'Expenses');
-
-                var i, iob, yearValue, monthValue, dayValue;
-                for (i = 0; i < data_array_rows_dynamic.length; i++) {
-                    iob = data_array_rows_dynamic[i];
-                    yearValue = iob[0].substr(0, 4);
-                    monthValue = iob[0].substr(5, 2) - 1;
-                    dayValue = iob[0].substr(8, 2);
-                    console.log(iob + " => " + yearValue + "/" + monthValue + "/" + dayValue); // + ": " + data_array_rows_dynamic[i][0]
-                    data_array_rows_dynamic[i][0] = new Date(parseInt(yearValue), parseInt(monthValue), parseInt(dayValue));
-                }
-
-                data.addRows(data_array_rows_dynamic);
-
-                options = {
-                    title: 'Занятость',
-                    vAxis: {title: '', ticks: [0, 1]},
-                    ignoreBounds: true,
-                    isStacked: false
-                };
-
-                chart = new google.visualization.SteppedAreaChart(document.getElementById('graph2'));
-
-                chart.draw(data, options);
-            }
-
-            if (data_array_rows_dynamic) {
-
-
-                var dataPoints = [];
-                //[
-                //    {x: new Date(2012,0), y: 8.3} ,
-                //    {x: new Date(2012,1), y: 8.3} ,
-                //    {x: new Date(2012,2), y: 8.2} ,
-                //    {x: new Date(2012,3), y: 8.1} ,
-                //    {x: new Date(2012,4), y: 8.2} ,
-                //    {x: new Date(2012,5), y: 8.2} ,
-                //    {x: new Date(2012,6), y: 8.2} ,
-                //    {x: new Date(2012,7), y: 8.1} ,
-                //    {x: new Date(2012,8), y: 7.8} ,
-                //    {x: new Date(2012,9), y: 7.9} ,
-                //    {x: new Date(2012,10), y:7.8} ,
-                //    {x: new Date(2012,11), y:7.8} ,
-                //    {x: new Date(2013,0), y:7.9} ,
-                //    {x: new Date(2013,1), y:7.7} ,
-                //    {x: new Date(2013,2), y:7.6} ,
-                //    {x: new Date(2013,3), y:7.5}
-                //]
-
-                var i, iob;
-                for (i = 0; i < data_array_rows_dynamic.length; i ++) {
-                    iob = data_array_rows_dynamic[i];
-                    dataPoints.push({
-                        x: new Date(iob["year"], iob["month"], iob["day"]),
-                        y: iob["val"]
-                    })
-                }
-
-                var chart = new CanvasJS.Chart("graph2",
+        var chart = new CanvasJS.Chart("graph2",
+            {
+                title:{
+                    text: "Занятость"
+                },
+                animationEnabled: true,
+                axisY:{
+                    includeZero: false,
+                    interval: 10,
+                    valueFormatString: ""
+                },
+                data: [
                     {
-                        title:{
-                            text: "Занятость"
-                        },
-                        animationEnabled: true,
-                        axisY:{
-                            includeZero: false,
-                            interval: 10,
-                            valueFormatString: ""
-                        },
-                        data: [
-                            {
-                                type: "stepArea",
-                                toolTipContent: "{x}: {y}%",
-                                markerSize: 5,
-                                dataPoints: dataPoints
-                            }
+                        type: "stepArea",
+                        toolTipContent: "{x}: {y}%",
+                        markerSize: 5,
+                        dataPoints: dataPoints
+                    }
 
-                        ]
-                    });
+                ]
+            });
 
-                $('#graph2').css('opacity','1.0').css('display','block');
-                chart.render();
-            }
-
-        }
-
-        if (data_array_rows_radial != undefined) {
-            $('#graph').css('opacity', '1.0').css('display', 'block');
-        }
-
-        if (data_array_rows_dynamic != undefined) {
-            $('#graph2').css('opacity', '1.0').css('display', 'block');
-        }
-
+        $div_graph_dynamic.css('opacity','1.0').css('display','block');
+        chart.render();
+    
     };
 
-    var fDrawChartSq = function (data) {
-
+    // рисуем динамический график занятости в м.кв.
+    var fDrawChartDynamicSq = function (data) {
 
         var dataPoints = [];
         //[
@@ -390,7 +311,7 @@ var fPstatsIndex = function () {
                 ]
             });
 
-        $('#graph3').css('opacity','1.0').css('display','block');
+        $div_graph_dynamic_sq.css('opacity','1.0').css('display','block');
         chart.render();
 
     };
