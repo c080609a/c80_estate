@@ -91,6 +91,7 @@ var fPstatsIndex = function () {
         $main_content.css('opacity', '1.0');
     };
 
+    // запросим коэф-ты и данные для построения графиков
     var fRequestCoefs = function () {
 
         var atype_id = $select_atype.val();
@@ -168,6 +169,8 @@ var fPstatsIndex = function () {
         //fPreloaderShow();
     };
 
+    // запросим таблицы объектов
+    // результат придёт в виде js и таблицы вставятся сами
     var fRequestCharts = function () {
 
         var atype_id = $select_atype.val();
