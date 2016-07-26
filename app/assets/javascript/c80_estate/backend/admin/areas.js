@@ -419,30 +419,73 @@ var fEdit = function () {
 
 var fAreasIndex = function () {
 
-    //var $input_square_min = $('<input type="text" class="min_text_input"/>')
-    //    .appendTo($("#q_item_prop_square_val_in").parent());
-    //
-    //var $input_square_max = $('<input type="text" class="max_text_input"/>')
-    //    .appendTo($("#q_item_prop_square_val_in").parent());
+    var csss_input_square = '#q_item_prop_square_val_in';
+    var csss_input_price = '#q_item_prop_price_val_in';
 
-    // переведём scope надписи
+    var $original_input_square;
+    var $original_input_price;
 
-    var $li, $a, $a_span;
+    var $slider_square;
+    var $slider_price;
 
-    $li = $('li.scope.all');
-    $a = $li.find(".table_tools_button");
-    $a_span = $a.find('span');
-    $a.html('Все <span class="count">' + $a_span.text() + '</span>');
+    var _fInit = function () {
 
-    $li = $('li.scope.free');
-    $a = $li.find(".table_tools_button");
-    $a_span = $a.find('span');
-    $a.html('Свободные <span class="count">' + $a_span.text() + '</span>');
+        $original_input_square = $(csss_input_square);
+        $original_input_price = $(csss_input_price);
 
-    $li = $('li.scope.busy');
-    $a = $li.find(".table_tools_button");
-    $a_span = $a.find('span');
-    $a.html('Занятые <span class="count">' + $a_span.text() + '</span>');
+        _fTranslateScopes();
+        _fInitSliders();
+    };
+
+    var _fTranslateScopes = function () {
+        // переведём scope надписи
+
+        var $li, $a, $a_span;
+
+        $li = $('li.scope.all');
+        $a = $li.find(".table_tools_button");
+        $a_span = $a.find('span');
+        $a.html('Все <span class="count">' + $a_span.text() + '</span>');
+
+        $li = $('li.scope.free');
+        $a = $li.find(".table_tools_button");
+        $a_span = $a.find('span');
+        $a.html('Свободные <span class="count">' + $a_span.text() + '</span>');
+
+        $li = $('li.scope.busy');
+        $a = $li.find(".table_tools_button");
+        $a_span = $a.find('span');
+        $a.html('Занятые <span class="count">' + $a_span.text() + '</span>');
+    };
+
+    var _fInitSliders = function () {
+
+        $slider_square = $original_input_square.bootstrapSlider();
+        $slider_price = $original_input_price.bootstrapSlider();
+
+        _fMakeMinMaxInputs($original_input_square);
+        _fMakeMinMaxInputs($original_input_price);
+
+    };
+
+    var _fMakeMinMaxInputs = function ($input) {
+
+        // перед этим элементом вставим наши инпуты
+        var $trg = $input.parent().find('div.slider');
+
+        // пофиксим отступ для красоты
+        $input.parent().find('.label').css('margin-bottom','-5px');
+
+        // вставляемые инпуты
+        var $input_min = $('<input type="text" class="min_text_input"/>');
+        var $input_max = $('<input type="text" class="max_text_input"/>');
+
+        $trg.before($input_min);
+        $trg.before($input_max);
+
+    };
+
+    _fInit();
 
 };
 

@@ -88,7 +88,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
          :as => :string,
          :label => 'Площадь (м.кв.)',
          :input_html => {data: {
-             provide: 'slider',
+             # provide: 'slider',
              slider_ticks: C80Estate::ItemProp.all_uniq_values(9).to_json, #'[0, 1, 2, 3]',
              slider_labels: C80Estate::ItemProp.all_uniq_values(9).to_json, #'["none", short", "medium","long"]',
              slider_min: C80Estate::ItemProp.all_uniq_values(9).last,
@@ -102,7 +102,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
          :as => :string,
          :label => 'Цена (руб/м.кв в месяц)',
          :input_html => {data: {
-             provide: 'slider',
+             #provide: 'slider',
              slider_ticks: C80Estate::ItemProp.all_uniq_values(1).to_json, #'[0, 1, 2, 3]',
              slider_labels: C80Estate::ItemProp.all_uniq_values(1).to_json, #'["none", short", "medium","long"]',
              slider_min: C80Estate::ItemProp.all_uniq_values(1).last,
