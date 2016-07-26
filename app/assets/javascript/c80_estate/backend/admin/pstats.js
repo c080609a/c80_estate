@@ -148,12 +148,20 @@ var fPstatsIndex = function () {
 
                 }
 
+                if (data["graph_radial"] != undefined) {
+                    fDrawChartRadial(data["graph_radial"]);
+                }
+
                 if (data["graph_dynamic"] != undefined) {
-                    fDrawChartDynamic(data["graph_dynamic"]);
+                    fDrawChartRadialSq(data["graph_dynamic"]);
                 }
 
                 if (data["graph_dynamic_sq"] != undefined) {
                     fDrawChartDynamicSq(data["graph_dynamic_sq"]);
+                }
+
+                if (data["graph_radial_sq"] != undefined) {
+                    fDrawChartRadialSq(data["graph_radial_sq"]);
                 }
 
                 $h2_page_title.text(data["title"]);
@@ -317,6 +325,74 @@ var fPstatsIndex = function () {
         $div_graph_dynamic_sq.css('opacity','1.0').css('display','block');
         chart.render();
 
+    };
+
+    var fDrawChartRadial = function (data) {
+
+        //  data:
+        //  [
+        //    {  y: 6, legendText:"Свободно", label: "Площадей свободно" },
+        //    {  y: 4, legendText:"Занято", label: "Площадей занято" }
+        //  ]
+
+        var chart = new CanvasJS.Chart("graph_radial",
+            {
+                animationEnabled: true,
+                legend:{
+                    verticalAlign: "center",
+                    horizontalAlign: "",
+                    fontSize: 0,
+                    fontFamily: "Open Sans"
+                },
+                theme: "theme",
+                data: [
+                    {
+                        type: "pie",
+                        indexLabelFontFamily: "Open Sans",
+                        indexLabelFontSize: 14,
+                        indexLabel: "{label}: {y}",
+                        startAngle:-10,
+                        showInLegend: true,
+                        toolTipContent:"{legendText} {y}",
+                        dataPoints: data
+                    }
+                ]
+            });
+        chart.render();
+    };
+
+    var fDrawChartRadialSq = function (data) {
+
+        //  data:
+        //  [
+        //    {  y: 6, legendText:"", label: "Метров свободно" },
+        //    {  y: 4, legendText:"", label: "Метров занято" }
+        //  ]
+
+        var chart = new CanvasJS.Chart("graph_radial_sq",
+            {
+                animationEnabled: true,
+                legend:{
+                    verticalAlign: "center",
+                    horizontalAlign: "",
+                    fontSize: 0,
+                    fontFamily: "Open Sans"
+                },
+                theme: "theme",
+                data: [
+                    {
+                        type: "pie",
+                        indexLabelFontFamily: "Open Sans",
+                        indexLabelFontSize: 14,
+                        indexLabel: "{label}: {y}",
+                        startAngle:-10,
+                        showInLegend: true,
+                        toolTipContent:"{legendText} {y}",
+                        dataPoints: data
+                    }
+                ]
+            });
+        chart.render();
     };
 
     fInit();

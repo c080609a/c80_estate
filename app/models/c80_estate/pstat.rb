@@ -60,7 +60,6 @@ module C80Estate
 
         free_areas_atnow = tt[:sum_free_areas] #*1.0/all_props.count #pstats.last.free_areas
         busy_areas_atnow = tt[:sum_busy_areas] #*1.0/all_props.count #pstats.last.busy_areas
-        graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
 
         # защищаемся от деления на ноль
         if free_areas_atnow + busy_areas_atnow == 0
@@ -85,8 +84,8 @@ module C80Estate
         result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
         result[:raw_props][:free_areas_count] = free_areas_atnow
         result[:raw_props][:busy_areas_atnow] = busy_areas_atnow
-        result[:graph_dynamic] = graph_data
-        # result[:graph_radial] = graph_radial_data
+        result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
+        result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
 
         # Rails.logger.debug "<Pstat.busy_coef> busy_areas_count = #{ busy_areas_count }"
         # Rails.logger.debug "<Pstat.busy_coef> all_areas_count = #{ all_areas_count }"
@@ -96,7 +95,6 @@ module C80Estate
 
         free_areas_atnow_sq = pstats.where(:atype_id => nil).last.free_areas_sq
         busy_areas_atnow_sq = pstats.where(:atype_id => nil).last.busy_areas_sq
-        graph_data_sq = _parse_for_js_dynamic_graph3_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
 
         # защищаемся от деления на ноль
         if busy_areas_atnow_sq + free_areas_atnow_sq == 0
@@ -117,8 +115,8 @@ module C80Estate
         result[:raw_props_sq][:all_areas_count_sq] = free_areas_atnow_sq + busy_areas_atnow_sq
         result[:raw_props_sq][:free_areas_count_sq] = free_areas_atnow_sq
         result[:raw_props_sq][:busy_areas_atnow_sq] = busy_areas_atnow_sq
-        result[:graph_dynamic_sq] = graph_data_sq
-        # result[:graph_radial_sq] = graph_radial_data_sq
+        result[:graph_dynamic_sq] = _parse_for_js_dynamic_graph3_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+        result[:graph_radial_sq] = _parse_for_js_radial_graph_sq(free_areas_atnow_sq, busy_areas_atnow_sq)
 
         # common
 
@@ -354,7 +352,6 @@ module C80Estate
 
         free_areas_atnow = tt[:sum_free_areas] #*1.0/all_props.count #pstats.last.free_areas
         busy_areas_atnow = tt[:sum_busy_areas] #*1.0/all_props.count #pstats.last.busy_areas
-        graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
 
         # Rails.logger.debug("\t\t atype_id = #{atype_id}")
         # Rails.logger.debug("\t\t free_areas_atnow = #{free_areas_atnow}")
@@ -370,6 +367,7 @@ module C80Estate
         result[:busy_coef] = sprintf "%.2f%", bcoef
         result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
         result[:abbr] = 'Занятость объекта за указанный период: число b/N, где b - кол-во свободных, N - всего площадей'
+        result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
 
         result[:raw_props] = {}
         result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
@@ -407,7 +405,6 @@ module C80Estate
 
         result[:title] = "Статистика - Объекты - Фильтр по типу площади '#{ Atype.find(atype_id).title }'"
         # result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
-        result[:graph_dynamic] = graph_data
         result[:graph_dynamic_sq] = graph_data_sq
 
         # if atype_id.present?
@@ -506,24 +503,30 @@ module C80Estate
     end
 
     def self._parse_for_js_radial_graph(free_areas_atnow, busy_areas_atnow)
-      # res = [
-      #     ['Year', 'Sales', 'Expenses'],
-      #     ['2013',  1000,      400],
-      #     ['2014',  1170,      460],
-      #     ['2015',  660,       1120],
-      #     ['2016/12/12',  1030,      540]
-      #
-      # ]
-      # [
-      #     ['', ''],
-      #     ['Свободно',     11],
-      #     ['Занято',      2]
-      # ]
+      #   data:
+      #       [
+      #         {  y: 6, legendText:"", label: "Площадей свободно" },
+      #         {  y: 4, legendText:"", label: "Площадей занято" }
+      #   ]
 
-      res = [['', '']]
-      res << ['Свободно', free_areas_atnow]
-      res << ['Занято', busy_areas_atnow]
-      Rails.logger.debug "<_parse_for_js_radial_graph> res: #{res}"
+      res = []
+      res << {label: 'Площадей свободно', y: free_areas_atnow, legendText: ''}
+      res << {label: 'Площадей занято', y: busy_areas_atnow, legendText: ''}
+      # Rails.logger.debug "<_parse_for_js_radial_graph> res: #{res}"
+      res
+
+    end
+
+    def self._parse_for_js_radial_graph_sq(free_areas_atnow_sq, busy_areas_atnow_sq)
+      #   data:
+      #       [
+      #         {  y: 6, legendText:"", label: "Метров свободно" },
+      #         {  y: 4, legendText:"", label: "Метров занято" }
+      #   ]
+
+      res = []
+      res << {label: 'Метров свободно', y: free_areas_atnow_sq, legendText: ''}
+      res << {label: 'Метров занято', y: busy_areas_atnow_sq, legendText: ''}
       res
 
     end
