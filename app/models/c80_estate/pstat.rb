@@ -23,6 +23,11 @@ module C80Estate
       # Rails.logger.debug "<Pstat.busy_coef> prop_id = #{prop_id}, atype_id = #{atype_id}"
       result = {}
 
+      # если нет событий - не считаем busy_coef
+      if self.all.count == 0
+        return result
+      end
+
       # обозначим диапазон фильтрации
       first_created_at = Time.at(self.first.created_at)
       time_now = Time.now
