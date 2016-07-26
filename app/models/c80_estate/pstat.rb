@@ -74,7 +74,7 @@ module C80Estate
 
         result[:busy_coef] = sprintf "%.2f%", bcoef
         result[:comment] = "<abbr title='Период рассчёта занятости'>C #{ddd} по #{ tcut[:used_end_date_str] }</abbr>"
-        result[:abbr] = 'Показана занятость для ВСЕХ площадей ВСЕХ объектов недвижимости за указанный период'
+        result[:abbr] = 'Показана занятость для ВСЕХ площадей ВСЕХ объектов недвижимости в конце указанного периода'
         result[:props] = [
             {tag: 'all_areas_count', val: "Площадей всего: #{free_areas_atnow + busy_areas_atnow}"},
             {tag: 'free_areas_count', val: "Площадей свободно: #{free_areas_atnow}"},
@@ -105,7 +105,7 @@ module C80Estate
 
         result[:busy_coef_sq] = sprintf "%.2f%", bcoef_sq
         result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ КВ'>C #{tcut[:used_start_date_str]} по #{tcut[:used_end_date_str]}</abbr>"
-        result[:abbr_sq] = 'Занятость объекта в МЕТРАХ за указанный период: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
+        result[:abbr_sq] = 'Занятость объекта в МЕТРАХ в конце указанного периода: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
         result[:props_sq] = [
             {tag: 'all_areas_count_sq', val: "Кв.м. всего: #{busy_areas_atnow_sq + free_areas_atnow_sq}"},
             {tag: 'free_areas_count_sq', val: "Свободных: #{free_areas_atnow_sq}"},
@@ -218,7 +218,7 @@ module C80Estate
 
           result[:busy_coef] = sprintf "%.2f%", bcoef
           result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-          result[:abbr] = 'Занятость объекта за указанный период: число b/N, где b - кол-во свободных, N - всего площадей'
+          result[:abbr] = 'Занятость объекта в конце указанного периода: число b/N, где b - кол-во свободных, N - всего площадей'
           result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
           result[:graph_dynamic] = graph_data
 
@@ -248,7 +248,7 @@ module C80Estate
 
           result[:busy_coef_sq] = sprintf "%.2f%", bcoef_sq
           result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ КВ'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-          result[:abbr_sq] = 'Занятость объекта в МЕТРАХ за указанный период: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
+          result[:abbr_sq] = 'Занятость объекта в МЕТРАХ в конце указанного периода: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
           result[:graph_dynamic_sq] = graph_data_sq
           result[:graph_radial_sq] = _parse_for_js_radial_graph_sq(free_areas_atnow_sq,busy_areas_atnow_sq)
 
@@ -370,7 +370,7 @@ module C80Estate
 
         result[:busy_coef] = sprintf "%.2f%", bcoef
         result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-        result[:abbr] = 'Занятость объекта за указанный период: число b/N, где b - кол-во свободных, N - всего площадей'
+        result[:abbr] = 'Занятость объекта в конце указанного периода: число b/N, где b - кол-во свободных, N - всего площадей'
         result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
         result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
 
@@ -394,7 +394,7 @@ module C80Estate
 
         result[:busy_coef_sq] = sprintf "%.2f%", bcoef_sq
         result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ КВ'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-        result[:abbr_sq] = 'Занятость объекта в МЕТРАХ за указанный период: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
+        result[:abbr_sq] = 'Занятость объекта в МЕТРАХ в конце указанного периода: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
         result[:graph_dynamic_sq] = graph_data_sq
         result[:graph_radial_sq] = _parse_for_js_radial_graph_sq(free_areas_atnow_sq,busy_areas_atnow_sq)
 
