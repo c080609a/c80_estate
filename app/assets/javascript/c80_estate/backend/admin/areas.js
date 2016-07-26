@@ -417,6 +417,9 @@ var fEdit = function () {
     fLoadingShow();
 };
 
+//var $slider_square;
+//var $slider_price;
+
 var fAreasIndex = function () {
 
     var csss_input_square = '#q_item_prop_square_val_in';
@@ -424,6 +427,11 @@ var fAreasIndex = function () {
 
     var $original_input_square;
     var $original_input_price;
+
+    var square_min;
+    var square_max;
+    var price_min;
+    var price_max;
 
     var $slider_square;
     var $slider_price;
@@ -435,6 +443,42 @@ var fAreasIndex = function () {
 
         _fTranslateScopes();
         _fInitSliders();
+
+        // считываем get параметры
+        var rex_square = /item_prop_square_val_in\]=(\d{1,5}),(\d{1,5})/;
+        var rex_price = /item_prop_square_val_in\]=(\d{1,5}),(\d{1,5})/;
+        var url = unescape(window.location.href);
+
+        var match_square = url.match(rex_square);
+        var match_price = url.match(rex_price);
+
+        var min, max, p;
+
+        if (match_square != null) {
+            min = Number(match_square[1]);
+            max = Number(match_square[2]);
+            if (min > max) {
+                p = min;
+                min = max;
+                max = p;
+            }
+            $slider_square.setValue([min, max]);
+        }
+
+        if (match_price != null) {
+            min = Number(match_price[1]);
+            max = Number(match_price[2]);
+            if (min > max) {
+                p = min;
+                min = max;
+                max = p;
+            }
+            $slider_price.setValue([min, max]);
+        }
+
+        //console.log("<_fMakeMinMaxInputs> square = " + param_item_prop_square_val_in + "; price = " + param_item_prop_price_val_in);
+
+        // подставляем начальные значения
     };
 
     var _fTranslateScopes = function () {
@@ -460,15 +504,25 @@ var fAreasIndex = function () {
 
     var _fInitSliders = function () {
 
-        $slider_square = $original_input_square.bootstrapSlider();
-        $slider_price = $original_input_price.bootstrapSlider();
+        //$slider_square = $original_input_square.bootstrapSlider();
+        //$slider_price = $original_input_price.bootstrapSlider();
+        $slider_square = new Slider(csss_input_square);
+        $slider_price = new Slider(csss_input_price);
 
-        _fMakeMinMaxInputs($original_input_square);
-        _fMakeMinMaxInputs($original_input_price);
+        //console.log($original_input_square);
+        //console.log($original_input_price);
+        square_min = $original_input_square.data('slider-min');
+        square_max = $original_input_square.data('slider-max');
+        price_min = $original_input_price.data('slider-min');
+        price_max = $original_input_price.data('slider-max');
+
+        _fMakeMinMaxInputs($original_input_square, $slider_square, [square_min,square_max] );
+        _fMakeMinMaxInputs($original_input_price, $slider_price, [price_min, price_max]);
 
     };
 
-    var _fMakeMinMaxInputs = function ($input) {
+    var _fMakeMinMaxInputs = function ($input, $slider, minmax) {
+        //console.log("<func_normalize_val> minmax = " + minmax);
 
         // перед этим элементом вставим наши инпуты
         var $trg = $input.parent().find('div.slider');
@@ -477,11 +531,75 @@ var fAreasIndex = function () {
         $input.parent().find('.label').css('margin-bottom','-5px');
 
         // вставляемые инпуты
-        var $input_min = $('<input type="text" class="min_text_input" placeholder="от"/>');
-        var $input_max = $('<input type="text" class="max_text_input" placeholder="до"/>');
-
+        var $input_min = $('<input type="number" class="min_text_input" placeholder="от"/>');
+        var $input_max = $('<input type="number" class="max_text_input" placeholder="до"/>');
         $trg.before($input_min);
         $trg.before($input_max);
+
+        /*взаимодействуя со слайдером - будут меняться значения в текстовых полях*/
+
+        var func_on_change_slider = function () {
+            //console.log("<func_on_change_slider> " + this.value); // #=> 12,333
+            var va = this.value.split(',');
+            var min = va[0];
+            var max = va[1];
+            $input_min.val(min);
+            $input_max.val(max);
+            //$input_min.data('normalized-value',min);
+            //$input_max.data('normalized-value',max);
+        };
+        $input.on('change', func_on_change_slider);
+        $input.change();
+
+        /*взаимодействуя с текстовыми полями - будет меняться слайдер*/
+
+        var func_normalize_val = function (val) {
+            //console.log("<func_normalize_val> val = " + val);
+            //console.log("<func_normalize_val> minmax[0] = " + minmax[0]);
+            //console.log("<func_normalize_val> minmax[1] = " + minmax[1]);
+
+            var v = val;
+            if (v < $input.data('slider-min')) {
+                v = $input.data('slider-min');
+            }
+            if (v > $input.data('slider-max')) {
+                v = $input.data('slider-max');
+            }
+            return Number(v);
+        };
+
+        var func_invalidate_slider = function () {
+
+            //$trg.bootstrapSlider('setValue',[
+            //    $input_min.data('normalized-value'),
+            //    $input_max.data('normalized-value')
+            //]);
+
+            var arr = [
+                func_normalize_val($input_min.val()),
+                func_normalize_val($input_max.val())
+            ];
+            //console.log("<func_invalidate_slider> " + arr);
+            $slider.setValue(arr);
+
+        };
+
+        var func_onblur_min = function () {
+            //console.log(this.value);
+            var v = func_normalize_val(this.value);
+            //$input_min.data('normalized-value',v);
+            func_invalidate_slider();
+        };
+
+        var func_onblur_max = function () {
+            //console.log(this.value);
+            var v = func_normalize_val(this.value);
+            //$input_max.data('normalized-value',v);
+            func_invalidate_slider();
+        };
+
+        $input_min.on('blur', func_onblur_min);
+        $input_max.on('blur', func_onblur_max);
 
     };
 

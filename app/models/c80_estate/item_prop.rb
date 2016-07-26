@@ -9,7 +9,7 @@ module C80Estate
 
     def self.all_uniq_values(prop_name_id)
       self.where(prop_name_id: prop_name_id)
-          .map { |ip| ip.value }.uniq
+          .map { |ip| ip.value.to_i }.uniq
     end
 
     private

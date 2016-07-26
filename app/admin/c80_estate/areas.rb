@@ -91,11 +91,12 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
              # provide: 'slider',
              slider_ticks: C80Estate::ItemProp.all_uniq_values(9).to_json, #'[0, 1, 2, 3]',
              slider_labels: C80Estate::ItemProp.all_uniq_values(9).to_json, #'["none", short", "medium","long"]',
-             slider_min: C80Estate::ItemProp.all_uniq_values(9).last,
-             slider_max: C80Estate::ItemProp.all_uniq_values(9).first,
+             slider_min: C80Estate::ItemProp.all_uniq_values(9).sort.first,
+             slider_max: C80Estate::ItemProp.all_uniq_values(9).sort.last,
              slider_step: 1,
              slider_value: 0,
-             slider_range: true
+             slider_range: true,
+             slider_tooltip: 'hide'
          }}
 
   filter :item_prop_price_val_in,
@@ -105,11 +106,12 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
              #provide: 'slider',
              slider_ticks: C80Estate::ItemProp.all_uniq_values(1).to_json, #'[0, 1, 2, 3]',
              slider_labels: C80Estate::ItemProp.all_uniq_values(1).to_json, #'["none", short", "medium","long"]',
-             slider_min: C80Estate::ItemProp.all_uniq_values(1).last,
-             slider_max: C80Estate::ItemProp.all_uniq_values(1).first,
+             slider_min: C80Estate::ItemProp.all_uniq_values(1).sort.first,
+             slider_max: C80Estate::ItemProp.all_uniq_values(1).sort.last,
              slider_step: 1,
              slider_value: 0,
-             slider_range: true
+             slider_range: true,
+             slider_tooltip: 'hide'
          }}
 
   filter :item_prop_oenter_in,
