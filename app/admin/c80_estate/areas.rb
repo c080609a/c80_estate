@@ -2,7 +2,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
   # scope_to :current_admin_user, association_method: :sites_list
 
-  menu :label => "Площади"
+  menu :label => 'Площади', priority: 3
 
   permit_params :title,
                 :desc,

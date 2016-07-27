@@ -2,7 +2,7 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
 
   # scope_to :current_admin_user, association_method: :sites_list
 
-  menu :label => "Объекты недвижимости"
+  menu :label => "Объекты недвижимости", priority: 2
 
   permit_params :title,
                 :desc,

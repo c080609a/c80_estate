@@ -1,6 +1,8 @@
 ActiveAdmin.register ActiveAdmin::Comment, :as => 'Comment' do
 
-  menu label: 'Комментарии', :if => proc { current_admin_user.can_view_comments? }
+  menu label: 'Комментарии',
+       :if => proc { current_admin_user.can_view_comments? },
+       :priority => 12
 
   batch_action :destroy, false
 

@@ -20,7 +20,10 @@ ActiveAdmin.register AdminUser do
   end
 
   # menu :if => proc {current_admin_user.email == "tz007@mail.ru"}
-  menu label: 'Пользователи', :if => proc { current_admin_user.can_view_users? }
+  menu label: 'Пользователи',
+       :if => proc { current_admin_user.can_view_users? },
+       :priority => 9
+
   index do
     selectable_column
     id_column
