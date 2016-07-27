@@ -500,6 +500,8 @@ var fAreasIndex = function () {
         $a = $li.find(".table_tools_button");
         $a_span = $a.find('span');
         $a.html('Занятые <span class="count">' + $a_span.text() + '</span>');
+
+        $('ul.scopes').css('opacity','1.0');
     };
 
     var _fInitSliders = function () {
