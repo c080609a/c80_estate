@@ -681,8 +681,10 @@ module C80Estate
       all_props = Property.all
       all_props.each do |prop|
         ppstats = pstats.where(:property_id => prop.id).ordered_by_created_at.last
-        sum_free_areas += ppstats.free_areas
-        sum_busy_areas += ppstats.busy_areas
+        if ppstats.present?
+          sum_free_areas += ppstats.free_areas
+          sum_busy_areas += ppstats.busy_areas
+        end
       end
       {
           sum_free_areas:sum_free_areas,
