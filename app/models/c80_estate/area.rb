@@ -116,13 +116,16 @@ module C80Estate
       import_result = ''
       spreadsheet = open_spreadsheet(file)
       header = spreadsheet.row(1)
-      Rails.logger.debug(header)
+
+      # Rails.logger.debug(header)
+      # ["title", "atype", "square", "price", "status"]
 
       (2..spreadsheet.last_row).each do |i|
 
         row = Hash[[header, spreadsheet.row(i)].transpose]
 
-        Rails.logger.debug(row)
+        Rails.logger.debug("---------- #{row} -----------")
+        # {"title"=>"С2-1.18", "atype"=>"Торговое помещение", "square"=>"0", "price"=>800.0, "status"=>"Занята"}
 
         #   area_where = Area.where(:slug => row["ID"])
         #   if area_where.count > 0
@@ -143,6 +146,25 @@ module C80Estate
         #   end
         #
         #
+
+        area = C80Estate::Area.create!({
+                                           title: row['title'],
+                                           property_id: row['property_id'].to_i,
+                                           atype_id: row['atype_id'].to_i,
+                                           owner_type: 'AdminUser',
+                                           owner_id: 2,
+                                           assigned_person_type: 'AdminUser',
+                                           assigned_person_id: 2
+                                       })
+
+        C80Estate::ItemProp.create!([
+                                        {value: row['price'].to_i, area_id: area.id, prop_name_id: 1},
+                                        {value: row['square'].to_f, area_id: area.id, prop_name_id: 9},
+                                    ])
+
+        area.astatuses << C80Estate::Astatus.find(row['astatus'].to_i)
+        area.save
+
       end
 
       puts "------------------------------------------------------------- self.import [END] "
@@ -347,9 +369,12 @@ module C80Estate
 
     def self.open_spreadsheet(file)
       case File.extname(file.original_filename)
-        when ".xls" then Roo::Excel.new(file.path)
-        when ".xlsx" then Roo::Excelx.new(file.path)
-        else raise "Неизвестный формат файла: #{file.original_filename}"
+        when ".xls" then
+          Roo::Excel.new(file.path)
+        when ".xlsx" then
+          Roo::Excelx.new(file.path)
+        else
+          raise "Неизвестный формат файла: #{file.original_filename}"
       end
     end
 
