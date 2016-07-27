@@ -163,7 +163,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       "<span class='status_#{area.astatus_tag}'>#{area.astatus_title}</span>".html_safe
     end
     column :assigned_person do |area|
-      area.assigned_person_title
+      area.property.assigned_person_title
     end
     # actions
     # column '' do |area|
@@ -182,10 +182,10 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       f.input :title
       f.input :atype, :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'}
       f.input :property, :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'}
-      f.input :assigned_person,
-              :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'},
-              :collection => AdminUser.all.map { |u| ["#{u.email}", u.id] }
-      f.input :assigned_person_type, :input_html => {:value => "AdminUser"}, as: :hidden
+      # f.input :assigned_person,
+      #         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'},
+      #         :collection => AdminUser.all.map { |u| ["#{u.email}", u.id] }
+      # f.input :assigned_person_type, :input_html => {:value => "AdminUser"}, as: :hidden
       f.input :astatuses,
               :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px', :multiple => false}
       f.input :desc, :as => :ckeditor

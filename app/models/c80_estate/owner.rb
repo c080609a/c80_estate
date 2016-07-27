@@ -75,8 +75,8 @@ module C80Estate
             r1 = roles.where(role_type: 1)
             # mark_is_owner = area.owner.id == id
             mark_is_assigned = false
-            if area.assigned_person.present?
-              mark_is_assigned = area.assigned_person.id == id
+            if area.property.assigned_person.present?
+              mark_is_assigned = area.property.assigned_person.id == id
             end
             r1.count > 0 || mark_is_assigned # || mark_is_owner
             # true
