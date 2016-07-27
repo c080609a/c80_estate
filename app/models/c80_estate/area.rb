@@ -111,38 +111,42 @@ module C80Estate
 
     def self.import_excel(file)
 
-      puts "------------------------------------------------------------- self.import [BEGIN] "
+      Rails.logger.debug "------------------------------------------------------------- self.import [BEGIN] "
 
-      # import_result = ""
-      # spreadsheet = open_spreadsheet(file)
-      # header = spreadsheet.row(1)
-      # (2..spreadsheet.last_row).each do |i|
-      #
-      #   row = Hash[ [header,spreadsheet.row(i)].transpose ]
-      #
-      #   area_where = Area.where(:slug => row["ID"])
-      #   if area_where.count > 0
-      #
-      #     area = Area.where(:slug => row["ID"]).first
-      #     puts "--- Обновляем данные для #{area.id}, #{area.slug}: "
-      #     puts "--- Хотим вставить данные: " + row.to_hash.to_s
-      #     area.price = row["Цена"]
-      #     area.space = row["Площадь"]
-      #     area.save
-      #     puts "."
-      #
-      #   else
-      #     s = "В базе не найден павильон: #{row.to_hash}"
-      #     import_result += s + "\n"
-      #     puts s
-      #
-      #   end
-      #
-      #
-      # end
+      import_result = ''
+      spreadsheet = open_spreadsheet(file)
+      header = spreadsheet.row(1)
+      Rails.logger.debug(header)
+
+      (2..spreadsheet.last_row).each do |i|
+
+        row = Hash[[header, spreadsheet.row(i)].transpose]
+
+        Rails.logger.debug(row)
+
+        #   area_where = Area.where(:slug => row["ID"])
+        #   if area_where.count > 0
+        #
+        #     area = Area.where(:slug => row["ID"]).first
+        #     puts "--- Обновляем данные для #{area.id}, #{area.slug}: "
+        #     puts "--- Хотим вставить данные: " + row.to_hash.to_s
+        #     area.price = row["Цена"]
+        #     area.space = row["Площадь"]
+        #     area.save
+        #     puts "."
+        #
+        #   else
+        #     s = "В базе не найден павильон: #{row.to_hash}"
+        #     import_result += s + "\n"
+        #     puts s
+        #
+        #   end
+        #
+        #
+      end
 
       puts "------------------------------------------------------------- self.import [END] "
-      # import_result
+      import_result
 
     end
 
@@ -337,6 +341,16 @@ module C80Estate
 
       end
 
+    end
+
+    private
+
+    def self.open_spreadsheet(file)
+      case File.extname(file.original_filename)
+        when ".xls" then Roo::Excel.new(file.path)
+        when ".xlsx" then Roo::Excelx.new(file.path)
+        else raise "Неизвестный формат файла: #{file.original_filename}"
+      end
     end
 
   end

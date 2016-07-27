@@ -22,9 +22,13 @@ module C80Estate
 
       respond_to do |format|
         if is_ok
-          format.js
+          format.js { render json: errs, status: :ok }
+          format.json
+          format.html
         else
           format.js { render json: errs, status: :unprocessable_entity }
+          format.json
+          format.html
         end
       end
 
