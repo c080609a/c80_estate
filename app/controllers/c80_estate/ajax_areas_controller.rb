@@ -13,7 +13,7 @@ module C80Estate
       begin
         @import_result = Area.import_excel(params[:file])
       rescue => e
-        # puts "-------------- " + e.to_s
+        Rails.logger.debug "ERROR: #{e}"
         errs["areas_exel"].push(e.to_s)
         is_ok = false
       end

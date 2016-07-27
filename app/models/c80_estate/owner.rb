@@ -74,7 +74,10 @@ module C80Estate
           def can_edit_area?(area)
             r1 = roles.where(role_type: 1)
             # mark_is_owner = area.owner.id == id
-            mark_is_assigned = area.assigned_person.id == id
+            mark_is_assigned = false
+            if area.assigned_person.present?
+              mark_is_assigned = area.assigned_person.id == id
+            end
             r1.count > 0 || mark_is_assigned # || mark_is_owner
             # true
           end
@@ -83,7 +86,10 @@ module C80Estate
           def can_edit_property?(property)
             r1 = roles.where(role_type: 1)
             # mark_is_owner = property.owner.id == id
-            mark_is_assigned = property.assigned_person.id == id
+            mark_is_assigned = false
+            if property.assigned_person.present?
+              mark_is_assigned = property.assigned_person.id == id
+            end
             r1.count > 0 || mark_is_assigned # || mark_is_owner
             # true
           end
