@@ -228,6 +228,24 @@ module C80Estate
       res
     end
 
+    def price_value
+      res = '-'
+      p = item_props.where(:prop_name_id => 1)
+      if p.count > 0
+        res = p.first.value
+      end
+      res
+    end
+
+    def square_value
+      res = '-'
+      p = item_props.where(:prop_name_id => 9)
+      if p.count > 0
+        res = p.first.value
+      end
+      res
+    end
+
     ransacker :item_prop_price_val,
               formatter: proc { |price_range| # 10,156
                 results = C80Estate::Area.where_price_range(price_range).map(&:id)

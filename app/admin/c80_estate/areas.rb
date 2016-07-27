@@ -141,14 +141,22 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
   index do
     selectable_column
-    column :title
+    column :title do |area|
+      link_to area.title, "/admin/areas/#{area.id}", title: I18n.t("active_admin.view")
+    end
     column :atype do |area|
       area.atype_title
     end
+    column 'Цена' do |area|
+      "#{area.price_value} руб"
+    end
+    column 'Метраж' do |area|
+      "#{area.square_value} м<sup>2</sup>".html_safe
+    end
     column :property do |area|
       "<div class='image_vertical properties_index_logo'>
-      <span></span><img src='#{image_path(area.property.logo_path)}'>
-      </div><span class='properties_index_logo_title'>#{area.property_title}</span>".html_safe
+      <span></span><a href='/admin/areas?utf8=✓&q%5Bproperty_id_eq%5D=#{area.property.id}&commit=Фильтровать&order=id_asc'><img src='#{image_path(area.property.logo_path)}'>
+      </div><span class='properties_index_logo_title'>#{area.property_title}</span></a>".html_safe
 
     end
     column :astatuses do |area|
@@ -158,9 +166,9 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       area.assigned_person_title
     end
     # actions
-    column '' do |area|
-      link_to I18n.t("active_admin.view"), "/admin/areas/#{area.id}", class: 'member_link'
-    end
+    # column '' do |area|
+    #   link_to I18n.t("active_admin.view"), "/admin/areas/#{area.id}", class: 'member_link'
+    # end
     column '' do |area|
       if current_admin_user.can_edit_area?(area)
         link_to I18n.t("active_admin.edit"), "/admin/areas/#{area.id}/edit", class: 'member_link'
