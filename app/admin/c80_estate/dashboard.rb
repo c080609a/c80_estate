@@ -35,15 +35,15 @@ ActiveAdmin.register_page "Dashboard" do
 
     end
 
-    section '', if: -> { current_admin_user.email == 'tz007@mail.ru' } do
-      columns do
-        column do
-          panel 'Admin Features', class: 'clearfix' do
-            render_upload_areas_excel_form
-          end
-        end
-      end
-    end
+    # section '', if: -> { current_admin_user.email == 'tz007@mail.ru' } do
+    #   columns do
+    #     column do
+    #       panel 'Admin Features', class: 'clearfix' do
+    #         render_upload_areas_excel_form
+    #       end
+    #     end
+    #   end
+    # end
 
     # div class: "blank_slate_container", id: "dashboard_default_message" do
     #   span class: "blank_slate" do

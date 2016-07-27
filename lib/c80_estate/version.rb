@@ -1,3 +1,3 @@
 module C80Estate
-  VERSION = "0.1.0.9"
+  VERSION = "0.1.0.11"
 end
