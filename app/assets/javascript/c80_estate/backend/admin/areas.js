@@ -446,7 +446,7 @@ var fAreasIndex = function () {
 
         // считываем get параметры
         var rex_square = /item_prop_square_val_in\]=(\d{1,5}),(\d{1,5})/;
-        var rex_price = /item_prop_square_val_in\]=(\d{1,5}),(\d{1,5})/;
+        var rex_price = /item_prop_price_val_in\]=(\d{1,5}),(\d{1,5})/;
         var url = unescape(window.location.href);
 
         var match_square = url.match(rex_square);
@@ -462,7 +462,7 @@ var fAreasIndex = function () {
                 min = max;
                 max = p;
             }
-            $slider_square.setValue([min, max]);
+            $slider_square.setValue([min, max],false,true);
         }
 
         if (match_price != null) {
@@ -473,7 +473,7 @@ var fAreasIndex = function () {
                 min = max;
                 max = p;
             }
-            $slider_price.setValue([min, max]);
+            $slider_price.setValue([min, max],false,true);
         }
 
         //console.log("<_fMakeMinMaxInputs> square = " + param_item_prop_square_val_in + "; price = " + param_item_prop_price_val_in);
@@ -500,6 +500,8 @@ var fAreasIndex = function () {
         $a = $li.find(".table_tools_button");
         $a_span = $a.find('span');
         $a.html('Занятые <span class="count">' + $a_span.text() + '</span>');
+
+        $('ul.scopes').css('opacity','1.0');
     };
 
     var _fInitSliders = function () {
@@ -538,8 +540,8 @@ var fAreasIndex = function () {
 
         /*взаимодействуя со слайдером - будут меняться значения в текстовых полях*/
 
-        var func_on_change_slider = function () {
-            //console.log("<func_on_change_slider> " + this.value); // #=> 12,333
+        var func_on_change_orig_input = function () {
+            //console.log("<func_on_change_orig_input> " + this.value); // #=> 12,333
             var va = this.value.split(',');
             var min = va[0];
             var max = va[1];
@@ -548,7 +550,7 @@ var fAreasIndex = function () {
             //$input_min.data('normalized-value',min);
             //$input_max.data('normalized-value',max);
         };
-        $input.on('change', func_on_change_slider);
+        $input.on('change', func_on_change_orig_input);
         $input.change();
 
         /*взаимодействуя с текстовыми полями - будет меняться слайдер*/
