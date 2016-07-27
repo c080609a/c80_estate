@@ -2,7 +2,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
   # scope_to :current_admin_user, association_method: :sites_list
 
-  menu :label => "Площади"
+  menu :label => 'Площади', priority: 3
 
   permit_params :title,
                 :desc,
@@ -88,28 +88,30 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
          :as => :string,
          :label => 'Площадь (м.кв.)',
          :input_html => {data: {
-             provide: 'slider',
+             # provide: 'slider',
              slider_ticks: C80Estate::ItemProp.all_uniq_values(9).to_json, #'[0, 1, 2, 3]',
              slider_labels: C80Estate::ItemProp.all_uniq_values(9).to_json, #'["none", short", "medium","long"]',
-             slider_min: C80Estate::ItemProp.all_uniq_values(9).last,
-             slider_max: C80Estate::ItemProp.all_uniq_values(9).first,
+             slider_min: C80Estate::ItemProp.all_uniq_values(9).sort.first,
+             slider_max: C80Estate::ItemProp.all_uniq_values(9).sort.last,
              slider_step: 1,
              slider_value: 0,
-             slider_range: true
+             slider_range: true,
+             slider_tooltip: 'hide'
          }}
 
   filter :item_prop_price_val_in,
          :as => :string,
          :label => 'Цена (руб/м.кв в месяц)',
          :input_html => {data: {
-             provide: 'slider',
+             #provide: 'slider',
              slider_ticks: C80Estate::ItemProp.all_uniq_values(1).to_json, #'[0, 1, 2, 3]',
              slider_labels: C80Estate::ItemProp.all_uniq_values(1).to_json, #'["none", short", "medium","long"]',
-             slider_min: C80Estate::ItemProp.all_uniq_values(1).last,
-             slider_max: C80Estate::ItemProp.all_uniq_values(1).first,
+             slider_min: C80Estate::ItemProp.all_uniq_values(1).sort.first,
+             slider_max: C80Estate::ItemProp.all_uniq_values(1).sort.last,
              slider_step: 1,
              slider_value: 0,
-             slider_range: true
+             slider_range: true,
+             slider_tooltip: 'hide'
          }}
 
   filter :item_prop_oenter_in,
@@ -139,26 +141,34 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
   index do
     selectable_column
-    column :title
+    column :title do |area|
+      link_to area.title, "/admin/areas/#{area.id}", title: I18n.t("active_admin.view")
+    end
     column :atype do |area|
       area.atype_title
     end
+    column 'Цена' do |area|
+      "#{area.price_value} руб"
+    end
+    column 'Метраж' do |area|
+      "#{area.square_value} м<sup>2</sup>".html_safe
+    end
     column :property do |area|
       "<div class='image_vertical properties_index_logo'>
-      <span></span><img src='#{image_path(area.property.logo_path)}'>
-      </div><span class='properties_index_logo_title'>#{area.property_title}</span>".html_safe
+      <span></span><a href='/admin/areas?utf8=✓&q%5Bproperty_id_eq%5D=#{area.property.id}&commit=Фильтровать&order=id_asc'><img src='#{image_path(area.property.logo_path)}'>
+      </div><span class='properties_index_logo_title'>#{area.property_title}</span></a>".html_safe
 
     end
     column :astatuses do |area|
       "<span class='status_#{area.astatus_tag}'>#{area.astatus_title}</span>".html_safe
     end
     column :assigned_person do |area|
-      area.assigned_person_title
+      area.property.assigned_person_title
     end
     # actions
-    column '' do |area|
-      link_to I18n.t("active_admin.view"), "/admin/areas/#{area.id}", class: 'member_link'
-    end
+    # column '' do |area|
+    #   link_to I18n.t("active_admin.view"), "/admin/areas/#{area.id}", class: 'member_link'
+    # end
     column '' do |area|
       if current_admin_user.can_edit_area?(area)
         link_to I18n.t("active_admin.edit"), "/admin/areas/#{area.id}/edit", class: 'member_link'
@@ -172,10 +182,10 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       f.input :title
       f.input :atype, :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'}
       f.input :property, :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'}
-      f.input :assigned_person,
-              :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'},
-              :collection => AdminUser.all.map { |u| ["#{u.email}", u.id] }
-      f.input :assigned_person_type, :input_html => {:value => "AdminUser"}, as: :hidden
+      # f.input :assigned_person,
+      #         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'},
+      #         :collection => AdminUser.all.map { |u| ["#{u.email}", u.id] }
+      # f.input :assigned_person_type, :input_html => {:value => "AdminUser"}, as: :hidden
       f.input :astatuses,
               :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px', :multiple => false}
       f.input :desc, :as => :ckeditor

@@ -109,6 +109,69 @@ module C80Estate
           .where(c80_estate_item_props: {value: v})
     end
 
+    def self.import_excel(file)
+
+      Rails.logger.debug "------------------------------------------------------------- self.import [BEGIN] "
+
+      import_result = ''
+      spreadsheet = open_spreadsheet(file)
+      header = spreadsheet.row(1)
+
+      # Rails.logger.debug(header)
+      # ["title", "atype", "square", "price", "status"]
+
+      (2..spreadsheet.last_row).each do |i|
+
+        row = Hash[[header, spreadsheet.row(i)].transpose]
+
+        Rails.logger.debug("---------- #{row} -----------")
+        # {"title"=>"С2-1.18", "atype"=>"Торговое помещение", "square"=>"0", "price"=>800.0, "status"=>"Занята"}
+
+        #   area_where = Area.where(:slug => row["ID"])
+        #   if area_where.count > 0
+        #
+        #     area = Area.where(:slug => row["ID"]).first
+        #     puts "--- Обновляем данные для #{area.id}, #{area.slug}: "
+        #     puts "--- Хотим вставить данные: " + row.to_hash.to_s
+        #     area.price = row["Цена"]
+        #     area.space = row["Площадь"]
+        #     area.save
+        #     puts "."
+        #
+        #   else
+        #     s = "В базе не найден павильон: #{row.to_hash}"
+        #     import_result += s + "\n"
+        #     puts s
+        #
+        #   end
+        #
+        #
+
+        area = C80Estate::Area.create!({
+                                           title: row['title'],
+                                           property_id: row['property_id'].to_i,
+                                           atype_id: row['atype_id'].to_i,
+                                           owner_type: 'AdminUser',
+                                           owner_id: 2,
+                                           assigned_person_type: 'AdminUser',
+                                           assigned_person_id: 2
+                                       })
+
+        C80Estate::ItemProp.create!([
+                                        {value: row['price'].to_i, area_id: area.id, prop_name_id: 1},
+                                        {value: row['square'].to_f, area_id: area.id, prop_name_id: 9},
+                                    ])
+
+        area.astatuses << C80Estate::Astatus.find(row['astatus'].to_i)
+        area.save
+
+      end
+
+      puts "------------------------------------------------------------- self.import [END] "
+      import_result
+
+    end
+
     def atype_title
       res = "-"
       if atype.present?
@@ -161,6 +224,24 @@ module C80Estate
       res = -1
       if owner.present?
         res = owner.id
+      end
+      res
+    end
+
+    def price_value
+      res = '-'
+      p = item_props.where(:prop_name_id => 1)
+      if p.count > 0
+        res = p.first.value
+      end
+      res
+    end
+
+    def square_value
+      res = '-'
+      p = item_props.where(:prop_name_id => 9)
+      if p.count > 0
+        res = p.first.value
       end
       res
     end
@@ -300,6 +381,19 @@ module C80Estate
 
       end
 
+    end
+
+    private
+
+    def self.open_spreadsheet(file)
+      case File.extname(file.original_filename)
+        when ".xls" then
+          Roo::Excel.new(file.path)
+        when ".xlsx" then
+          Roo::Excelx.new(file.path)
+        else
+          raise "Неизвестный формат файла: #{file.original_filename}"
+      end
     end
 
   end

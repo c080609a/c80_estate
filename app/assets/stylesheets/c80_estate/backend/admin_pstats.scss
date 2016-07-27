@@ -24,8 +24,9 @@ body.admin_pstats {
           height: 183px;
 
           &#coef {
-            width: 25%;
+            width: 33%;
             text-align: center;
+            margin-bottom: 15px;
 
             p {
               width: 100%;
@@ -40,8 +41,7 @@ body.admin_pstats {
           }
 
           &#coef_sq {
-            width: calc(25% - 30px);
-            margin-left: 30px;
+            width: 33%;
             text-align: center;
 
             p {
@@ -57,8 +57,9 @@ body.admin_pstats {
           }
 
           &#text_stats, &#text_stats_sq {
-            width: calc(25% - 30px);
+            width: calc(33% - 30px);
             margin-left: 30px;
+            margin-bottom: 15px;
 
             ul {
               padding: 0 5px;
@@ -70,16 +71,23 @@ body.admin_pstats {
 
           }
 
-          &#graph {
-            width: calc(100% - 200px - 200px - 30px - 30px);
-            /*width: 100%;*/
-            /*height: 200px;*/
-            /*margin-top: 15px;*/
+          &#graph_radial {
+            width: calc(33% - 30px);
+            margin-left: 30px;
+            margin-bottom: 15px;
+            padding: 0;
 
+            -webkit-transition: opacity .2s ease-in;
+            -moz-transition: opacity .2s ease-in;
+            -ms-transition: opacity .2s ease-in;
+            -o-transition: opacity .2s ease-in;
+            transition: opacity .2s ease-in;
+          }
+
+          &#graph_radial_sq {
+            width: calc(33% - 30px);
             margin-left: 30px;
             padding: 0;
-            display: none;
-            opacity: 0;
 
             -webkit-transition: opacity .2s ease-in;
             -moz-transition: opacity .2s ease-in;

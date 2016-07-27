@@ -23,6 +23,11 @@ module C80Estate
       # Rails.logger.debug "<Pstat.busy_coef> prop_id = #{prop_id}, atype_id = #{atype_id}"
       result = {}
 
+      # если нет событий - не считаем busy_coef
+      if self.all.count == 0
+        return result
+      end
+
       # обозначим диапазон фильтрации
       first_created_at = Time.at(self.first.created_at)
       time_now = Time.now
@@ -60,7 +65,6 @@ module C80Estate
 
         free_areas_atnow = tt[:sum_free_areas] #*1.0/all_props.count #pstats.last.free_areas
         busy_areas_atnow = tt[:sum_busy_areas] #*1.0/all_props.count #pstats.last.busy_areas
-        graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
 
         # защищаемся от деления на ноль
         if free_areas_atnow + busy_areas_atnow == 0
@@ -75,7 +79,7 @@ module C80Estate
 
         result[:busy_coef] = sprintf "%.2f%", bcoef
         result[:comment] = "<abbr title='Период рассчёта занятости'>C #{ddd} по #{ tcut[:used_end_date_str] }</abbr>"
-        result[:abbr] = 'Показана занятость для ВСЕХ площадей ВСЕХ объектов недвижимости за указанный период'
+        result[:abbr] = 'Показана занятость для ВСЕХ площадей ВСЕХ объектов недвижимости в конце указанного периода'
         result[:props] = [
             {tag: 'all_areas_count', val: "Площадей всего: #{free_areas_atnow + busy_areas_atnow}"},
             {tag: 'free_areas_count', val: "Площадей свободно: #{free_areas_atnow}"},
@@ -85,7 +89,8 @@ module C80Estate
         result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
         result[:raw_props][:free_areas_count] = free_areas_atnow
         result[:raw_props][:busy_areas_atnow] = busy_areas_atnow
-        result[:graph_dynamic] = graph_data
+        result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
+        result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
 
         # Rails.logger.debug "<Pstat.busy_coef> busy_areas_count = #{ busy_areas_count }"
         # Rails.logger.debug "<Pstat.busy_coef> all_areas_count = #{ all_areas_count }"
@@ -95,7 +100,6 @@ module C80Estate
 
         free_areas_atnow_sq = pstats.where(:atype_id => nil).last.free_areas_sq
         busy_areas_atnow_sq = pstats.where(:atype_id => nil).last.busy_areas_sq
-        graph_data_sq = _parse_for_js_dynamic_graph3_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
 
         # защищаемся от деления на ноль
         if busy_areas_atnow_sq + free_areas_atnow_sq == 0
@@ -106,7 +110,7 @@ module C80Estate
 
         result[:busy_coef_sq] = sprintf "%.2f%", bcoef_sq
         result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ КВ'>C #{tcut[:used_start_date_str]} по #{tcut[:used_end_date_str]}</abbr>"
-        result[:abbr_sq] = 'Занятость объекта в МЕТРАХ за указанный период: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
+        result[:abbr_sq] = 'Занятость объекта в МЕТРАХ в конце указанного периода: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
         result[:props_sq] = [
             {tag: 'all_areas_count_sq', val: "Кв.м. всего: #{busy_areas_atnow_sq + free_areas_atnow_sq}"},
             {tag: 'free_areas_count_sq', val: "Свободных: #{free_areas_atnow_sq}"},
@@ -116,7 +120,8 @@ module C80Estate
         result[:raw_props_sq][:all_areas_count_sq] = free_areas_atnow_sq + busy_areas_atnow_sq
         result[:raw_props_sq][:free_areas_count_sq] = free_areas_atnow_sq
         result[:raw_props_sq][:busy_areas_atnow_sq] = busy_areas_atnow_sq
-        result[:graph_dynamic_sq] = graph_data_sq
+        result[:graph_dynamic_sq] = _parse_for_js_dynamic_graph3_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+        result[:graph_radial_sq] = _parse_for_js_radial_graph_sq(free_areas_atnow_sq, busy_areas_atnow_sq)
 
         # common
 
@@ -218,7 +223,9 @@ module C80Estate
 
           result[:busy_coef] = sprintf "%.2f%", bcoef
           result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-          result[:abbr] = 'Занятость объекта за указанный период: число b/N, где b - кол-во свободных, N - всего площадей'
+          result[:abbr] = 'Занятость объекта в конце указанного периода: число b/N, где b - кол-во свободных, N - всего площадей'
+          result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
+          result[:graph_dynamic] = graph_data
 
           result[:raw_props] = {}
           result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
@@ -246,7 +253,10 @@ module C80Estate
 
           result[:busy_coef_sq] = sprintf "%.2f%", bcoef_sq
           result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ КВ'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-          result[:abbr_sq] = 'Занятость объекта в МЕТРАХ за указанный период: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
+          result[:abbr_sq] = 'Занятость объекта в МЕТРАХ в конце указанного периода: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
+          result[:graph_dynamic_sq] = graph_data_sq
+          result[:graph_radial_sq] = _parse_for_js_radial_graph_sq(free_areas_atnow_sq,busy_areas_atnow_sq)
+
           result[:props_sq] = [
               {tag: 'all_areas_count_sq', val: "Кв.м. всего: #{busy_areas_atnow_sq + free_areas_atnow_sq}"},
               {tag: 'free_areas_count_sq', val: "Свободных: #{free_areas_atnow_sq}"},
@@ -262,8 +272,7 @@ module C80Estate
 
           result[:title] = "Статистика - Объект - #{property.title}"
           # result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
-          result[:graph_dynamic] = graph_data
-          result[:graph_dynamic_sq] = graph_data_sq
+
 
           # if atype_id.present?
           #   result[:title] += " (#{Atype.find(atype_id).title})"
@@ -352,7 +361,6 @@ module C80Estate
 
         free_areas_atnow = tt[:sum_free_areas] #*1.0/all_props.count #pstats.last.free_areas
         busy_areas_atnow = tt[:sum_busy_areas] #*1.0/all_props.count #pstats.last.busy_areas
-        graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
 
         # Rails.logger.debug("\t\t atype_id = #{atype_id}")
         # Rails.logger.debug("\t\t free_areas_atnow = #{free_areas_atnow}")
@@ -367,7 +375,9 @@ module C80Estate
 
         result[:busy_coef] = sprintf "%.2f%", bcoef
         result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-        result[:abbr] = 'Занятость объекта за указанный период: число b/N, где b - кол-во свободных, N - всего площадей'
+        result[:abbr] = 'Занятость объекта в конце указанного периода: число b/N, где b - кол-во свободных, N - всего площадей'
+        result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
+        result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
 
         result[:raw_props] = {}
         result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
@@ -389,7 +399,10 @@ module C80Estate
 
         result[:busy_coef_sq] = sprintf "%.2f%", bcoef_sq
         result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ КВ'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-        result[:abbr_sq] = 'Занятость объекта в МЕТРАХ за указанный период: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
+        result[:abbr_sq] = 'Занятость объекта в МЕТРАХ в конце указанного периода: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
+        result[:graph_dynamic_sq] = graph_data_sq
+        result[:graph_radial_sq] = _parse_for_js_radial_graph_sq(free_areas_atnow_sq,busy_areas_atnow_sq)
+
         result[:props_sq] = [
             {tag: 'all_areas_count_sq', val: "Кв.м. всего: #{busy_areas_atnow_sq + free_areas_atnow_sq}"},
             {tag: 'free_areas_count_sq', val: "Свободных: #{free_areas_atnow_sq}"},
@@ -404,9 +417,6 @@ module C80Estate
         # common
 
         result[:title] = "Статистика - Объекты - Фильтр по типу площади '#{ Atype.find(atype_id).title }'"
-        # result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
-        result[:graph_dynamic] = graph_data
-        result[:graph_dynamic_sq] = graph_data_sq
 
         # if atype_id.present?
         #   result[:title] += " (#{Atype.find(atype_id).title})"
@@ -504,24 +514,30 @@ module C80Estate
     end
 
     def self._parse_for_js_radial_graph(free_areas_atnow, busy_areas_atnow)
-      # res = [
-      #     ['Year', 'Sales', 'Expenses'],
-      #     ['2013',  1000,      400],
-      #     ['2014',  1170,      460],
-      #     ['2015',  660,       1120],
-      #     ['2016/12/12',  1030,      540]
-      #
-      # ]
-      # [
-      #     ['', ''],
-      #     ['Свободно',     11],
-      #     ['Занято',      2]
-      # ]
+      #   data:
+      #       [
+      #         {  y: 6, legendText:"", label: "Площадей свободно" },
+      #         {  y: 4, legendText:"", label: "Площадей занято" }
+      #   ]
 
-      res = [['', '']]
-      res << ['Свободно', free_areas_atnow]
-      res << ['Занято', busy_areas_atnow]
-      Rails.logger.debug "<_parse_for_js_radial_graph> res: #{res}"
+      res = []
+      res << {label: 'Площадей свободно', y: free_areas_atnow, legendText: ''}
+      res << {label: 'Площадей занято', y: busy_areas_atnow, legendText: ''}
+      # Rails.logger.debug "<_parse_for_js_radial_graph> res: #{res}"
+      res
+
+    end
+
+    def self._parse_for_js_radial_graph_sq(free_areas_atnow_sq, busy_areas_atnow_sq)
+      #   data:
+      #       [
+      #         {  y: 6, legendText:"", label: "Метров свободно" },
+      #         {  y: 4, legendText:"", label: "Метров занято" }
+      #   ]
+
+      res = []
+      res << {label: 'Метров свободно', y: free_areas_atnow_sq, legendText: ''}
+      res << {label: 'Метров занято', y: busy_areas_atnow_sq, legendText: ''}
       res
 
     end
@@ -665,8 +681,10 @@ module C80Estate
       all_props = Property.all
       all_props.each do |prop|
         ppstats = pstats.where(:property_id => prop.id).ordered_by_created_at.last
-        sum_free_areas += ppstats.free_areas
-        sum_busy_areas += ppstats.busy_areas
+        if ppstats.present?
+          sum_free_areas += ppstats.free_areas
+          sum_busy_areas += ppstats.busy_areas
+        end
       end
       {
           sum_free_areas:sum_free_areas,

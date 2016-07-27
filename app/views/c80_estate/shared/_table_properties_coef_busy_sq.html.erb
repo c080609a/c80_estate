@@ -11,14 +11,18 @@
   <tbody>
 
   <% list.each do |obj| %>
-  <%# Rails.logger.debug "#{obj}" %>
-    <tr>
-      <td><%= obj[:title] %></td>
-      <td><%= obj[:busy_coef] %></td>
-      <% obj[:props].each_key do |key| %>
-        <td><%= obj[:props][key] %></td>
-      <% end %>
-    </tr>
+      <%# Rails.logger.debug "#{obj}" %>
+      <tr>
+        <td><%= obj[:title] %></td>
+        <td><%= obj[:busy_coef] %></td>
+
+        <% if obj[:props].present? %>
+            <% obj[:props].each_key do |key| %>
+                <td><%= obj[:props][key] %></td>
+            <% end %>
+        <% end %>
+
+      </tr>
   <% end %>
 
   </tbody>

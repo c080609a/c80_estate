@@ -1,6 +1,5 @@
 <div class="prop_in_list">
-  <%# link_to image_tag(image_path(prop.logo_path)), "/admin/properties/#{prop.id}" %>
-  <a href="/admin/properties?utf8=✓&q%5Bproperty_id_eq%5D=<%= prop.id %>&commit=Фильтровать&order=id_asc">
+  <a href="/admin/areas?utf8=✓&q%5Bproperty_id_eq%5D=<%= prop.id %>&commit=Фильтровать&order=id_asc">
     <span></span><img src="<%= image_path(prop.logo_path) %>">
   </a>
   <div class="text_content">

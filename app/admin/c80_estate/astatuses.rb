@@ -1,6 +1,7 @@
 # ПОДкатегории строительных материалов
 ActiveAdmin.register C80Estate::Astatus, :as => 'Astatus' do
 
+  menu :label => "Настройки", :priority => 3#, :if => :foo
   menu :label => "Статусы", :parent => "Настройки", :if => proc { current_admin_user.can_view_settings? }
 
   permit_params :title

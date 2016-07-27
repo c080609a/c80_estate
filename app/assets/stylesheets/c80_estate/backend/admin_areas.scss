@@ -122,14 +122,14 @@ body.admin_areas {
   &.index {
 
     .min_text_input {
-      margin-top: 15px;
+      margin: 10px 0;
       width: 45% !important;
+      padding-left: 15px;
     }
 
     .max_text_input {
-      margin-top: 15px;
+      margin: 10px 0 0 10% !important;
       width: 45% !important;
-      margin-left: 10%;
     }
 
     a.delete_link {
@@ -172,6 +172,10 @@ body.admin_areas {
         color: #ff2d2d;
       }
 
+    }
+
+    .blank_slate_container {
+      display: none !important;
     }
 
   }
