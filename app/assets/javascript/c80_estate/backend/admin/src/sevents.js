@@ -36,7 +36,7 @@ var fSeventsIndex = function () {
         $h2_page_title = $("h2#page_title");
 
         // построим компонент "над таблицей"
-        $div_index_adds = $("<div id='index_adds'></div>");
+        $div_index_adds = $("<div class='index_adds_like_sevents'></div>");
 
         $div_ecoef = $("<div id='ecoef'></div>");
         $p_ecoef_val = $("<p class='val'></p>");

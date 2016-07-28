@@ -37,7 +37,7 @@ var fAreasShow = function () {
         //$h2_page_title = $("h2#page_title");
 
         // построим компонент "над таблицей"
-        $div_index_adds = $("<div id='index_adds'></div>");
+        $div_index_adds = $("<div class='index_adds_like_sevents'></div>");
 
         $div_ecoef = $("<div id='ecoef'></div>");
         $p_ecoef_val = $("<p class='val'></p>");
@@ -59,7 +59,7 @@ var fAreasShow = function () {
         $div_index_adds.append($div_area_text_stats);
         $div_index_adds.append($div_graph);
 
-        $main_content.prepend($div_index_adds);
+        $(".comments").before($div_index_adds);
 
         // теперь покажем
         $main_content.css('opacity', '1.0');
