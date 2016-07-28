@@ -1,16 +1,51 @@
 "use strict";
 
-var fSeventsIndex = function () {
+var fAreasShow_initRichShowPage = function () {
+
+    //fCommon();
+    fItemImageMagnificPopupStart();
+    fItemGalleryPhotosMagnificPopupStart();
+
+    // если нужна кнопка "заказать"
+    //var $b = $('.c80_order_invoking_btn');
+    //$b.click(function (e) {
+    //    if (orderForm) {
+    //        orderForm.afterShowForm = function () {
+                $("textarea#mess_comment").focus();
+                //
+                //var $t = $("textarea#mess_comment");
+                //$t.data('toggle', 'tooltip');
+                //$t.data('palacement', 'right');
+                //$t.data('title', 'Укажите желаемое количество.');
+                //$t.tooltip();
+                //
+                //var $f = $('#form_order');
+                //
+                //var $b = $f.find('.btn');
+                //$b.removeClass('btn');
+                //$b.removeClass('btn-primary');
+                //$b.addClass('red_button');
+                //$b.attr('style','line-height: 34px;font-size: 16px;color: white; text-transform: uppercase; border-radius: 4px !important;');
+                //
+                //var $c = $f.find('.actions');
+                //$c.css('margin-top','15px');
+            //};
+        //}
+    //});
+
+};
+
+var fAreasShow = function () {
 
     // элементы html страницы
     var $main_content;          // правая сторона, там живёт таблица
-    var $select_area;           // фильтр area
-    var $select_atype;          // фильтр atype
-    var $select_property;       // фильтр property
-    var $select_auser;          // фильтр auser
-    var $input_start_date;      // фильтр "дата начала периода"
-    var $input_end_date;        // фильтр "дата конца периода"
-    var $h2_page_title;         // заголовок страницы
+    //var $select_area;           // фильтр area
+    //var $select_atype;          // фильтр atype
+    //var $select_property;       // фильтр property
+    //var $select_auser;          // фильтр auser
+    //var $input_start_date;      // фильтр "дата начала периода"
+    //var $input_end_date;        // фильтр "дата конца периода"
+    //var $h2_page_title;         // заголовок страницы
 
     // компонент "над таблицей"
     var $div_index_adds;
@@ -27,16 +62,16 @@ var fSeventsIndex = function () {
 
         // зафиксируем html элементы
         $main_content = $('#main_content');
-        $select_area = $("#q_area_id");
-        $select_atype = $("#q_atype_id");
-        $select_property = $("#q_property_id");
-        $select_auser = $("#q_auser_id");
-        $input_start_date = $("#q_created_at_gteq");
-        $input_end_date = $("#q_created_at_lteq");
-        $h2_page_title = $("h2#page_title");
+        //$select_area = $("#q_area_id");
+        //$select_atype = $("#q_atype_id");
+        //$select_property = $("#q_property_id");
+        //$select_auser = $("#q_auser_id");
+        //$input_start_date = $("#q_created_at_gteq");
+        //$input_end_date = $("#q_created_at_lteq");
+        //$h2_page_title = $("h2#page_title");
 
         // построим компонент "над таблицей"
-        $div_index_adds = $("<div id='index_adds'></div>");
+        $div_index_adds = $("<div class='index_adds_like_sevents'></div>");
 
         $div_ecoef = $("<div id='ecoef'></div>");
         $p_ecoef_val = $("<p class='val'></p>");
@@ -58,7 +93,8 @@ var fSeventsIndex = function () {
         $div_index_adds.append($div_area_text_stats);
         $div_index_adds.append($div_graph);
 
-        $main_content.prepend($div_index_adds);
+        $(".comments").before($('<h4 style="padding-top:15px;">Статистика</h4>'));
+        $(".comments").before($div_index_adds);
 
         // теперь покажем
         $main_content.css('opacity', '1.0');
@@ -66,24 +102,32 @@ var fSeventsIndex = function () {
 
     var fRequest = function () {
 
-        var area_id = $select_area.val();
-        var atype_id = $select_atype.val();
-        var property_id = $select_property.val();
-        var auser_id = $select_auser.val();
-        var start_date = $input_start_date.val();
-        var end_date = $input_end_date.val();
+        //var area_id = $select_area.val();
+        //var atype_id = $select_atype.val();
+        //var property_id = $select_property.val();
+        //var auser_id = $select_auser.val();
+        //var start_date = $input_start_date.val();
+        //var end_date = $input_end_date.val();
+        //
+
+        var area_id = -1;
+        var url = unescape(window.location.href);
+        var match_res = url.match(/areas\/(\d{1,9})/);
+        if (match_res != null) {
+            area_id = Number(match_res[1]);
+        }
 
         $.ajax({
             url: '/estate/areas_ecoef',
             type: 'POST',
             dataType: 'json',
             data: {
-                area_id: area_id,
-                atype_id: atype_id,
-                property_id: property_id,
-                auser_id: auser_id,
-                start_date: start_date,
-                end_date: end_date
+                area_id: area_id//,
+                //atype_id: atype_id,
+                //property_id: property_id,
+                //auser_id: auser_id,
+                //start_date: start_date,
+                //end_date: end_date
             }
         }).done(function (data, result) {
             if (result == 'success') {
@@ -110,9 +154,9 @@ var fSeventsIndex = function () {
                     fDrawChart(data["graph"]);
                 }
 
-                $h2_page_title.text(data["title"]);
-                $h2_page_title.css('opacity', '1.0');
-                $(document).attr('title', data["title"]);
+                //$h2_page_title.text(data["title"]);
+                //$h2_page_title.css('opacity', '1.0');
+                //$(document).attr('title', data["title"]);
 
             } else {
                 alert('fail: /estate/areas_ecoef');
@@ -126,6 +170,7 @@ var fSeventsIndex = function () {
     var fInit = function () {
         fBuild();
         fRequest();
+        fAreasShow_initRichShowPage();
     };
 
     var fDrawChart_google = function (data_array_rows) {
@@ -234,7 +279,7 @@ var fSeventsIndex = function () {
     };
 
     var fDrawChart = function (data) {
-        if (data != undefined) {
+        if (data != undefined && $('#graph').length) {
 
             var dataPoints = [];
             //[
@@ -304,22 +349,4 @@ var fSeventsIndex = function () {
 
     fInit();
 
-};
-
-var fSeventsEdit = function () {
-
-    alert("edit");
-
-};
-
-var fSeventsNew = function () {
-
-    alert("new");
-
-};
-
-YOUR_APP.sevents = {
-    edit: fSeventsEdit,
-    "new": fSeventsNew,
-    index: fSeventsIndex
 };

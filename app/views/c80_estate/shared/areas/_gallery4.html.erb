@@ -1,0 +1,52 @@
+<%  # рендер фотографий при просмотре товара из строительных материалов (http://td-forbiz.ru/stroitelnye-materialy/kirpich/1) %>
+
+<script>
+    var small_frames_slidesToShow = 3;
+    var small_frames_dots = false;
+</script>
+
+<div id="gallery3_wrapper">
+  <div id="gallery3">
+    <% frames.each do |frame| %>
+
+        <div class="col-md-12 col-sm-12 col-xs-12 frame">
+
+          <div class="img-holder col-md-12 col-sm-12 col-xs-12">
+            <%= link_to image_tag("",
+                                  :alt=>"frame.title",
+                                  :data => {
+                                          :lazy => image_path(frame.image.thumb256)
+                                  }
+                        ), frame.image.url, :title => "frame.title"
+            %>
+          </div>
+
+          <div class="name hidden"><%#frame.title %></div>
+
+        </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12" id="gallery3_nav_wrapper">
+  <div id="gallery3_nav">
+    <% frames.each do |frame| %>
+
+        <div class="frame">
+
+          <div class="img-holder">
+            <%= image_tag("",
+                          :alt=>"frame.title",
+                          :data => {
+                                  :lazy => image_path(frame.image.thumb256)
+                          }
+                )
+            %>
+            <div class="name hidden"><%# frame.title %></div>
+          </div>
+
+        </div>
+    <% end %>
+  </div>
+  <a id='goto_gallery' href="#" title="Посмотреть все">Изображений: <%= frames.count %></a>
+</div>

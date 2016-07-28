@@ -215,4 +215,9 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
     f.actions
   end
 
+  show do
+    render partial: 'show_area', locals: { area:resource }
+    active_admin_comments
+  end
+
 end

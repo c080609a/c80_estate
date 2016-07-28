@@ -5,11 +5,11 @@ module C80Estate
     process :resize_to_limit => [1024, 1024]
 
     version :thumb512 do
-      process :resize_to_limit => [512, 512]
+      process :resize_to_fill => [621, 377]
     end
 
     version :thumb256 do
-      process :resize_to_limit => [256, 256]
+      process :resize_to_fill => [310, 188]
     end
 
     def store_dir

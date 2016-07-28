@@ -11,7 +11,7 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
                 :auser_id,
                 :auser_type
 
-  config.sort_order = 'id_asc'
+  config.sort_order = 'created_at_desc'
 
   filter :property_id,
          :as => :select,
@@ -41,7 +41,7 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
   index do
     selectable_column
     column :area do |sevent|
-      sevent.area_title
+      link_to sevent.area_title, "/admin/areas/#{sevent.area.id}", target: '_blank'
     end
     column :astatus do |sevent|
       sevent.astatus_title

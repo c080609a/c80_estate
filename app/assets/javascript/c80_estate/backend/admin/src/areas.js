@@ -612,5 +612,6 @@ var fAreasIndex = function () {
 YOUR_APP.areas = {
     edit: fEdit,
     "new": jsinit.go,
-    index: fAreasIndex
+    index: fAreasIndex,
+    show: fAreasShow
 };

@@ -8,7 +8,7 @@ ActiveAdmin.register_page "Dashboard" do
 
       column do
 
-        panel 'Объекты недвижимости', class: 'clearfix' do
+        panel 'Объекты недвижимости', class: 'clearfix proplist' do
           # para "Объекты недвижимости", class: 'title'
           C80Estate::Property.all.each do |prop|
             render partial: 'prop_in_list', locals: {prop: prop}

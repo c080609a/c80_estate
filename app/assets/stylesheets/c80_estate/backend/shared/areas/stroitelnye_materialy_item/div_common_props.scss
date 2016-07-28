@@ -1,0 +1,51 @@
+div#div_common_props {
+  float: left;
+  width: 100%;
+  clear: both;
+
+  table {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 621px;
+
+    tr {
+
+      td {
+        min-height: 39px;
+        margin: 0;
+        padding: 9px 7px 9px 7px;
+        font-size: 16px;
+        color: #767676;
+      }
+
+      span.ptitle {
+        display: inline-block;
+        max-width: 220px;
+      }
+
+      &.p0 {
+
+        td {
+          box-shadow: 0px -19px 17px -8px rgba(0, 0, 0, 0.12) inset,
+          0 17px 17px -8px rgba(0, 0, 0, 0.12) inset;
+
+          -o-box-shadow: 0px -19px 17px -8px rgba(0, 0, 0, 0.12) inset,
+          0 17px 17px -8px rgba(0, 0, 0, 0.12) inset;
+
+          -ms-box-shadow: 0px -19px 17px -8px rgba(0, 0, 0, 0.12) inset,
+          0 17px 17px -8px rgba(0, 0, 0, 0.12) inset;
+
+          -moz-box-shadow: 0px -19px 17px -8px rgba(0, 0, 0, 0.12) inset,
+          0 17px 17px -8px rgba(0, 0, 0, 0.12) inset;
+
+          -webkit-box-shadow: 0px -19px 17px -8px rgba(0, 0, 0, 0.12) inset,
+          0 17px 17px -8px rgba(0, 0, 0, 0.12) inset;
+        }
+
+      }
+
+    }
+
+  }
+}
