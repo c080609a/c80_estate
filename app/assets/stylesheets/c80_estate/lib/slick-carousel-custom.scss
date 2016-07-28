@@ -1,0 +1,174 @@
+$width: 825px;
+$width_padd: 855px;
+
+
+#slider_wrapper {
+  padding: 0;
+  height: 305px;
+  margin-top: 15px;
+  margin-left: 56px;
+  /*overflow: hidden;*/
+  background: transparent image-url("wslider-bg.png") no-repeat;
+}
+
+#slider {
+
+  width: 859px;
+  margin: 18px 0 0 2px;
+  text-align: center;
+  font-family: "HelveticaRegular", Arial, Helvetica, sans-serif;
+
+  .img-holder {
+    width: $width_padd;
+    height: 245px;
+    /*padding: 15px 0;*/
+  }
+
+  img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 245px;
+  }
+
+  button {
+
+    z-index: 999;
+  }
+
+  .frame {
+    padding: 0;
+    outline: none;
+    overflow: hidden;
+  }
+
+  .img-holder
+  {
+    /*background: #F8F6F5;*/
+  }
+
+  .desc {
+    overflow: hidden;
+    padding: 0;
+  }
+
+
+}
+
+.slick-prev,
+.slick-next{
+
+  &:before,
+  &:before{
+    font-size: 60px;
+    color: #FECC00;
+    content: '';
+  }
+
+    width: 50px !important;
+    height: 51px !important;
+    cursor: pointer;
+    position: absolute;
+
+  &.slick-prev {
+    background: image-url("arrows.png") no-repeat top left ;
+    top: 105px;
+    left: -53px;
+    &:hover {
+      background: image-url("arrows.png") no-repeat bottom left;
+    }
+  }
+
+  &.slick-next {
+    background: image-url("arrows.png") no-repeat top right;
+    top: 105px;
+    right: -49px;
+    &:hover {
+      background: image-url("arrows.png") no-repeat bottom right;
+    }    
+  }
+
+}
+
+.slick-dots {
+  float: left;
+  position: relative;
+  top: 16px;
+  width: 100%;
+  z-index: 999;
+}
+
+.slick-dots li {
+  margin: 0;
+}
+
+.slick-dots li button {
+
+  background: transparent image-url("slide.png") no-repeat top center;
+
+  width: 12px;
+  height: 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  overflow: hidden;
+  display: block;
+
+
+  &:before {
+    content:"";
+    width: 0;
+    position: absolute;
+    /* font-size: 6px;
+     line-height: 20px;
+     position: absolute;
+     top: 0px;
+     left: 0px;
+     width: 20px;
+     height: 20px;
+     text-align: center;
+     opacity: 0.25;
+     color: #000;*/
+  }
+
+}
+
+.slick-active button {
+  background: image-url("slide-hower.png") no-repeat top center !important;
+}
+
+/*-------------------[фон под слайдер в шапке]------------------------------------------------------------------*/
+
+$width_home: 553px;
+$width_home_padd: 583px;
+
+body#index,
+body#about_company,
+body#price,
+body#info,
+body#hot_offers,
+body#stenovye-materialy,
+body#landshaftnye-materialy,
+body#krovelnye-materialy,
+body#drugie-tovarnye-gruppy,
+body#metallicheskie-resheniya,
+body#contacts
+{
+  #slider_wrapper {
+    background: transparent image-url("slider-bg.png") no-repeat;
+    margin-left: 35px;
+  }
+  #slider {
+    width: $width_home;
+    left:-18px;
+  }
+  .img-holder {
+    width: $width_home_padd;
+  }
+  .slick-prev {
+    left: -38px;
+  }
+  .slick-next {
+    right: -69px;
+  }
+}
+

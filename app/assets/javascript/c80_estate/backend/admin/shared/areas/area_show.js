@@ -1,5 +1,39 @@
 "use strict";
 
+var fAreasShow_initRichShowPage = function () {
+
+    //fCommon();
+    fItemImageMagnificPopupStart();
+    fItemGalleryPhotosMagnificPopupStart();
+
+    // если нужна кнопка "заказать"
+    //var $b = $('.c80_order_invoking_btn');
+    //$b.click(function (e) {
+    //    if (orderForm) {
+    //        orderForm.afterShowForm = function () {
+                $("textarea#mess_comment").focus();
+                //
+                //var $t = $("textarea#mess_comment");
+                //$t.data('toggle', 'tooltip');
+                //$t.data('palacement', 'right');
+                //$t.data('title', 'Укажите желаемое количество.');
+                //$t.tooltip();
+                //
+                //var $f = $('#form_order');
+                //
+                //var $b = $f.find('.btn');
+                //$b.removeClass('btn');
+                //$b.removeClass('btn-primary');
+                //$b.addClass('red_button');
+                //$b.attr('style','line-height: 34px;font-size: 16px;color: white; text-transform: uppercase; border-radius: 4px !important;');
+                //
+                //var $c = $f.find('.actions');
+                //$c.css('margin-top','15px');
+            //};
+        //}
+    //});
+
+};
 
 var fAreasShow = function () {
 
@@ -59,6 +93,7 @@ var fAreasShow = function () {
         $div_index_adds.append($div_area_text_stats);
         $div_index_adds.append($div_graph);
 
+        $(".comments").before($('<h4 style="padding-top:15px;">Статистика</h4>'));
         $(".comments").before($div_index_adds);
 
         // теперь покажем
@@ -135,6 +170,7 @@ var fAreasShow = function () {
     var fInit = function () {
         fBuild();
         fRequest();
+        fAreasShow_initRichShowPage();
     };
 
     var fDrawChart_google = function (data_array_rows) {
@@ -243,7 +279,7 @@ var fAreasShow = function () {
     };
 
     var fDrawChart = function (data) {
-        if (data != undefined) {
+        if (data != undefined && $('#graph').length) {
 
             var dataPoints = [];
             //[

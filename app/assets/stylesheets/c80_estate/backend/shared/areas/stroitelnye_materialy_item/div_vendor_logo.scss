@@ -1,0 +1,18 @@
+div#div_vendor_logo {
+  width: 150px;
+  min-height: 61px;
+  background-color: rgba(255, 0, 0, 0.008);
+  float: left;
+  padding-top: 0;
+
+  > a {
+    width: 150px !important;
+    border: none !important;
+    min-height: 1px !important;
+  }
+
+  img {
+    max-width: 100%;
+    border: none !important;
+  }
+}

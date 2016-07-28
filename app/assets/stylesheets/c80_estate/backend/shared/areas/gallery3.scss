@@ -1,0 +1,107 @@
+#gallery3_wrapper {
+  padding: 0;
+  height: 672px;
+  margin: 0 0 30px 35px;
+
+  #gallery3 {
+
+    width: 841px;
+    font-family: "HelveticaRegular", Arial, Helvetica, sans-serif;
+
+    .img-holder {
+      width: 841px;
+      height: 672px;
+      padding: 0;
+    }
+
+    img {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+    }
+
+    button {
+
+      z-index: 999;
+    }
+
+    .frame {
+      padding: 0;
+      height: 672px;
+      .name {
+        padding-top: 15px !important;
+        padding-left: 15px !important;
+      }
+    }
+
+    .desc {
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .slick-prev,
+    .slick-next{
+      top: 50%;
+    }
+    .slick-next{
+      right: -53px;
+    }
+
+
+  }
+
+}
+
+#gallery3_nav_wrapper {
+  width: 880px;
+  padding-left: 0;
+  margin-bottom: 40px;
+  margin-left: 35px;
+  #gallery3_nav {
+    img {
+      /*width: 100%;*/
+      border: 1px solid transparent;
+    }
+  }
+
+}
+
+// Общие свойства фреймов верхней части и нижней части компонента
+#gallery3_wrapper,
+#gallery3_nav_wrapper
+{
+  .frame {
+    position: relative;
+    cursor: pointer;
+    .name {
+      background-color: rgba(103, 102, 102, 0.0);
+      width: 187px;
+      height: 50px;
+      position: absolute;
+      bottom: 0;
+      z-index: 1000;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.0);
+      padding: 5px;
+      line-height: 18px;
+
+      -webkit-transition: all .2s ease-out;
+      -moz-transition: all .2s ease-out;
+      -ms-transition: all .2s ease-out;
+      -o-transition: all .2s ease-out;
+      transition: all .2s ease-out;
+
+    }
+  }
+}
+
+// Немного поправим свойства фрейма верхней части компонента
+#gallery3_wrapper {
+  .frame {
+    .name {
+      width: 841px;
+      color: rgba(255, 255, 255, 1.0);
+      background-color: rgba(103, 102, 102, 1.0);
+    }
+  }
+}

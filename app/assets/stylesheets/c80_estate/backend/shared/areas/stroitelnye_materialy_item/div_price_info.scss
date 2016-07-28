@@ -1,0 +1,68 @@
+  div#price_info {
+
+    ul {
+      list-style: none;
+      margin: 15px 0 0 0;
+      padding: 0;
+
+      li {
+        float: left;
+        margin-right: 20px;
+
+        p {
+          margin: 0;
+
+          &.ptitle {
+            font-size: 14px;
+            color: #afafaf;
+          }
+
+          span {
+            &.pvalue {
+              font-size: 18px;
+              color: #ab1e22;
+            }
+          }
+
+          &.old {
+            position: relative;
+            display: inline;
+
+            span {
+              font-size: 14px;
+              color: #afafaf;
+
+              &.puom {
+                display: inline-block;
+                padding-right: 5px;
+              }
+            }
+
+            &:after {
+              position: absolute;
+              display: block;
+              left:0;
+              top:50%;
+              height: 1px;
+              width: 100%;
+              background-color: #afafaf;
+              content:"";
+            }
+          }
+
+        }
+      }
+    }
+
+  }
+
+  body.stroitelnye_materialy_item {
+    div#price_info {
+
+      display: inline-block;
+      min-width: 227px; /*ширина = ширине картинки, что сверху */
+      /*background-color: rgba(0, 0, 0, 0.08);*/
+      float: left;
+
+    }
+  }

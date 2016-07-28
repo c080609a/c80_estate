@@ -1,0 +1,151 @@
+$gallery_block_width: 320px;
+$gallery_wrapper_margin_left: 45px;
+$gallery_frame_width: 310px;
+$gallery_frame_height: 188px;
+
+body.admin_areas.show {
+
+  h4 {
+    background-color: transparent !important;
+    background-image: none !important;
+    text-shadow: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    line-height: 30px !important;
+    color: #484444 !important;
+    padding: 5px 10px 3px 0;
+    font-size: 24px;
+    clear: both;
+  }
+
+}
+
+div#div_main_show_area {
+  width: 1085px;
+  border-right: 1px solid #C2C2C2;
+  float: left;
+
+  a {
+    display: block;
+    float: left;
+    margin-right: 30px;
+    width: calc(621px * 0.7);
+    height: calc(377px * 0.7);
+    border: 3px solid #F2F2F2;
+
+    img {
+      /*background-color: #ffffff;*/
+      max-width: 100% !important;
+      display: block !important;
+      padding: 5px;
+      margin: 0 auto;
+    }
+  }
+
+  div#main_props {
+    float: left;
+    overflow: hidden;
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+
+        abbr {
+          font-size: 16px;
+        }
+
+        span {
+          font-size: 16px;
+          line-height: 25px;
+
+          &.atype_badge {
+            /*white-space: nowrap;
+            border-radius: 3px;
+            background-color: #74b1b2;
+            color: white;
+            font-weight: bold;
+            padding: 5px;
+            display: inline-block;*/
+          }
+
+          &.ptitle {
+            color: #288feb;
+          }
+
+          &.puom {
+            color: #727272;
+          }
+
+        }
+      }
+    }
+  }
+
+}
+
+div#gallery_block {
+  float: left;
+  /*background-color: rgba(10, 110, 20, 0.08);*/
+  width: $gallery_block_width;
+  margin-bottom: -20px;
+
+  #gallery3_wrapper {
+    height: $gallery_frame_height;
+    margin: 0 0 10px $gallery_wrapper_margin_left;
+
+    #gallery3 {
+      width: $gallery_frame_width;
+
+      .frame {
+        height: $gallery_frame_height;
+        .img-holder {
+          width: $gallery_frame_width;
+          height: $gallery_frame_height;
+        }
+        .name {
+          display: none;
+        }
+      }
+
+      button {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+    }
+
+  }
+
+  #gallery3_nav_wrapper {
+    width: 337px;
+    margin-left: $gallery_wrapper_margin_left;
+    margin-bottom: -100px;
+
+    #gallery3_nav {
+      margin-bottom: 10px !important;
+      .frame {
+        .img-holder {
+          width: 94px;
+          img {
+            width: 94px;
+          }
+          .name {
+            display: none;
+          }
+        }
+
+      }
+    }
+
+    a#goto_gallery {
+      float: right;
+      margin-right: 13px;
+      text-decoration: underline;
+    }
+  }
+
+}
+

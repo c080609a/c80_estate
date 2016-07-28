@@ -1,3 +1,10 @@
+body.admin_dashboard {
+  table.index_table th {
+    background-color: transparent !important;
+    border-bottom: 2px solid #eaeaea !important;
+  }
+}
+
 a.atype_in_list {
   display: block;
   float: left;

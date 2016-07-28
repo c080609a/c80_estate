@@ -228,6 +228,10 @@ module C80Estate
       res
     end
 
+    def last_updater
+      sevents.last.auser.email
+    end
+
     def price_value
       res = '-'
       p = item_props.where(:prop_name_id => 1)
@@ -244,6 +248,14 @@ module C80Estate
         res = p.first.value
       end
       res
+    end
+
+    def main_image_url
+      url = 'no_thumb.png'
+      if aphotos.count > 0
+        url = aphotos.first.image.thumb512
+      end
+      url
     end
 
     ransacker :item_prop_price_val,
