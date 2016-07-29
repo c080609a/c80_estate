@@ -104,4 +104,9 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
     f.actions
   end
 
+  show do
+    render partial: 'show_property', locals: { property:resource }
+    active_admin_comments
+  end
+
 end

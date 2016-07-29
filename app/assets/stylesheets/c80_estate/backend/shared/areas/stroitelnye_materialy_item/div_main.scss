@@ -3,7 +3,9 @@ $gallery_wrapper_margin_left: 45px;
 $gallery_frame_width: 310px;
 $gallery_frame_height: 188px;
 
-body.admin_areas.show {
+body.admin_areas.show,
+body.admin_properties.show,
+{
 
   h4 {
     background-color: transparent !important;
@@ -22,7 +24,7 @@ body.admin_areas.show {
 
 div#div_main_show_area {
   width: 1085px;
-  border-right: 1px solid #C2C2C2;
+  /*border-right: 1px solid #C2C2C2;*/
   float: left;
 
   a {

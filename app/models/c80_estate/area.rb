@@ -171,6 +171,10 @@ module C80Estate
 
     end
 
+    def self.where_atype(atype_id)
+      self.where(:atype_id => atype_id)
+    end
+
     def atype_title
       res = "-"
       if atype.present?
@@ -232,10 +236,10 @@ module C80Estate
     end
 
     def price_value
-      res = '-'
+      res = 0
       p = item_props.where(:prop_name_id => 1)
       if p.count > 0
-        res = p.first.value
+        res = p.first.value.to_i
       end
       res
     end
@@ -247,6 +251,10 @@ module C80Estate
         res = p.first.value.to_f
       end
       res
+    end
+
+    def power_price_value
+      price_value * 1.0 * square_value
     end
 
     def main_image_url
