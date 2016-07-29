@@ -89,7 +89,12 @@ module C80Estate
         result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
         result[:raw_props][:free_areas_count] = free_areas_atnow
         result[:raw_props][:busy_areas_atnow] = busy_areas_atnow
-        result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
+        # result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
+        result[:graph_dynamic] = _parse_for_js_dynamic_graph_highstock(
+            pstats.ordered_by_created_at,
+            tcut[:used_start_date],
+            tcut[:used_end_date]
+        )
         result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow, busy_areas_atnow)
 
         # Rails.logger.debug "<Pstat.busy_coef> busy_areas_count = #{ busy_areas_count }"
@@ -120,7 +125,11 @@ module C80Estate
         result[:raw_props_sq][:all_areas_count_sq] = free_areas_atnow_sq + busy_areas_atnow_sq
         result[:raw_props_sq][:free_areas_count_sq] = free_areas_atnow_sq
         result[:raw_props_sq][:busy_areas_atnow_sq] = busy_areas_atnow_sq
-        result[:graph_dynamic_sq] = _parse_for_js_dynamic_graph3_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+        result[:graph_dynamic_sq] = _parse_for_js_dynamic_graph_highstock_sq(
+            pstats.where(:atype_id => nil).ordered_by_created_at,
+            tcut[:used_start_date],
+            tcut[:used_end_date]
+        )
         result[:graph_radial_sq] = _parse_for_js_radial_graph_sq(free_areas_atnow_sq, busy_areas_atnow_sq)
 
         # common
@@ -207,11 +216,21 @@ module C80Estate
             if atype_id.nil?
               free_areas_atnow = pstats.where(:atype_id => nil).last.free_areas
               busy_areas_atnow = pstats.where(:atype_id => nil).last.busy_areas
-              graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+              # graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+              graph_data = _parse_for_js_dynamic_graph_highstock(
+                  pstats.where(:atype_id => nil).ordered_by_created_at,
+                  used_start_date,
+                  used_end_date
+              )
             else
               free_areas_atnow = pstats.last.free_areas
               busy_areas_atnow = pstats.last.busy_areas
-              graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
+              # graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
+              graph_data = _parse_for_js_dynamic_graph_highstock(
+                  pstats.ordered_by_created_at,
+                  used_start_date,
+                  used_end_date
+              )
             end
 
             # Rails.logger.debug("\t\t atype_id = #{atype_id}")
@@ -241,11 +260,17 @@ module C80Estate
             if atype_id.nil?
               free_areas_atnow_sq = pstats.where(:atype_id => nil).last.free_areas_sq
               busy_areas_atnow_sq = pstats.where(:atype_id => nil).last.busy_areas_sq
-              graph_data_sq = _parse_for_js_dynamic_graph3_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+              graph_data_sq = _parse_for_js_dynamic_graph_highstock_sq(pstats.where(:atype_id => nil).ordered_by_created_at,
+                                                                       used_start_date,
+                                                                       used_end_date
+              )
             else
               free_areas_atnow_sq = pstats.last.free_areas_sq
               busy_areas_atnow_sq = pstats.last.busy_areas_sq
-              graph_data_sq = _parse_for_js_dynamic_graph3_canvasjs(pstats.ordered_by_created_at)
+              graph_data_sq = _parse_for_js_dynamic_graph_highstock_sq(pstats.ordered_by_created_at,
+                                                                       used_start_date,
+                                                                       used_end_date
+              )
             end
 
             # защищаемся от деления на ноль
@@ -381,7 +406,12 @@ module C80Estate
         result[:busy_coef] = sprintf "%.2f%", bcoef
         result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
         result[:abbr] = 'Занятость объекта в конце указанного периода: число b/N, где b - кол-во свободных, N - всего площадей'
-        result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
+        # result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
+        result[:graph_dynamic] = _parse_for_js_dynamic_graph_highstock(
+            pstats.ordered_by_created_at,
+            used_start_date,
+            used_end_date
+        )
         result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow, busy_areas_atnow)
 
         result[:raw_props] = {}
@@ -393,7 +423,10 @@ module C80Estate
 
         free_areas_atnow_sq = pstats.last.free_areas_sq
         busy_areas_atnow_sq = pstats.last.busy_areas_sq
-        graph_data_sq = _parse_for_js_dynamic_graph3_canvasjs(pstats.ordered_by_created_at)
+        graph_data_sq = _parse_for_js_dynamic_graph_highstock_sq(pstats.ordered_by_created_at,
+                                                                 used_start_date,
+                                                                 used_end_date
+        )
 
         # защищаемся от деления на ноль
         if busy_areas_atnow_sq + free_areas_atnow_sq == 0
@@ -473,11 +506,11 @@ module C80Estate
 
           self.free_areas = self.property.areas.free_areas.count
           self.busy_areas = self.property.areas.busy_areas.count
-          self.coef_busy = self.busy_areas*1.0 / (self.free_areas + self.busy_areas) * 100.0
+          self.coef_busy = (self.free_areas + self.busy_areas == 0) ? 0 : self.busy_areas*1.0 / (self.free_areas + self.busy_areas) * 100.0
 
           self.free_areas_sq = self.property.areas.free_areas_sq
           self.busy_areas_sq = self.property.areas.busy_areas_sq
-          self.coef_busy_sq = self.busy_areas_sq*1.0 / (self.free_areas_sq + self.busy_areas_sq) * 100.0
+          self.coef_busy_sq = (self.free_areas_sq + self.busy_areas_sq == 0) ? 0 : self.busy_areas_sq*1.0 / (self.free_areas_sq + self.busy_areas_sq) * 100.0
 
           # здесь считаем коэф-ты для 'atype related записей'
         else
@@ -586,6 +619,7 @@ module C80Estate
 
     end
 
+=begin
     def self._parse_for_js_dynamic_graph_canvasjs(pstats)
       # res: [
       #     {
@@ -612,6 +646,57 @@ module C80Estate
       Rails.logger.debug "<Pstat.parse_for_js_graph> res = #{res}"
       res
     end
+=end
+
+    def self._parse_for_js_dynamic_graph_highstock(pstats, start_date, end_date)
+      res = []
+      res << [start_date.to_i*1000,pstats.first.coef_busy]
+
+      pstats.each do |pstat|
+
+        res << [
+            pstat.created_at.to_i*1000,
+            pstat.coef_busy
+        ]
+
+        # Rails.logger.debug "#{res.last[0]}"
+
+      end
+
+      res << [end_date.to_i*1000,pstats.last.coef_busy]
+      # Rails.logger.debug "#{end_date.to_i*1000}"
+
+      # Rails.logger.debug "<Pstat.parse_for_js_graph> pstat.last.created_at = #{pstats.last.created_at}, #{end_date}"
+      # res.sort! { |a,b| a[0] <=> b[0] }
+      res
+
+    end
+
+    def self._parse_for_js_dynamic_graph_highstock_sq(pstats, start_date, end_date)
+      res = []
+      res << [start_date.to_i*1000,pstats.first.coef_busy_sq]
+
+      pstats.each do |pstat|
+
+        res << [
+            pstat.created_at.to_i*1000,
+            pstat.coef_busy_sq
+        ]
+
+        # Rails.logger.debug "#{res.last[0]}"
+
+      end
+
+      res << [end_date.to_i*1000,pstats.last.coef_busy_sq]
+      # Rails.logger.debug "#{end_date.to_i*1000}"
+
+      # Rails.logger.debug "<Pstat.parse_for_js_graph> pstat.last.created_at = #{pstats.last.created_at}, #{end_date}"
+      # res.sort! { |a,b| a[0] <=> b[0] }
+      res
+
+    end
+
+=begin
 
     def self._parse_for_js_dynamic_graph3_canvasjs(pstats)
       # res: [
@@ -636,6 +721,7 @@ module C80Estate
       end
       res
     end
+=end
 
     def self._calc_time_cut(first_created_at, time_now, start_date, end_date)
 

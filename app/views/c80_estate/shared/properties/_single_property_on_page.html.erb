@@ -14,29 +14,14 @@
                 :title => item_title,
                 :class => 'lazy-image-wrapper no-outline' %>
     <div id="main_props">
-      <%= smiph_render_all_props(@item) %>
+      <%= smiph_render_property_props(@item) %>
 
       <div id="div_vendor_logo">
-        <%= smiph_render_vendor_logo(@item) %>
+        <%# smiph_render_vendor_logo(@item) %>
       </div>
 
     </div>
   </div>
-  <div id="gallery_block" class="hidden"><%= lh_render_gallery4(@vparams[:galleries]) %></div>
-</div>
-
-<div id="price_info hidden" class="clearfix">
-  <%# smiph_render_price_props(@item,@sub_cat.id) %>
-</div>
-
-<div id="div_button_order" class="hidden">
-  <%# link_to "Заказать","#",
-              # :class => 'button-red no-clickable no-outline bold c80_order_invoking_btn',
-              # :data => {
-              #         subj_id: @vparams[:c80_order_form_subj],
-              #         comment_text: @vparams[:c80_order_form_comment_text]
-              # }
-  %>
 </div>
 
 <div id="div_desc">
@@ -45,7 +30,7 @@
 
 <div id="div_common_props" class="clearfix">
   <h4 class="bold">Техническая информация</h4>
-  <%= smiph_render_common_props(@item) %>
+  <%= ph_render_tech_props(@item) %>
 </div>
 
 <div id="related_items" class="hidden">

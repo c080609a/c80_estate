@@ -1,14 +1,48 @@
 "use strict";
 
-var fPstatsIndex = function () {
+var fPropertiesShow_initRichShowPage = function () {
+
+    //fCommon();
+    fItemImageMagnificPopupStart();
+
+    // если нужна кнопка "заказать"
+    //var $b = $('.c80_order_invoking_btn');
+    //$b.click(function (e) {
+    //    if (orderForm) {
+    //        orderForm.afterShowForm = function () {
+                $("textarea#mess_comment").focus();
+                //
+                //var $t = $("textarea#mess_comment");
+                //$t.data('toggle', 'tooltip');
+                //$t.data('palacement', 'right');
+                //$t.data('title', 'Укажите желаемое количество.');
+                //$t.tooltip();
+                //
+                //var $f = $('#form_order');
+                //
+                //var $b = $f.find('.btn');
+                //$b.removeClass('btn');
+                //$b.removeClass('btn-primary');
+                //$b.addClass('red_button');
+                //$b.attr('style','line-height: 34px;font-size: 16px;color: white; text-transform: uppercase; border-radius: 4px !important;');
+                //
+                //var $c = $f.find('.actions');
+                //$c.css('margin-top','15px');
+            //};
+        //}
+    //});
+
+};
+
+var fPropertiesShow = function () {
 
     // элементы html страницы
     var $main_content;          // правая сторона, там живёт таблица
-    var $select_atype;          // фильтр atype
-    var $select_property;       // фильтр property
-    var $input_start_date;      // фильтр "дата начала периода"
-    var $input_end_date;        // фильтр "дата конца периода"
-    var $h2_page_title;         // заголовок страницы
+    //var $select_atype;          // фильтр atype
+    //var $select_property;       // фильтр property
+    //var $input_start_date;      // фильтр "дата начала периода"
+    //var $input_end_date;        // фильтр "дата конца периода"
+    //var $h2_page_title;         // заголовок страницы
 
     // компонент "над таблицей"
     var $div_index_adds;
@@ -30,11 +64,11 @@ var fPstatsIndex = function () {
 
     var $div_area_text_stats_sq,
         $ul_props_sq;              // здесь выводим текстовые свойства занятости в метрах
-    
+
     // тут живут круговые графики
     var $div_graph_radial;
     var $div_graph_radial_sq;
-    
+
     // тут живут динамические графики
     var $div_graph_dynamic,
         $div_graph_dynamic_sq;
@@ -45,37 +79,38 @@ var fPstatsIndex = function () {
 
         // зафиксируем html элементы
         $main_content = $('#main_content');
-        $select_atype = $("#q_atype_id");
-        $select_property = $("#q_property_id");
-        $input_start_date = $("#q_created_at_gteq");
-        $input_end_date = $("#q_created_at_lteq");
-        $h2_page_title = $("h2#page_title");
+        //$select_atype = $("#q_atype_id");
+        //$select_property = $("#q_property_id");
+        //$input_start_date = $("#q_created_at_gteq");
+        //$input_end_date = $("#q_created_at_lteq");
+        //$h2_page_title = $("h2#page_title");
+        //
 
         $ajax_div = $("<div id='ajax_div'></div>");
         $ajax_div2 = $("<div id='ajax_div2'></div>");
 
         // построим компонент "над таблицей"
-        $div_index_adds = $("<div id='index_adds_like_pstats'></div>");
+        $div_index_adds = $("<div class='index_adds_like_pstats'></div>");
 
         $div_busy_coef = $("<div id='coef'></div>").appendTo($div_index_adds);
-            $p_busy_coef = $("<p class='val'></p>").appendTo($div_busy_coef);
-            $p_busy_coef_mess = $("<p class='title'><abbr class='abbr_busy_coef' title='TITLE'>Занятость</abbr></p>").appendTo($div_busy_coef);
-            $p_busy_coef_comment = $("<p class='comment'></p>").appendTo($div_busy_coef);
-        
+        $p_busy_coef = $("<p class='val'></p>").appendTo($div_busy_coef);
+        $p_busy_coef_mess = $("<p class='title'><abbr class='abbr_busy_coef' title='TITLE'>Занятость</abbr></p>").appendTo($div_busy_coef);
+        $p_busy_coef_comment = $("<p class='comment'></p>").appendTo($div_busy_coef);
+
         $div_area_text_stats = $("<div id='text_stats'></div>").appendTo($div_index_adds);
-            $ul_props = $("<ul><li id='title'></li><li id='born_date'></li><li id='atype_filter'></li><li id='all_areas_count'></li><li id='free_areas_count'></li><li id='busy_areas_count'></li></ul>");
-            $div_area_text_stats.append($ul_props);
+        $ul_props = $("<ul><li id='title'></li><li id='born_date'></li><li id='atype_filter'></li><li id='all_areas_count'></li><li id='free_areas_count'></li><li id='busy_areas_count'></li></ul>");
+        $div_area_text_stats.append($ul_props);
 
         $div_graph_radial = $("<div id='graph_radial'></div>").appendTo($div_index_adds);
 
         $div_busy_coef_sq = $("<div id='coef_sq'></div>").appendTo($div_index_adds);
-            $p_busy_coef_sq = $("<p class='val'></p>").appendTo($div_busy_coef_sq);
-            $p_busy_coef_mess_sq = $("<p class='title'><abbr class='abbr_busy_coef_sq' title='TITLE'>Занятость (в м.кв.)</abbr></p>").appendTo($div_busy_coef_sq);
-            $p_busy_coef_comment_sq = $("<p class='comment'></p>").appendTo($div_busy_coef_sq);
+        $p_busy_coef_sq = $("<p class='val'></p>").appendTo($div_busy_coef_sq);
+        $p_busy_coef_mess_sq = $("<p class='title'><abbr class='abbr_busy_coef_sq' title='TITLE'>Занятость (в м.кв.)</abbr></p>").appendTo($div_busy_coef_sq);
+        $p_busy_coef_comment_sq = $("<p class='comment'></p>").appendTo($div_busy_coef_sq);
 
         $div_area_text_stats_sq = $("<div id='text_stats_sq'></div>").appendTo($div_index_adds);
-            $ul_props_sq = $("<ul><li id='all_areas_count_sq'></li><li id='free_areas_count_sq'></li><li id='busy_areas_count_sq'></li></ul>");
-            $div_area_text_stats_sq.append($ul_props_sq);
+        $ul_props_sq = $("<ul><li id='all_areas_count_sq'></li><li id='free_areas_count_sq'></li><li id='busy_areas_count_sq'></li></ul>");
+        $div_area_text_stats_sq.append($ul_props_sq);
 
         $div_graph_radial_sq = $("<div id='graph_radial_sq'></div>").appendTo($div_index_adds);
 
@@ -87,6 +122,9 @@ var fPstatsIndex = function () {
         $main_content.prepend($ajax_div);
         $main_content.prepend($div_index_adds);
 
+        $(".comments").before($('<h4 style="padding-top:15px;">Статистика</h4>'));
+        $(".comments").before($div_index_adds);
+
         // теперь покажем
         $main_content.css('opacity', '1.0');
     };
@@ -94,20 +132,24 @@ var fPstatsIndex = function () {
     // запросим коэф-ты и данные для построения графиков
     var fRequestCoefs = function () {
 
-        var atype_id = $select_atype.val();
-        var property_id = $select_property.val();
-        var start_date = $input_start_date.val();
-        var end_date = $input_end_date.val();
+        //var atype_id = $select_atype.val();
+        //var property_id = $select_property.val();
+        //var start_date = $input_start_date.val();
+        //var end_date = $input_end_date.val();
+
+        var property_id = -1;
+        var url = unescape(window.location.href);
+        var match_res = url.match(/properties\/(\d{1,9})/);
+        if (match_res != null) {
+            property_id = Number(match_res[1]);
+        }
 
         $.ajax({
             url: '/estate/properties_busy_coef',
             type: 'POST',
             dataType: 'json',
             data: {
-                atype_id: atype_id,
-                prop_id: property_id,
-                start_date: start_date,
-                end_date: end_date
+                prop_id: property_id
             }
         }).done(function (data, result) {
             if (result == 'success') {
@@ -164,9 +206,9 @@ var fPstatsIndex = function () {
                     fDrawChartRadialSq(data["graph_radial_sq"]);
                 }
 
-                $h2_page_title.text(data["title"]);
-                $h2_page_title.css('opacity', '1.0');
-                $(document).attr('title', data["title"]);
+                //$h2_page_title.text(data["title"]);
+                //$h2_page_title.css('opacity', '1.0');
+                //$(document).attr('title', data["title"]);
 
             } else {
                 alert('fail: /estate/properties_busy_coef');
@@ -177,36 +219,10 @@ var fPstatsIndex = function () {
         //fPreloaderShow();
     };
 
-    // запросим таблицы объектов
-    // результат придёт в виде js и таблицы вставятся сами
-    var fRequestCharts = function () {
-
-        var atype_id = $select_atype.val();
-
-        $.ajax({
-            url:'/estate/table_properties_coef_busy',
-            type:'POST',
-            data:{atype_id: atype_id},
-            dataType:'script'
-        }).done(function (data, result) {
-            //alert(result);
-        });
-
-        $.ajax({
-            url:'/estate/table_properties_coef_busy_sq',
-            type:'POST',
-            data:{atype_id: atype_id},
-            dataType:'script'
-        }).done(function (data, result) {
-            //alert(result);
-        });
-
-    };
-
     var fInit = function () {
         fBuild();
         fRequestCoefs();
-        fRequestCharts();
+        fPropertiesShow_initRichShowPage();
     };
 
     // рисуем динамический график занятости
@@ -297,7 +313,7 @@ var fPstatsIndex = function () {
 
         $div_graph_dynamic.css('opacity','1.0').css('display','block');
         chart.render();
-    
+
     };
 
     // рисуем динамический график занятости в м.кв.
@@ -461,22 +477,4 @@ var fPstatsIndex = function () {
 
     fInit();
 
-};
-
-var fPstatsEdit = function () {
-
-    alert("edit");
-
-};
-
-var fPstatsNew = function () {
-
-    alert("new");
-
-};
-
-YOUR_APP.pstats = {
-    edit: fPstatsEdit,
-    "new": fPstatsNew,
-    index: fPstatsIndex
 };
