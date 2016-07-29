@@ -153,7 +153,7 @@ var fPstatsIndex = function () {
                 }
 
                 if (data["graph_dynamic"] != undefined) {
-                    fDrawChartRadialSq(data["graph_dynamic"]);
+                    fDrawChartDynamic(data["graph_dynamic"]);
                 }
 
                 if (data["graph_dynamic_sq"] != undefined) {
@@ -210,7 +210,39 @@ var fPstatsIndex = function () {
     };
 
     // рисуем динамический график занятости
-    var fDrawChartDynamic = function (data_array_rows_dynamic) {
+    var fDrawChartDynamic = function (data) {
+        $div_graph_dynamic.css('opacity','1.0').css('display','block');
+        $('#graph2').highcharts('StockChart', {
+
+            yAxis: {
+                min:0,
+                max:120
+            },
+
+            plotOptions: {
+                line: {
+                    linecap: 'square'
+                }
+            },
+
+            rangeSelector : {
+                selected : 1
+            },
+
+            title : {
+                text : 'Коэф-т занятости объекта за указанный период'
+            },
+
+            series : [{
+                name : 'Занятость',
+                data : data,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            }]
+        });
+    };
+    var fDrawChartDynamic_old = function (data_array_rows_dynamic) {
 
         var dataPoints = [];
         //[
@@ -270,6 +302,38 @@ var fPstatsIndex = function () {
 
     // рисуем динамический график занятости в м.кв.
     var fDrawChartDynamicSq = function (data) {
+        $div_graph_dynamic_sq.css('opacity','1.0').css('display','block');
+        $('#graph3').highcharts('StockChart', {
+
+            yAxis: {
+                min:0,
+                max:120
+            },
+
+            plotOptions: {
+                line: {
+                    linecap: 'square'
+                }
+            },
+
+            rangeSelector : {
+                selected : 1
+            },
+
+            title : {
+                text : 'Коэф-т занятости в м.кв.'
+            },
+
+            series : [{
+                name : 'Занятость в м.кв.',
+                data : data,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            }]
+        });
+    };
+    var fDrawChartDynamicSq_old = function (data) {
 
         var dataPoints = [];
         //[

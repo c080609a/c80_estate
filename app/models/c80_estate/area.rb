@@ -41,10 +41,9 @@ module C80Estate
     def self.free_areas_sq
       sum = 0
       self.free_areas.each do |area|
-        area_prop_square = area.item_props.where(:prop_name_id => 9)
-        if area_prop_square.present?
-          sum += area_prop_square.first.value.to_i
-        end
+        # area_prop_square = area.item_props.where(:prop_name_id => 9)
+        area_prop_square = area.square_value
+        sum += area_prop_square.first.value.to_i
       end
       sum
     end
@@ -242,10 +241,10 @@ module C80Estate
     end
 
     def square_value
-      res = '-'
+      res = 0
       p = item_props.where(:prop_name_id => 9)
       if p.count > 0
-        res = p.first.value
+        res = p.first.value.to_f
       end
       res
     end
