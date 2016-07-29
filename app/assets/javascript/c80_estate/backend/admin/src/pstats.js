@@ -55,7 +55,7 @@ var fPstatsIndex = function () {
         $ajax_div2 = $("<div id='ajax_div2'></div>");
 
         // построим компонент "над таблицей"
-        $div_index_adds = $("<div id='index_adds_like_pstats'></div>");
+        $div_index_adds = $("<div class='index_adds_like_pstats'></div>");
 
         $div_busy_coef = $("<div id='coef'></div>").appendTo($div_index_adds);
             $p_busy_coef = $("<p class='val'></p>").appendTo($div_busy_coef);
