@@ -90,7 +90,7 @@ module C80Estate
         result[:raw_props][:free_areas_count] = free_areas_atnow
         result[:raw_props][:busy_areas_atnow] = busy_areas_atnow
         result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
-        result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
+        result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow, busy_areas_atnow)
 
         # Rails.logger.debug "<Pstat.busy_coef> busy_areas_count = #{ busy_areas_count }"
         # Rails.logger.debug "<Pstat.busy_coef> all_areas_count = #{ all_areas_count }"
@@ -187,110 +187,115 @@ module C80Estate
           # если в этот промежуток небыло событий - значит промежуток целиком попал в какое-то событие
           # найдем его
           # заодно поднимем вспомогательный флаг, который обработаем во view
-          mark_whole = false
+          # mark_whole = false
           if pstats.count == 0
-            pstats = [self.where(:property_id => prop_id).where("created_at < ?", used_start_date).last]
-            mark_whole = true
+            l = self.where(:property_id => prop_id).where("created_at < ?", used_start_date).last
+            if l.present?
+              pstats = [l]
+              # mark_whole = true
+            end
             # sevents.each do |se|
             #   Rails.logger.debug "\t\t\t #{used_start_date - se.created_at}"
             # end
           end
 
           # Занятость -----
+          if pstats.count > 0
 
-          # если сортируем по типу, то берём последнюю запись,
-          # иначе - берём последнюю запись с общими данными
-          if atype_id.nil?
-            free_areas_atnow = pstats.where(:atype_id => nil).last.free_areas
-            busy_areas_atnow = pstats.where(:atype_id => nil).last.busy_areas
-            graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
-          else
-            free_areas_atnow = pstats.last.free_areas
-            busy_areas_atnow = pstats.last.busy_areas
-            graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
-          end
+            # если сортируем по типу, то берём последнюю запись,
+            # иначе - берём последнюю запись с общими данными
+            if atype_id.nil?
+              free_areas_atnow = pstats.where(:atype_id => nil).last.free_areas
+              busy_areas_atnow = pstats.where(:atype_id => nil).last.busy_areas
+              graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+            else
+              free_areas_atnow = pstats.last.free_areas
+              busy_areas_atnow = pstats.last.busy_areas
+              graph_data = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
+            end
 
-          # Rails.logger.debug("\t\t atype_id = #{atype_id}")
-          # Rails.logger.debug("\t\t free_areas_atnow = #{free_areas_atnow}")
-          # Rails.logger.debug("\t\t busy_areas_atnow = #{busy_areas_atnow}")
+            # Rails.logger.debug("\t\t atype_id = #{atype_id}")
+            # Rails.logger.debug("\t\t free_areas_atnow = #{free_areas_atnow}")
+            # Rails.logger.debug("\t\t busy_areas_atnow = #{busy_areas_atnow}")
 
-          # защищаемся от деления на ноль
-          if free_areas_atnow + busy_areas_atnow == 0
-            bcoef = 0.0
-          else
-            bcoef = busy_areas_atnow*1.0 / (free_areas_atnow + busy_areas_atnow) * 100.0
-          end
+            # защищаемся от деления на ноль
+            if free_areas_atnow + busy_areas_atnow == 0
+              bcoef = 0.0
+            else
+              bcoef = busy_areas_atnow*1.0 / (free_areas_atnow + busy_areas_atnow) * 100.0
+            end
 
-          result[:busy_coef] = sprintf "%.2f%", bcoef
-          result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-          result[:abbr] = 'Занятость объекта в конце указанного периода: число b/N, где b - кол-во свободных, N - всего площадей'
-          result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
-          result[:graph_dynamic] = graph_data
+            result[:busy_coef] = sprintf "%.2f%", bcoef
+            result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
+            result[:abbr] = 'Занятость объекта в конце указанного периода: число b/N, где b - кол-во свободных, N - всего площадей'
+            result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow, busy_areas_atnow)
+            result[:graph_dynamic] = graph_data
 
-          result[:raw_props] = {}
-          result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
-          result[:raw_props][:free_areas_count] = free_areas_atnow
-          result[:raw_props][:busy_areas_atnow] = busy_areas_atnow
+            result[:raw_props] = {}
+            result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
+            result[:raw_props][:free_areas_count] = free_areas_atnow
+            result[:raw_props][:busy_areas_atnow] = busy_areas_atnow
 
-          # Занятость в метрах ------
+            # Занятость в метрах ------
 
-          if atype_id.nil?
-            free_areas_atnow_sq = pstats.where(:atype_id => nil).last.free_areas_sq
-            busy_areas_atnow_sq = pstats.where(:atype_id => nil).last.busy_areas_sq
-            graph_data_sq = _parse_for_js_dynamic_graph3_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
-          else
-            free_areas_atnow_sq = pstats.last.free_areas_sq
-            busy_areas_atnow_sq = pstats.last.busy_areas_sq
-            graph_data_sq = _parse_for_js_dynamic_graph3_canvasjs(pstats.ordered_by_created_at)
-          end
+            if atype_id.nil?
+              free_areas_atnow_sq = pstats.where(:atype_id => nil).last.free_areas_sq
+              busy_areas_atnow_sq = pstats.where(:atype_id => nil).last.busy_areas_sq
+              graph_data_sq = _parse_for_js_dynamic_graph3_canvasjs(pstats.where(:atype_id => nil).ordered_by_created_at)
+            else
+              free_areas_atnow_sq = pstats.last.free_areas_sq
+              busy_areas_atnow_sq = pstats.last.busy_areas_sq
+              graph_data_sq = _parse_for_js_dynamic_graph3_canvasjs(pstats.ordered_by_created_at)
+            end
 
-          # защищаемся от деления на ноль
-          if busy_areas_atnow_sq + free_areas_atnow_sq == 0
-            bcoef_sq = 0.0
-          else
-            bcoef_sq = busy_areas_atnow_sq*1.0/(busy_areas_atnow_sq + free_areas_atnow_sq)*100.0
-          end
+            # защищаемся от деления на ноль
+            if busy_areas_atnow_sq + free_areas_atnow_sq == 0
+              bcoef_sq = 0.0
+            else
+              bcoef_sq = busy_areas_atnow_sq*1.0/(busy_areas_atnow_sq + free_areas_atnow_sq)*100.0
+            end
 
-          result[:busy_coef_sq] = sprintf "%.2f%", bcoef_sq
-          result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ КВ'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-          result[:abbr_sq] = 'Занятость объекта в МЕТРАХ в конце указанного периода: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
-          result[:graph_dynamic_sq] = graph_data_sq
-          result[:graph_radial_sq] = _parse_for_js_radial_graph_sq(free_areas_atnow_sq,busy_areas_atnow_sq)
+            result[:busy_coef_sq] = sprintf "%.2f%", bcoef_sq
+            result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ КВ'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
+            result[:abbr_sq] = 'Занятость объекта в МЕТРАХ в конце указанного периода: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
+            result[:graph_dynamic_sq] = graph_data_sq
+            result[:graph_radial_sq] = _parse_for_js_radial_graph_sq(free_areas_atnow_sq, busy_areas_atnow_sq)
 
-          result[:props_sq] = [
-              {tag: 'all_areas_count_sq', val: "Кв.м. всего: #{busy_areas_atnow_sq + free_areas_atnow_sq}"},
-              {tag: 'free_areas_count_sq', val: "Свободных: #{free_areas_atnow_sq}"},
-              {tag: 'busy_areas_count_sq', val: "Занятых: #{busy_areas_atnow_sq}"}
-          ]
+            result[:props_sq] = [
+                {tag: 'all_areas_count_sq', val: "Кв.м. всего: #{busy_areas_atnow_sq + free_areas_atnow_sq}"},
+                {tag: 'free_areas_count_sq', val: "Свободных: #{free_areas_atnow_sq}"},
+                {tag: 'busy_areas_count_sq', val: "Занятых: #{busy_areas_atnow_sq}"}
+            ]
 
-          result[:raw_props_sq] = {}
-          result[:raw_props_sq][:all_areas_count_sq] = free_areas_atnow_sq + busy_areas_atnow_sq
-          result[:raw_props_sq][:free_areas_count_sq] = free_areas_atnow_sq
-          result[:raw_props_sq][:busy_areas_atnow_sq] = busy_areas_atnow_sq
+            result[:raw_props_sq] = {}
+            result[:raw_props_sq][:all_areas_count_sq] = free_areas_atnow_sq + busy_areas_atnow_sq
+            result[:raw_props_sq][:free_areas_count_sq] = free_areas_atnow_sq
+            result[:raw_props_sq][:busy_areas_atnow_sq] = busy_areas_atnow_sq
 
-          # common
+            # common
 
-          result[:title] = "Статистика - Объект - #{property.title}"
-          # result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
+            result[:title] = "Статистика - Объект - #{property.title}"
+            # result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
 
 
-          # if atype_id.present?
-          #   result[:title] += " (#{Atype.find(atype_id).title})"
-          # end
+            # if atype_id.present?
+            #   result[:title] += " (#{Atype.find(atype_id).title})"
+            # end
 
-          dc_str = property.areas.first.created_at.in_time_zone('Moscow').strftime('%Y/%m/%d')
-          dc_abbr = 'За дату создания объекта недвижимости при рассчетах берётся дата создания первой площади объекта'
+            dc_str = property.areas.first.created_at.in_time_zone('Moscow').strftime('%Y/%m/%d')
+            dc_abbr = 'За дату создания объекта недвижимости при рассчетах берётся дата создания первой площади объекта'
 
-          result[:props] = [
-              {tag: 'title', val: "#{property.title}"},
-              {tag: 'born_date', val: "<abbr title='#{dc_abbr}'>Дата создания: #{dc_str}"},
-              {tag: 'all_areas_count', val: "<abbr title='В конце указанного периода'>Площадей всего</abbr>: #{ free_areas_atnow + busy_areas_atnow }"},
-              {tag: 'free_areas_count', val: "<abbr title='В конце указанного периода'>Свободных площадей</abbr>: #{ free_areas_atnow }"},
-              {tag: 'busy_areas_count', val: "<abbr title='В конце указанного периода'>Занятых площадей</abbr>: #{ busy_areas_atnow }"}
-          ]
+            result[:props] = [
+                {tag: 'title', val: "#{property.title}"},
+                {tag: 'born_date', val: "<abbr title='#{dc_abbr}'>Дата создания: #{dc_str}"},
+                {tag: 'all_areas_count', val: "<abbr title='В конце указанного периода'>Площадей всего</abbr>: #{ free_areas_atnow + busy_areas_atnow }"},
+                {tag: 'free_areas_count', val: "<abbr title='В конце указанного периода'>Свободных площадей</abbr>: #{ free_areas_atnow }"},
+                {tag: 'busy_areas_count', val: "<abbr title='В конце указанного периода'>Занятых площадей</abbr>: #{ busy_areas_atnow }"}
+            ]
 
-          if atype_id.present?
-            result[:props] << {tag: 'atype_filter', val: "Фильтр по типу площади: #{ Atype.find(atype_id).title }"}
+            if atype_id.present?
+              result[:props] << {tag: 'atype_filter', val: "Фильтр по типу площади: #{ Atype.find(atype_id).title }"}
+            end
           end
 
         else
@@ -377,7 +382,7 @@ module C80Estate
         result[:comment] = "<abbr title='Период рассчёта занятости'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
         result[:abbr] = 'Занятость объекта в конце указанного периода: число b/N, где b - кол-во свободных, N - всего площадей'
         result[:graph_dynamic] = _parse_for_js_dynamic_graph_canvasjs(pstats.ordered_by_created_at)
-        result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
+        result[:graph_radial] = _parse_for_js_radial_graph(free_areas_atnow, busy_areas_atnow)
 
         result[:raw_props] = {}
         result[:raw_props][:all_areas_count] = free_areas_atnow + busy_areas_atnow
@@ -401,7 +406,7 @@ module C80Estate
         result[:comment_sq] = "<abbr title='Период рассчёта занятости в МЕТРАХ КВ'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
         result[:abbr_sq] = 'Занятость объекта в МЕТРАХ в конце указанного периода: число b/N, где b - кол-во свободных МЕТРОВ, N - всего МЕТРОВ КВ'
         result[:graph_dynamic_sq] = graph_data_sq
-        result[:graph_radial_sq] = _parse_for_js_radial_graph_sq(free_areas_atnow_sq,busy_areas_atnow_sq)
+        result[:graph_radial_sq] = _parse_for_js_radial_graph_sq(free_areas_atnow_sq, busy_areas_atnow_sq)
 
         result[:props_sq] = [
             {tag: 'all_areas_count_sq', val: "Кв.м. всего: #{busy_areas_atnow_sq + free_areas_atnow_sq}"},
@@ -687,8 +692,8 @@ module C80Estate
         end
       end
       {
-          sum_free_areas:sum_free_areas,
-          sum_busy_areas:sum_busy_areas
+          sum_free_areas: sum_free_areas,
+          sum_busy_areas: sum_busy_areas
       }
     end
 
