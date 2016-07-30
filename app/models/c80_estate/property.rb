@@ -29,6 +29,14 @@ module C80Estate
       res
     end
 
+    def owner_title
+      res = "-"
+      if owner.present?
+        res = owner.email
+      end
+      res
+    end
+
     def logo_path
       url = 'property_default_logo.png'
       if plogos.count > 0

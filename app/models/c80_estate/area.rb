@@ -43,7 +43,7 @@ module C80Estate
       self.free_areas.each do |area|
         # area_prop_square = area.item_props.where(:prop_name_id => 9)
         area_prop_square = area.square_value
-        sum += area_prop_square.first.value.to_i
+        sum += area_prop_square#.first.value.to_i
       end
       sum
     end

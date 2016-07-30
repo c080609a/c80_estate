@@ -44,7 +44,7 @@ module C80Estate
           { title: 'ID объекта', value: property.id },
           { title: 'Название', value: property.title },
           { title: 'Адрес', value: property.address },
-          { title: 'Кто создал', value: property.owner.email },
+          { title: 'Кто создал', value: property.owner_title },
           { title: 'Время создания', value: property.created_at.strftime('%Y/%m/%d %H:%M:%S') },
           { title: 'Время последнего изменения', value: property.updated_at.strftime('%Y/%m/%d %H:%M:%S') },
           { title: 'Кто последний раз вносил изменения', value: property.last_updater },
