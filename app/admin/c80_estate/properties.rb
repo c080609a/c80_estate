@@ -44,11 +44,23 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
       <span></span><img src='#{image_path(prop.logo_path)}'>
       </div>".html_safe
     end
-    column :title
-    column :address
-    column :gps do |prop|
-      "#{prop.latitude},#{prop.longitude}"
+    # column :title
+    column :title do |prop|
+      link_to prop.title, "/admin/properties/#{prop.id}", title: I18n.t("active_admin.view")
     end
+    column 'Площадей' do |prop|
+      prop.areas.count
+    end
+    column 'Метраж' do |prop|
+      "#{prop.square_value} м.кв."
+    end
+    column '<abbr title="Сумма всех цен площадей">Цена объекта</abbr>'.html_safe do |prop|
+      "#{prop.power_price_value} руб"
+    end
+    # column :address
+    # column :gps do |prop|
+    #   "#{prop.latitude},#{prop.longitude}"
+    # end
     column :assigned_person do |prop|
       prop.assigned_person_title
     end
@@ -57,9 +69,9 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
     # end
     # actions
 
-    column '' do |property|
-      link_to I18n.t("active_admin.view"), "/admin/properties/#{property.id}", class: 'member_link'
-    end
+    # column '' do |property|
+    #   link_to I18n.t("active_admin.view"), "/admin/properties/#{property.id}", class: 'member_link'
+    # end
     column '' do |property|
       if current_admin_user.can_edit_property?(property)
         link_to I18n.t("active_admin.edit"), "/admin/properties/#{property.id}/edit", class: 'member_link'

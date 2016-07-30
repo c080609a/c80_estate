@@ -48,6 +48,10 @@ module C80Estate
             roles << r
           end
 
+          def assigned_areas_count
+            assigned_properties.areas_count
+          end
+
           def can_view_statistics?
             r1 = roles.where(role_type: 1)
             r2 = roles.where(role_type: 2)

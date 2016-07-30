@@ -127,10 +127,10 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
          :input_html => {:class => 'selectpicker', 'data-size' => "3", 'data-width' => '100%'}
 
   # filter :title
-  filter :assigned_person_id,
+  filter :assigned_person_id_in,
          :label => 'Назначенный пользователь',
          :as => :select,
-         :collection => -> { AdminUser.all.map { |u| ["#{u.email}", u.id] } },
+         :collection => -> { AdminUser.all.map { |u| ["#{u.email} (#{u.assigned_areas_count})", u.id] } },
          :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '100%'}
   filter :created_at
   filter :updated_at
@@ -147,8 +147,11 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
     column :atype do |area|
       area.atype_title
     end
-    column 'Цена' do |area|
+    column '<abbr title="За м.кв. в месяц">Цена м.кв.</abbr>'.html_safe do |area|
       "#{area.price_value} руб"
+    end
+    column '<abbr title="Стоимость всей площади в месяц. Число PxS, где P - цена за м.кв. в месяц, S - метраж площади в м.кв.">Цена площади</abbr>'.html_safe do |area|
+      "#{area.power_price_value} руб"
     end
     column 'Метраж' do |area|
       "#{area.square_value} м<sup>2</sup>".html_safe
