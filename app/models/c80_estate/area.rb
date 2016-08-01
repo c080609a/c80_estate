@@ -26,6 +26,10 @@ module C80Estate
 
     has_many :sevents, :dependent => :destroy
 
+    validates :property, :presence => true
+    validates :atype, :presence => true
+    validate :has_astatus?
+
     after_create :create_initial_sevent
     after_update :check_and_generate_sevent
 
@@ -179,6 +183,10 @@ module C80Estate
 
     def self.where_atype(atype_id)
       self.where(:atype_id => atype_id)
+    end
+
+    def has_astatus?
+      errors.add_to_base 'Укажите статус площади' if self.astatuses.blank?
     end
 
     def atype_title
