@@ -21,6 +21,15 @@ module C80Estate
     has_many :sevents, :dependent => :destroy
     has_many :pstats, :dependent => :destroy
 
+    # этот метод для ActiveRecordCollection of Properties
+    def self.areas_count
+      ac = 0
+      self.all.each do |prop|
+        ac += prop.areas.count
+      end
+      ac
+    end
+
     def assigned_person_title
       res = "-"
       if assigned_person.present?

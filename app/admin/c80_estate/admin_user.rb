@@ -34,6 +34,9 @@ ActiveAdmin.register AdminUser do
     column :role do |user|
       user.role_type_title
     end
+    column 'Площадей' do |user|
+      user.assigned_areas_count
+    end
     actions
   end
 

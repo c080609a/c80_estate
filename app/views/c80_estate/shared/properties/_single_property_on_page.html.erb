@@ -24,6 +24,10 @@
   </div>
 </div>
 
+<div id="price_info" class="clearfix">
+  <%= ph_render_price_props(@item) %>
+</div>
+
 <div id="div_desc">
   <%= @item.desc.html_safe if @item.desc.present? %>
 </div>
@@ -31,6 +35,16 @@
 <div id="div_common_props" class="clearfix">
   <h4 class="bold">Техническая информация</h4>
   <%= ph_render_tech_props(@item) %>
+</div>
+
+<div id="div_all_areas_table" class="wrap_collapse">
+  <button type="button" class="btn" data-toggle="collapse" data-target="#iid">
+    <span class="fa fa-chevron-right"></span>
+    Площади объекта <%= @item.title %> (<%= @item.areas.count %>)
+  </button>
+  <div class="collapse" id="iid">
+    <%= ph_render_areas_table(@item) %>
+  </div>
 </div>
 
 <div id="related_items" class="hidden">

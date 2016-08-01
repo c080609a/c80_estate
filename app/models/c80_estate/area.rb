@@ -108,6 +108,12 @@ module C80Estate
           .where(c80_estate_item_props: {value: v})
     end
 
+    def self.where_assigned_person_id(id)
+      # Rails.logger.debug "\t\t [2]: v = #{v}"
+      C80Estate::Area.joins(:property)
+          .where(:c80_estate_properties => {assigned_person_id: id})
+    end
+
     def self.import_excel(file)
 
       Rails.logger.debug "------------------------------------------------------------- self.import [BEGIN] "
@@ -284,6 +290,14 @@ module C80Estate
     ransacker :item_prop_floor_val,
               formatter: proc { |v|
                 results = C80Estate::Area.where_floor(v).map(&:id)
+                results = results.present? ? results : nil
+              }, splat_params: true do |parent|
+      parent.table[:id]
+    end
+
+    ransacker :assigned_person_id,
+              formatter: proc { |v|
+                results = C80Estate::Area.where_assigned_person_id(v).map(&:id)
                 results = results.present? ? results : nil
               }, splat_params: true do |parent|
       parent.table[:id]

@@ -1,0 +1,45 @@
+.wrap_collapse {
+
+  clear:both;
+  background: none !important;
+  filter: none !important;
+  border: none;
+  margin-bottom: 20px;
+
+  .fa {
+    margin-right: 5px;
+    color: #FBCB17;
+    width: 14px;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+    text-align: left;
+    font-weight: bold;
+    color: #43474f;
+    background-color: transparent;
+    outline: 0;
+    font-size: 20px !important;
+    text-shadow: none !important;
+
+  }
+
+  p, ul, ol {
+    margin-left: 35px;
+    margin-right: 15px;
+
+  }
+
+  table {
+    margin-top: 20px;
+  }
+
+}
+
+button:not(.disabled):hover {
+  background: #f4f4f4;
+  filter: none !important;
+
+}
