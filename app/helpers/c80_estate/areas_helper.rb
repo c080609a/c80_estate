@@ -16,7 +16,7 @@ module C80Estate
       result += "<li><span class='ptitle bold'>Объект недвижимости</span>: "
       result += "<a href='/admin/properties/#{area.property.id}'"
       result += "<span class='pvalue'>"
-      result += "#{ area.property.title }"
+      result += "#{ area.property_title }"
       result += "</a></span></li>"
       # result += "<li><span class='ptitle bold'>Объём площади</span>: <span class='pvalue'>#{area.square_value}</span> <span class='puom'>м.кв.</span></li>"
       # result += "<li><span class='ptitle bold'><abbr title='За м.кв. в месяц'>Цена</abbr></span>: <span class='pvalue'>#{area.price_value} </span> <span class='puom'>руб</span></li>"
