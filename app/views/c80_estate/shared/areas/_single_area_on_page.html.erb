@@ -25,8 +25,8 @@
   <div id="gallery_block" class="hidden"><%= lh_render_gallery4(@vparams[:galleries]) %></div>
 </div>
 
-<div id="price_info hidden" class="clearfix">
-  <%# smiph_render_price_props(@item,@sub_cat.id) %>
+<div id="price_info" class="clearfix">
+  <%= smiph_render_price_props(@item) %>
 </div>
 
 <div id="div_button_order" class="hidden">

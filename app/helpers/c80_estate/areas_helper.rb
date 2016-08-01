@@ -13,9 +13,13 @@ module C80Estate
       #   result += "<li><span class='ptitle bold'>#{title}</span>: <span class='pvalue'>#{value}</span> <span class='puom'>#{uom}</span></li>"
       # end
 
-      result += "<li><span class='ptitle bold'>Объект недвижимости</span>: <span class='pvalue'>#{area.property.title}</span></li>"
-      result += "<li><span class='ptitle bold'>Объём площади</span>: <span class='pvalue'>#{area.square_value}</span> <span class='puom'>м.кв.</span></li>"
-      result += "<li><span class='ptitle bold'><abbr title='За м.кв. в месяц'>Цена</abbr></span>: <span class='pvalue'>#{area.price_value} </span> <span class='puom'>руб</span></li>"
+      result += "<li><span class='ptitle bold'>Объект недвижимости</span>: "
+      result += "<a href='/admin/properties/#{area.property.id}'"
+      result += "<span class='pvalue'>"
+      result += "#{ area.property.title }"
+      result += "</a></span></li>"
+      # result += "<li><span class='ptitle bold'>Объём площади</span>: <span class='pvalue'>#{area.square_value}</span> <span class='puom'>м.кв.</span></li>"
+      # result += "<li><span class='ptitle bold'><abbr title='За м.кв. в месяц'>Цена</abbr></span>: <span class='pvalue'>#{area.price_value} </span> <span class='puom'>руб</span></li>"
 
       area.atype.prop_names.each do |atype_propname|
           title = atype_propname.title
@@ -102,6 +106,69 @@ module C80Estate
       # end
 
       res.html_safe
+
+    end
+
+    # для подкатегории strsubcat сформировать список цен, которые выводятся под картинкой
+    def smiph_render_price_props(area)
+
+      result = ""
+
+      # rows = PriceProp.gget_pprops_for_strsubcat(strsubcat_id)
+      # rows.each(:as => :hash) do |row|
+
+      rows = [
+          {
+              title: 'Метраж',
+              abbr: 'Объем площади',
+              value: area.square_value,
+              uom: 'м.кв.'
+          },
+          {
+              title: 'Цена',
+              abbr: 'За метр квадратный в месяц',
+              value: area.price_value,
+              uom: 'руб'
+          },
+          {
+              title: 'Цена площади',
+              abbr: 'Стоимость всей площади в месяц. Число PxS, где P - цена за м.кв. в месяц, S - метраж площади в м.кв.',
+              value: area.power_price_value,
+              uom: 'руб'
+          }
+      ]
+      rows.each do |row|
+
+        title = row[:title]
+        value = row[:value]
+        abbr = row[:abbr]
+        uom = row[:uom]
+
+        # нормальная цена
+        result += '<li>'
+        result += "<p class='ptitle medium'><abbr title='#{abbr}'>#{title}</abbr></p>" # Цена за шт | Цена за м²
+        result += "<p><span class='pvalue bold'>#{value}<span> <span class='puom'>#{uom}</span></p>" # 1212,80 руб
+
+        # старая цена
+
+        # if item_as_hash['is_sale'] == 1
+        #   if related.present?
+        #     related_value = item_as_hash['prop_'+related.to_s]
+        #     if related_value.present?
+        #       v = related_value.gsub(',', '.')
+        #       if v.to_f > 0
+        #         result += "<p class='old'><span class='pvalue bold'>#{related_value}</span> <span class='puom'>#{uom}</span></p>" # 1212,80 руб
+        #       end
+        #     end
+        #   end
+        # end
+
+        result += '</li>'
+
+      end
+
+      result = "<ul>#{result}</ul>"
+      result.html_safe
 
     end
 

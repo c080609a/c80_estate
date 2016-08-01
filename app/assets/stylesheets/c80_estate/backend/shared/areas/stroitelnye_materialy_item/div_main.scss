@@ -55,6 +55,20 @@ div#div_main_show_area {
 
       li {
 
+        > a {
+          text-decoration: none !important;
+          color: #6f6c79 !important;
+          display: inline !important;
+          border: none !important;
+          font-size: 16px !important;
+          font-weight: bold;
+          margin: 0 !important;
+          float: none !important;
+          &:hover {
+            text-decoration: underline !important;
+          }
+        }
+
         abbr {
           font-size: 16px;
         }
