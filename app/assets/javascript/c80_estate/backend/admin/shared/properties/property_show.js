@@ -34,7 +34,7 @@ var fPropertiesShow_initRichShowPage = function () {
 
 };
 
-var fPropertiesShow = function () {
+var fPropertiesShow_go = function () {
 
     // элементы html страницы
     var $main_content;          // правая сторона, там живёт таблица
@@ -478,3 +478,11 @@ var fPropertiesShow = function () {
     fInit();
 
 };
+
+var fPropertiesShow = function () {
+    $.ajax({
+        url: '/estate/can_view_statistics',
+        type: 'POST',
+        dataType:'script'
+    })
+}

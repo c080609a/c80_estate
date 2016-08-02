@@ -52,5 +52,16 @@ module C80Estate
 
     end
 
+    def can_view_statistics
+
+      @res = current_admin_user.can_view_statistics?
+
+      respond_to do |format|
+        format.js
+        # format.json
+      end
+
+    end
+
   end
 end
