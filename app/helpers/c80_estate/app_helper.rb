@@ -17,6 +17,7 @@ module C80Estate
           busy_coef = pp[:busy_coef]
           props = pp[:raw_props]
           list << {
+              id: prop.id,
               title: prop.title,
               busy_coef: busy_coef,
               props: props
@@ -45,6 +46,7 @@ module C80Estate
           busy_coef_sq = pp[:busy_coef_sq]
           props = pp[:raw_props_sq]
           list << {
+              id: prop.id,
               title: prop.title,
               busy_coef: busy_coef_sq,
               props: props

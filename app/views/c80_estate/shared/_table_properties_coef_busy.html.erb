@@ -10,15 +10,15 @@
   </thead>
   <tbody>
 
-  <% list.each do |obj| %>
+  <% list.each do |prop| %>
       <%# Rails.logger.debug "#{obj}" %>
       <tr>
-        <td><%= obj[:title] %></td>
-        <td><%= obj[:busy_coef] %></td>
+        <td><%= "<a href='/admin/properties/#{prop[:id]}'>#{prop[:title]}</a>".html_safe %></td>
+        <td><%= prop[:busy_coef] %></td>
 
-        <% if obj[:props].present? %>
-            <% obj[:props].each_key do |key| %>
-                <td><%= obj[:props][key] %></td>
+        <% if prop[:props].present? %>
+            <% prop[:props].each_key do |key| %>
+                <td><%= prop[:props][key] %></td>
             <% end %>
         <% end %>
 
