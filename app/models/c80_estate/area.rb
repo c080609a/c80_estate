@@ -229,6 +229,14 @@ module C80Estate
       res
     end
 
+    def is_free?
+      astatus_tag == 'free'
+    end
+
+    def is_busy?
+      astatus_tag == 'busy'
+    end
+
     def assigned_person_title
       res = "-"
       if assigned_person.present?

@@ -59,6 +59,8 @@ ru:
         updated_at: 'Изменён'
         owner: 'Создатель'
         astatuses: 'Статус'
+        average_price: 'Средняя ставка'
+        average_price_busy: 'Средняя ставка занятых'
       c80_estate/aphoto:
         image: 'Файл'
       c80_news_tz/nphoto:

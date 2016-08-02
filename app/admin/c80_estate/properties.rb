@@ -52,15 +52,21 @@ ActiveAdmin.register C80Estate::Property, as: 'Property' do
       prop.areas.count
     end
     column 'Метраж' do |prop|
-      "#{prop.square_value} м.кв."
+      "#{prop.square_value.to_s(:rounded, precision: 2)} м.кв."
     end
     column '<abbr title="Сумма всех цен площадей">Цена объекта</abbr>'.html_safe do |prop|
-      "#{prop.power_price_value} руб"
+      "#{prop.power_price_value.to_s(:rounded, precision: 2)} руб"
     end
     # column :address
     # column :gps do |prop|
     #   "#{prop.latitude},#{prop.longitude}"
     # end
+    column :average_price do |prop|
+      "#{prop.average_price.to_s(:rounded, precision: 2)} руб"
+    end
+    column :average_price_busy do |prop|
+      "#{prop.average_price_busy.to_s(:rounded, precision: 2)} руб"
+    end
     column :assigned_person do |prop|
       prop.assigned_person_title
     end

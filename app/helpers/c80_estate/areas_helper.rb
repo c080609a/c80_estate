@@ -122,19 +122,29 @@ module C80Estate
               title: 'Метраж',
               abbr: 'Объем площади',
               value: area.square_value,
-              uom: 'м.кв.'
+              uom: 'м.кв.',
+              css:''
           },
           {
               title: 'Цена',
               abbr: 'За метр квадратный в месяц',
               value: area.price_value,
-              uom: 'руб'
+              uom: 'руб',
+              css:''
           },
           {
               title: 'Цена площади',
               abbr: 'Стоимость всей площади в месяц. Число PxS, где P - цена за м.кв. в месяц, S - метраж площади в м.кв.',
               value: area.power_price_value,
-              uom: 'руб'
+              uom: 'руб',
+              css:''
+          },
+          {
+              title: '',
+              abbr: '',
+              value: area.astatus_title,
+              uom: '',
+              css:"astatus_span #{area.astatus_tag}",
           }
       ]
       rows.each do |row|
@@ -143,9 +153,10 @@ module C80Estate
         value = row[:value]
         abbr = row[:abbr]
         uom = row[:uom]
+        css = row[:css]
 
         # нормальная цена
-        result += '<li>'
+        result += "<li class='#{css}'>"
         result += "<p class='ptitle medium'><abbr title='#{abbr}'>#{title}</abbr></p>" # Цена за шт | Цена за м²
         result += "<p><span class='pvalue bold'>#{value}<span> <span class='puom'>#{uom}</span></p>" # 1212,80 руб
 

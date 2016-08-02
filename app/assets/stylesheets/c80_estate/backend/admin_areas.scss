@@ -164,6 +164,33 @@ body.admin_areas {
       -o-transition: opacity .2s ease-in;
       transition: opacity .2s ease-in;
 
+      .astatus_span {
+        font-size: 20px;
+        font-weight: bold;
+        margin-right: 0;
+
+        .pvalue {
+          font-weight: 600 !important;
+        }
+
+        &.free {
+          margin-left: 58px;
+
+          .pvalue {
+            color: #00b729 !important;
+          }
+        }
+
+        &.busy {
+          margin-left: 78px;
+
+          .pvalue {
+            color: #b72600 !important;
+          }
+        }
+
+      }
+
     }
 
   }

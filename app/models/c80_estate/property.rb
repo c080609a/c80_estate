@@ -30,6 +30,60 @@ module C80Estate
       ac
     end
 
+    # применим для коллекций
+    # def self.average_price
+    #
+    #   areas_counter = 0
+    #   price_sum = 0
+    #
+    #   self.all.each do |prop|
+    #     prop.areas.all.each do |area|
+    #       price_sum += area.price_value
+    #       areas_counter += 1
+    #     end
+    #   end
+    #
+    #   if areas_counter != 0
+    #     price_sum*1.0 / areas_counter
+    #   else
+    #     0
+    #   end
+    # end
+
+    def average_price
+      price_sum = 0
+      areas.all.each do |area|
+        price_sum += area.price_value
+      end
+
+      if areas.all.count != 0
+        price_sum*1.0 / areas.all.count
+      else
+        0
+      end
+
+    end
+
+    def average_price_busy
+
+      busy_areas_count = 0
+      price_sum = 0
+
+      areas.all.each do |area|
+        if area.is_busy?
+          busy_areas_count += 1
+          price_sum += area.price_value
+        end
+      end
+
+      if busy_areas_count != 0
+        price_sum*1.0 / busy_areas_count
+      else
+        0
+      end
+
+    end
+
     def assigned_person_title
       res = "-"
       if assigned_person.present?

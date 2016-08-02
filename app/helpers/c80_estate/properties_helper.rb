@@ -93,6 +93,18 @@ module C80Estate
               abbr: 'Сумма всех цен площадей объекта',
               value: property.power_price_value.to_s(:rounded, precision: 2),
               uom: 'руб'
+          },
+          {
+              title: 'Средняя ставка',
+              abbr: 'Средняя арендная ставка за 1 кв. м',
+              value: property.average_price.to_s(:rounded, precision: 2),
+              uom: 'руб'
+          },
+          {
+              title: 'Средняя ставка занятых',
+              abbr: ' Средняя арендная ставка за 1 кв. м занятых площадей',
+              value: property.average_price_busy.to_s(:rounded, precision: 2),
+              uom: 'руб'
           }
       ]
       rows.each do |row|
