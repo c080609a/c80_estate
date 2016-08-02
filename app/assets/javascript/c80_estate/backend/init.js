@@ -3,6 +3,8 @@
 //
 //};
 
+var $main_content;
+
 var fLoadingShow = function () {
     $("body").append($('<div id="loading"></div>'));
 };

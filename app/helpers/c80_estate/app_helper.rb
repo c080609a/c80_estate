@@ -7,11 +7,11 @@ module C80Estate
     def render_table_prop_busy_coef(atype_id: nil)
       # Rails.logger.debug "<render_table_prop_busy_coef> atype_id = #{atype_id}"
 
-      props = Property.all
+      props = Property.sorted_chart
       if props.count > 0
         list = []
 
-        props.all.each do |prop|
+        props.each do |prop|
           pp = Pstat.busy_coef(prop_id: prop.id, atype_id: atype_id)
           # Rails.logger.debug "<render_table_prop_busy_coef> pp = #{pp}"
           busy_coef = pp[:busy_coef]
@@ -35,12 +35,12 @@ module C80Estate
     def render_table_prop_busy_coef_sq(atype_id: nil)
       # Rails.logger.debug "<render_table_prop_busy_coef_sq> atype_id = #{atype_id}"
 
-      props = Property.all
+      props = Property.sorted_chart
 
       if props.count > 0
         list = []
 
-        props.all.each do |prop|
+        props.each do |prop|
           pp = Pstat.busy_coef(prop_id: prop.id, atype_id: atype_id)
           # Rails.logger.debug "<render_table_prop_busy_coef> pp = #{pp}"
           busy_coef_sq = pp[:busy_coef_sq]

@@ -21,6 +21,17 @@ module C80Estate
     has_many :sevents, :dependent => :destroy
     has_many :pstats, :dependent => :destroy
 
+    # scope :sort_chart, -> {order(:ord => :asc)}
+
+    def self.sorted_chart
+      self.all.sort_by(&:busy_koef).reverse!
+    end
+
+    def busy_koef
+      pp = Pstat.busy_coef(prop_id: self.id, atype_id: nil)
+      pp[:busy_coef].to_f
+    end
+
     # этот метод для ActiveRecordCollection of Properties
     def self.areas_count
       ac = 0

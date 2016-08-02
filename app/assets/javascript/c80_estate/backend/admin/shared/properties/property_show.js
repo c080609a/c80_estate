@@ -36,14 +36,6 @@ var fPropertiesShow_initRichShowPage = function () {
 
 var fPropertiesShow_go = function () {
 
-    // элементы html страницы
-    var $main_content;          // правая сторона, там живёт таблица
-    //var $select_atype;          // фильтр atype
-    //var $select_property;       // фильтр property
-    //var $input_start_date;      // фильтр "дата начала периода"
-    //var $input_end_date;        // фильтр "дата конца периода"
-    //var $h2_page_title;         // заголовок страницы
-
     // компонент "над таблицей"
     var $div_index_adds;
 
@@ -76,15 +68,6 @@ var fPropertiesShow_go = function () {
     var $ajax_div, $ajax_div2;
 
     var fBuild = function () {
-
-        // зафиксируем html элементы
-        $main_content = $('#main_content');
-        //$select_atype = $("#q_atype_id");
-        //$select_property = $("#q_property_id");
-        //$input_start_date = $("#q_created_at_gteq");
-        //$input_end_date = $("#q_created_at_lteq");
-        //$h2_page_title = $("h2#page_title");
-        //
 
         $ajax_div = $("<div id='ajax_div'></div>");
         $ajax_div2 = $("<div id='ajax_div2'></div>");
@@ -122,8 +105,8 @@ var fPropertiesShow_go = function () {
         $main_content.prepend($ajax_div);
         $main_content.prepend($div_index_adds);
 
-        $(".comments").before($('<h4 style="padding-top:15px;">Статистика</h4>'));
-        $(".comments").before($div_index_adds);
+        $(".comments").before($('<h4 style="padding-top:15px;">Статистика</h4>'))
+                      .before($div_index_adds);
 
         // теперь покажем
         $main_content.css('opacity', '1.0');
@@ -480,9 +463,13 @@ var fPropertiesShow_go = function () {
 };
 
 var fPropertiesShow = function () {
+
+    // зафиксируем html элементы
+    $main_content = $('#main_content');
+
     $.ajax({
         url: '/estate/can_view_statistics',
         type: 'POST',
         dataType:'script'
     })
-}
+};

@@ -11,7 +11,7 @@ var fAreasShow_initRichShowPage = function () {
     //$b.click(function (e) {
     //    if (orderForm) {
     //        orderForm.afterShowForm = function () {
-                $("textarea#mess_comment").focus();
+                //$("textarea#mess_comment").focus();
                 //
                 //var $t = $("textarea#mess_comment");
                 //$t.data('toggle', 'tooltip');
@@ -35,17 +35,7 @@ var fAreasShow_initRichShowPage = function () {
 
 };
 
-var fAreasShow = function () {
-
-    // элементы html страницы
-    var $main_content;          // правая сторона, там живёт таблица
-    //var $select_area;           // фильтр area
-    //var $select_atype;          // фильтр atype
-    //var $select_property;       // фильтр property
-    //var $select_auser;          // фильтр auser
-    //var $input_start_date;      // фильтр "дата начала периода"
-    //var $input_end_date;        // фильтр "дата конца периода"
-    //var $h2_page_title;         // заголовок страницы
+var fAreasShow_go = function () {
 
     // компонент "над таблицей"
     var $div_index_adds;
@@ -59,16 +49,6 @@ var fAreasShow = function () {
     var $div_graph_canvas;
 
     var fBuild = function () {
-
-        // зафиксируем html элементы
-        $main_content = $('#main_content');
-        //$select_area = $("#q_area_id");
-        //$select_atype = $("#q_atype_id");
-        //$select_property = $("#q_property_id");
-        //$select_auser = $("#q_auser_id");
-        //$input_start_date = $("#q_created_at_gteq");
-        //$input_end_date = $("#q_created_at_lteq");
-        //$h2_page_title = $("h2#page_title");
 
         // построим компонент "над таблицей"
         $div_index_adds = $("<div class='index_adds_like_sevents'></div>");
@@ -349,4 +329,16 @@ var fAreasShow = function () {
 
     fInit();
 
+};
+
+var fAreasShow = function () {
+
+    // зафиксируем html элементы
+    $main_content = $('#main_content');
+
+    $.ajax({
+        url: '/estate/can_view_statistics_area',
+        type: 'POST',
+        dataType:'script'
+    })
 };
