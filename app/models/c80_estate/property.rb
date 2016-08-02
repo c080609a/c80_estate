@@ -63,7 +63,10 @@ module C80Estate
     end
 
     def last_updater
-      pstats.last.sevent.auser.email
+      res = '-'
+      if pstats.count > 0
+        res = pstats.last.sevent.auser.email
+      end
     end
 
     def square_value

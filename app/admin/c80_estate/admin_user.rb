@@ -49,13 +49,13 @@ ActiveAdmin.register AdminUser do
     f.inputs "Свойства" do
       f.input :email
 
-      if f.object.new_record?
+      # if f.object.new_record?
         f.input :password
         f.input :password_confirmation
-      else
+      # else
         # f.input :password
         # f.input :password_confirmation
-      end
+      # end
 
       # f.input :roles
       f.has_many :roles,
