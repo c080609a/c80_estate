@@ -770,8 +770,8 @@ module C80Estate
     end
 
     def self._calc_free_busy_areas(pstats)
-      sum_free_areas = 0
-      sum_busy_areas = 0
+      sum_free_areas = 0.0
+      sum_busy_areas = 0.0
       all_props = Property.all
       all_props.each do |prop|
         ppstats = pstats.where(:property_id => prop.id).ordered_by_created_at.last
@@ -788,17 +788,22 @@ module C80Estate
 
     def self._calc_free_busy_areas_sq(pstats)
 
-      sum_free_areas_sq = 0
-      sum_busy_areas_sq = 0
+      sum_free_areas_sq = 0.0
+      sum_busy_areas_sq = 0.0
       all_props = Property.all
 
       all_props.each do |prop|
         ppstats = pstats.where(:property_id => prop.id).ordered_by_created_at.last
         if ppstats.present?
+          Rails.logger.debug "\t\t ppstats.free_areas_sq = #{ppstats.free_areas_sq}"
+          Rails.logger.debug "\t\t ppstats.busy_areas_sq = #{ppstats.busy_areas_sq}"
           sum_free_areas_sq += ppstats.free_areas_sq
           sum_busy_areas_sq += ppstats.busy_areas_sq
         end
       end
+
+      Rails.logger.debug "<_calc_free_busy_areas_sq> sum_free_areas_sq = #{sum_free_areas_sq}, sum_busy_areas_sq = #{sum_busy_areas_sq}"
+
       {
           free_areas_atnow_sq: sum_free_areas_sq,
           busy_areas_atnow_sq: sum_busy_areas_sq

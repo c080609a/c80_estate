@@ -121,21 +121,21 @@ module C80Estate
           {
               title: 'Метраж',
               abbr: 'Объем площади',
-              value: area.square_value,
+              value: area.square_value.to_s(:rounded, precision: 2),
               uom: 'м.кв.',
               css:''
           },
           {
               title: 'Цена',
               abbr: 'За метр квадратный в месяц',
-              value: area.price_value,
+              value: area.price_value.to_s(:rounded, precision: 2),
               uom: 'руб',
               css:''
           },
           {
               title: 'Цена площади',
               abbr: 'Стоимость всей площади в месяц. Число PxS, где P - цена за м.кв. в месяц, S - метраж площади в м.кв.',
-              value: area.power_price_value,
+              value: area.power_price_value.to_s(:rounded, precision: 2),
               uom: 'руб',
               css:''
           },

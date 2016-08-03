@@ -43,12 +43,14 @@ module C80Estate
 
     # посчитает кол-во свободных метров
     def self.free_areas_sq
-      sum = 0
+      Rails.logger.debug "<Area.free_areas_sq>"
+      sum = 0.0
       self.free_areas.each do |area|
         # area_prop_square = area.item_props.where(:prop_name_id => 9)
         area_prop_square = area.square_value
-        sum += area_prop_square#.first.value.to_i
+        sum += area_prop_square
       end
+      Rails.logger.debug "<Area.free_areas_sq> sum = #{sum}"
       sum
     end
 
@@ -58,22 +60,22 @@ module C80Estate
 
     # посчитает кол-во занятых метров
     def self.busy_areas_sq
-      sum = 0
+      sum = 0.0
       self.busy_areas.each do |area|
         area_prop_square = area.item_props.where(:prop_name_id => 9)
         if area_prop_square.present?
-          sum += area_prop_square.first.value.to_i
+          sum += area_prop_square.first.value.to_f
         end
       end
       sum
     end
 
     def self.all_areas_sq
-      sum = 0
+      sum = 0.0
       self.all.each do |area|
         area_prop_square = area.item_props.where(:prop_name_id => 9)
         if area_prop_square.present?
-          sum += area_prop_square.first.value.to_i
+          sum += area_prop_square.first.value.to_f
         end
       end
       sum
@@ -82,15 +84,15 @@ module C80Estate
     def self.where_price_range(range)
       self.joins(:item_props)
           .where(c80_estate_item_props: {prop_name_id: 1})
-          .where('c80_estate_item_props.value > ?', range.split(',')[0].to_i-1)
-          .where('c80_estate_item_props.value < ?', range.split(',')[1].to_i+1)
+          .where('c80_estate_item_props.value > ?', range.split(',')[0].to_f-1)
+          .where('c80_estate_item_props.value < ?', range.split(',')[1].to_f+1)
     end
 
     def self.where_square_range(range)
       C80Estate::Area.joins(:item_props)
           .where(c80_estate_item_props: {prop_name_id: 9})
-          .where('c80_estate_item_props.value > ?', range.split(',')[0].to_i-1)
-          .where('c80_estate_item_props.value < ?', range.split(',')[1].to_i+1)
+          .where('c80_estate_item_props.value > ?', range.split(',')[0].to_f-1)
+          .where('c80_estate_item_props.value < ?', range.split(',')[1].to_f+1)
     end
 
     def self.where_oenter(v)
@@ -167,7 +169,7 @@ module C80Estate
                                        })
 
         C80Estate::ItemProp.create!([
-                                        {value: row['price'].to_i, area_id: area.id, prop_name_id: 1},
+                                        {value: row['price'].to_f, area_id: area.id, prop_name_id: 1},
                                         {value: row['square'].to_f, area_id: area.id, prop_name_id: 9},
                                     ])
 
@@ -258,20 +260,21 @@ module C80Estate
     end
 
     def price_value
-      res = 0
+      res = 0.0
       p = item_props.where(:prop_name_id => 1)
       if p.count > 0
-        res = p.first.value.to_i
+        res = p.first.value.to_f
       end
       res
     end
 
     def square_value
-      res = 0
+      res = 0.0
       p = item_props.where(:prop_name_id => 9)
       if p.count > 0
         res = p.first.value.to_f
       end
+      Rails.logger.debug "<Area.square_value> res = #{res}"
       res
     end
 

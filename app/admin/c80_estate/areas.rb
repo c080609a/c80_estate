@@ -148,13 +148,13 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       area.atype_title
     end
     column '<abbr title="За м.кв. в месяц">Цена м.кв.</abbr>'.html_safe do |area|
-      "#{area.price_value} руб"
+      "#{area.price_value.to_s(:rounded, :precision => 2)} руб"
     end
     column '<abbr title="Стоимость всей площади в месяц. Число PxS, где P - цена за м.кв. в месяц, S - метраж площади в м.кв.">Цена площади</abbr>'.html_safe do |area|
-      "#{area.power_price_value} руб"
+      "#{area.power_price_value.to_s(:rounded, :precision => 2)} руб"
     end
     column 'Метраж' do |area|
-      "#{area.square_value} м<sup>2</sup>".html_safe
+      "#{area.square_value.to_s(:rounded, :precision => 2)} м<sup>2</sup>".html_safe
     end
     column :property do |area|
       "<div class='image_vertical properties_index_logo'>
