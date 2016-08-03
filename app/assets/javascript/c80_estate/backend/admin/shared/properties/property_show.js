@@ -468,7 +468,7 @@ var fPropertiesShow = function () {
     $main_content = $('#main_content');
 
     $.ajax({
-        url: '/estate/can_view_statistics',
+        url: '/estate/can_view_statistics_property',
         type: 'POST',
         dataType:'script'
     })

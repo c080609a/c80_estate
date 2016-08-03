@@ -148,13 +148,13 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       area.atype_title
     end
     column '<abbr title="За м.кв. в месяц">Цена м.кв.</abbr>'.html_safe do |area|
-      "#{area.price_value} руб"
+      "#{area.price_value.to_s(:rounded, :precision => 2)} руб"
     end
     column '<abbr title="Стоимость всей площади в месяц. Число PxS, где P - цена за м.кв. в месяц, S - метраж площади в м.кв.">Цена площади</abbr>'.html_safe do |area|
-      "#{area.power_price_value} руб"
+      "#{area.power_price_value.to_s(:rounded, :precision => 2)} руб"
     end
     column 'Метраж' do |area|
-      "#{area.square_value} м<sup>2</sup>".html_safe
+      "#{area.square_value.to_s(:rounded, :precision => 2)} м<sup>2</sup>".html_safe
     end
     column :property do |area|
       "<div class='image_vertical properties_index_logo'>
@@ -184,7 +184,9 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
     f.inputs 'Свойства' do
       f.input :title
       f.input :atype, :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'}
-      f.input :property, :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'}
+      f.input :property,
+              :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'},
+              :collection => C80Estate::Property.where(:assigned_person_id => current_admin_user.id).map { |p| ["#{p.title}", p.id] }
       # f.input :assigned_person,
       #         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'},
       #         :collection => AdminUser.all.map { |u| ["#{u.email}", u.id] }

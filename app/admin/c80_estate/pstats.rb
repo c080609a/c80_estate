@@ -29,8 +29,12 @@ ActiveAdmin.register C80Estate::Pstat, as: 'Pstat' do
     end
     column :free_areas
     column :busy_areas
-    column :coef_busy
-    column :coef_busy_sq
+    column :coef_busy do |pst|
+      pst.coef_busy.to_s(:rounded, :precision => 2)
+    end
+    column :coef_busy_sq do |pst|
+      pst.coef_busy_sq(:rounded, :precision => 2)
+    end
     column :created_at
     actions
   end

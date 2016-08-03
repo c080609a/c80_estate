@@ -58,6 +58,9 @@ var fSeventsIndex = function () {
         $div_index_adds.append($div_area_text_stats);
         $div_index_adds.append($div_graph);
 
+        var $h = $('<h4 class="sub_h4">Последние события</h4>');
+        $div_index_adds.append($h);
+
         $main_content.prepend($div_index_adds);
 
         // теперь покажем

@@ -102,12 +102,7 @@ var fAreasShow_go = function () {
             type: 'POST',
             dataType: 'json',
             data: {
-                area_id: area_id//,
-                //atype_id: atype_id,
-                //property_id: property_id,
-                //auser_id: auser_id,
-                //start_date: start_date,
-                //end_date: end_date
+                area_id: area_id
             }
         }).done(function (data, result) {
             if (result == 'success') {
@@ -331,6 +326,18 @@ var fAreasShow_go = function () {
 
 };
 
+var fAreasShow_initActionItems = function (area_id) {
+
+    var html_str = "";
+    html_str += "<span class='action_item'><a href='/admin/areas/{ID}/edit'>Изменить</a></span>";
+    html_str += "<span class='action_item'><a class='has_many_remove' data-confirm='Вы уверены, что хотите удалить это?' rel='nofollow' data-method='delete' href='/admin/areas/{ID}'>Удалить</a></span>";
+    html_str = html_str.split("{ID}").join(area_id);
+
+    $("div.action_items").html($("<div></div>"))
+                         .append($(html_str))
+                         .css('opacity','1');
+};
+
 var fAreasShow = function () {
 
     // зафиксируем html элементы
@@ -340,5 +347,22 @@ var fAreasShow = function () {
         url: '/estate/can_view_statistics_area',
         type: 'POST',
         dataType:'script'
-    })
+    });
+
+    var area_id = -1;
+    var url = unescape(window.location.href);
+    var match_res = url.match(/areas\/(\d{1,9})/);
+    if (match_res != null) {
+        area_id = Number(match_res[1]);
+    }
+
+    $.ajax({
+        url: '/estate/can_edit_area',
+        type: 'POST',
+        data: {
+            area_id: area_id
+        },
+        dataType:'script'
+    });
+
 };

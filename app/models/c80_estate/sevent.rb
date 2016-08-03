@@ -93,7 +93,7 @@ module C80Estate
 
         result[:average_value] = sprintf "%.2f%", summ/k*100
         result[:comment] = "<abbr title='Период рассчёта эффективности: с момента самого первого известного события до текущего дня'>C #{Time.at(self.first.created_at).strftime('%Y/%m/%d')} по #{Time.now.year}/#{sprintf "%02d", Time.now.month}/#{sprintf "%02d", Time.now.day}</abbr>"
-        result[:abbr] = 'Среднее значение для всех площадей за весь период'
+        result[:abbr] = 'Среднее значение коэф-та эффективности для всех площадей за весь период. Эффективность - это число b/N, где b - кол-во дней которые площадь была занята (за указанный период), N - всего дней в указанном периоде'
         result[:title] = 'Статистика - Все площади'
         result[:props] = [
             {tag:'all_areas_count', val: "Площадей всего: #{Area.all.count}"},
@@ -185,8 +185,8 @@ module C80Estate
 
         result[:average_value] = sprintf "%.2f%", result[area_id][:ecoef]*100
         result[:comment] = "<abbr title='Период рассчёта коэф-та эффективности'>C #{used_start_date_str} по #{used_end_date_str}</abbr>"
-        result[:abbr] = 'Коэф-т эффективности площади за указанный период'
-        result[:title] = "Статистика - #{area.title}"
+        result[:abbr] = 'Коэф-т эффективности площади за указанный период. Эффективность - это число b/N, где b - кол-во дней которые площадь была занята (за указанный период), N - всего дней в указанном периоде'
+        result[:title] = "Статистика - площадь '#{area.title}'"
         result[:graph] = _parse_for_js_graph(sevents)
 
         if mark_whole
@@ -196,9 +196,9 @@ module C80Estate
         end
 
         result[:props] = [
-            { tag: 'title', val: "#{area.title}" },
+            { tag: 'title', val: "Площадь: #{area.title}" },
             { tag: 'atype', val: "Тип: #{area.atype_title}" },
-            # { tag: 'born_date', val: "Дата создания: #{area.created_at.in_time_zone('Moscow')}" },
+            { tag: 'born_date', val: "Дата создания: #{area.created_at.in_time_zone('Moscow').strftime('%Y/%m/%d')}" },
             { tag: 'busy_time', val: "<abbr title='В указанный период'>Времени занята</abbr>: #{time_duration(t[:time_busy])}" },
             { tag: 'free_time', val: "<abbr title='В указанный период'>Времени свободна</abbr>: #{time_duration(t[:time_free])}" },
             { tag: 'all_time', val: "<abbr title='В указанный период'>Времени всего</abbr>: #{time_duration(t[:time_busy] + t[:time_free])}" },

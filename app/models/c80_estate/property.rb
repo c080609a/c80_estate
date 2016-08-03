@@ -3,7 +3,7 @@ module C80Estate
     belongs_to :atype
     belongs_to :owner, :polymorphic => true
     belongs_to :assigned_person, :polymorphic => true
-    has_many :item_props, :dependent => :destroy
+    # has_many :item_props, :dependent => :destroy
     has_many :pphotos, :dependent => :destroy   # одна или несколько фоток
     accepts_nested_attributes_for :pphotos,
                                   :reject_if => lambda { |attributes|
@@ -62,7 +62,7 @@ module C80Estate
     # end
 
     def average_price
-      price_sum = 0
+      price_sum = 0.0
       areas.all.each do |area|
         price_sum += area.price_value
       end
@@ -70,7 +70,7 @@ module C80Estate
       if areas.all.count != 0
         price_sum*1.0 / areas.all.count
       else
-        0
+        0.0
       end
 
     end
@@ -78,7 +78,7 @@ module C80Estate
     def average_price_busy
 
       busy_areas_count = 0
-      price_sum = 0
+      price_sum = 0.0
 
       areas.all.each do |area|
         if area.is_busy?
@@ -90,7 +90,7 @@ module C80Estate
       if busy_areas_count != 0
         price_sum*1.0 / busy_areas_count
       else
-        0
+        0.0
       end
 
     end
@@ -135,7 +135,7 @@ module C80Estate
     end
 
     def square_value
-      sum = 0
+      sum = 0.0
       areas.all.each do |area|
         sum += area.square_value
       end
@@ -143,7 +143,7 @@ module C80Estate
     end
 
     def power_price_value
-      sum = 0
+      sum = 0.0
       areas.all.each do |area|
         sum += area.power_price_value
       end
