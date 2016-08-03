@@ -33,7 +33,7 @@ ActiveAdmin.register C80Estate::Pstat, as: 'Pstat' do
       pst.coef_busy.to_s(:rounded, :precision => 2)
     end
     column :coef_busy_sq do |pst|
-      pst.coef_busy_sq(:rounded, :precision => 2)
+      pst.coef_busy_sq.to_s(:rounded, :precision => 2)
     end
     column :created_at
     actions
