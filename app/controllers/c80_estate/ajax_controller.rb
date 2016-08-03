@@ -74,5 +74,22 @@ module C80Estate
 
     end
 
+    def can_edit_area
+
+      area_id = request.params[:area_id] == "" ? nil:request.params[:area_id]
+      @res = false
+
+      if area_id != ''
+        @area = Area.find(area_id)
+        @res = current_admin_user.can_edit_area?(@area)
+      end
+
+      respond_to do |format|
+        format.js
+        # format.json
+      end
+
+    end
+
   end
 end

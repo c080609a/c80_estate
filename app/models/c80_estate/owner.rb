@@ -98,9 +98,11 @@ module C80Estate
             # true
           end
 
+          # если да, то будет видна кнопка "создать area"
           def can_create_areas?
             r1 = roles.where(role_type: 1)
-            r1.count > 0
+            r3 = roles.where(role_type: 3)
+            r1.count > 0 || r3.count > 0
             # true
           end
 

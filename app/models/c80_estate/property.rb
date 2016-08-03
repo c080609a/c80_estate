@@ -3,7 +3,7 @@ module C80Estate
     belongs_to :atype
     belongs_to :owner, :polymorphic => true
     belongs_to :assigned_person, :polymorphic => true
-    has_many :item_props, :dependent => :destroy
+    # has_many :item_props, :dependent => :destroy
     has_many :pphotos, :dependent => :destroy   # одна или несколько фоток
     accepts_nested_attributes_for :pphotos,
                                   :reject_if => lambda { |attributes|

@@ -238,9 +238,9 @@ module C80Estate
     end
 
     def assigned_person_title
-      res = "-"
-      if assigned_person.present?
-        res = assigned_person.email
+      res = '-'
+      if property.assigned_person.present?
+        res = property.assigned_person.email
       end
       res
     end
@@ -355,21 +355,17 @@ module C80Estate
                                created_at: self.created_at
                            })
 
-        # см [*]
-        # if last_known_sevent == ''
-        #   pparams[:created_at] = self.created_at
-        # end
-        #
-        # pparams = {
-        #     atype_id: nil,
-        #     property_id: self.property_id,
-        #     sevent_id: s.id
-        # }
+        pparams = {
+            atype_id: nil,
+            property_id: self.property_id,
+            sevent_id: s.id,
+            created_at: self.created_at
+        }
 
         # генерим запись с общими данными
         # связываем её с Sevent
         # чтобы можно было удалить как dependent => destroy
-        # Pstat.create!(pparams)
+        Pstat.create!(pparams)
 
       end
 

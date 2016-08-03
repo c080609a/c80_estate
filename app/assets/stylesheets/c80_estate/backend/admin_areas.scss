@@ -60,8 +60,13 @@ body.admin_areas {
 
     form fieldset > ol > li.boolean {
       height: auto;
-      &#item_is_main_input {padding-bottom: 20px;padding-top: 0;}
-      &#item_is_sale_input {padding-bottom: 0;}
+      &#item_is_main_input {
+        padding-bottom: 20px;
+        padding-top: 0;
+      }
+      &#item_is_sale_input {
+        padding-bottom: 0;
+      }
       label {
         font-weight: bold;
         color: #5E6469;
@@ -76,7 +81,9 @@ body.admin_areas {
     // спрячем артефакт
     li#area_galleries_input {
       fieldset.choices {
-        legend.label { display:none; }
+        legend.label {
+          display: none;
+        }
       }
     }
 
@@ -102,7 +109,9 @@ body.admin_areas {
     .fieldset_item_props {
       background-color: white !important;
       box-shadow: none !important;
-      legend { display: none !important; }
+      legend {
+        display: none !important;
+      }
     }
 
   }
@@ -154,6 +163,21 @@ body.admin_areas {
   }
 
   &.show {
+
+    #title_bar .action_items {
+      opacity: 0;
+
+      span.action_item > a {
+        &.has_many_remove {
+          border: 1px solid #ED4F32 !important;
+          margin-left: 10px;
+          &:hover {
+            background-color: #ED4F32 !important;
+            color: white !important;
+          }
+        }
+      }
+    }
 
     div#main_content {
       opacity: 0;
