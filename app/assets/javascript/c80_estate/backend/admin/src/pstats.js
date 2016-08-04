@@ -41,6 +41,11 @@ var fPstatsIndex = function () {
 
     var $ajax_div, $ajax_div2;
 
+    // здесь живут средние арендные ставки: по всем, и по занятым
+    var $div_row_average_prices,
+        $p_average_price,
+        $p_average_price_busy;
+
     var fBuild = function () {
 
         // зафиксируем html элементы
@@ -57,6 +62,17 @@ var fPstatsIndex = function () {
         // построим компонент "над таблицей"
         $div_index_adds = $("<div class='index_adds_like_pstats'></div>");
 
+        // строка со средними ценами
+        $div_row_average_prices = $("<div id='div_row_average_prices'></div>").appendTo($div_index_adds);
+            var $div_average_price = $('<div class="average_price"></div>').appendTo($div_row_average_prices);
+                $p_average_price = $('<p class="val"></p>').appendTo($div_average_price);
+                var $average_price_comment = $('<p class="abbr"><abbr title="Среднее значение среди средних цен за м.кв. всех объектов">Средняя цена</abbr></p>').appendTo($div_average_price);
+
+            var $div_average_price_busy = $('<div class="average_price_busy"></div>').appendTo($div_row_average_prices);
+                $p_average_price_busy = $('<p class="val"></p>').appendTo($div_average_price_busy);
+                var $average_price_comment_busy = $('<p class="abbr"><abbr title="Среднее значение среди средних цен за м.кв. занятых площадей всех объектов">Средняя цена по занятым</abbr></p>').appendTo($div_average_price_busy);
+
+        // коэф-ты занятости
         $div_busy_coef = $("<div id='coef'></div>").appendTo($div_index_adds);
             $p_busy_coef = $("<p class='val'></p>").appendTo($div_busy_coef);
             $p_busy_coef_mess = $("<p class='title'><abbr class='abbr_busy_coef' title='TITLE'>Занятость</abbr></p>").appendTo($div_busy_coef);
@@ -163,6 +179,9 @@ var fPstatsIndex = function () {
                 if (data["graph_radial_sq"] != undefined) {
                     fDrawChartRadialSq(data["graph_radial_sq"]);
                 }
+
+                $p_average_price.text('200,12 руб');
+                $p_average_price_busy.text('179,12 руб');
 
                 $h2_page_title.text(data["title"]);
                 $h2_page_title.css('opacity', '1.0');
