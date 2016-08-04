@@ -66,11 +66,11 @@ var fPstatsIndex = function () {
         $div_row_average_prices = $("<div id='div_row_average_prices'></div>").appendTo($div_index_adds);
             var $div_average_price = $('<div class="average_price"></div>').appendTo($div_row_average_prices);
                 $p_average_price = $('<p class="val"></p>').appendTo($div_average_price);
-                var $average_price_comment = $('<p class="abbr"><abbr title="Среднее значение среди средних цен за м.кв. всех объектов">Средняя цена</abbr></p>').appendTo($div_average_price);
+                var $average_price_comment = $('<p class="abbr"><abbr title="Суммируем все средние ставки всех объектов и делим на кол-во объектов. Если в фильтрах указан тип - то вычисления проводятся относительно указанного типа.">Средняя ставка</abbr></p>').appendTo($div_average_price);
 
             var $div_average_price_busy = $('<div class="average_price_busy"></div>').appendTo($div_row_average_prices);
                 $p_average_price_busy = $('<p class="val"></p>').appendTo($div_average_price_busy);
-                var $average_price_comment_busy = $('<p class="abbr"><abbr title="Среднее значение среди средних цен за м.кв. занятых площадей всех объектов">Средняя цена по занятым</abbr></p>').appendTo($div_average_price_busy);
+                var $average_price_comment_busy = $('<p class="abbr"><abbr title="Суммируем все средние ставки по занятым всех объектов и делим на кол-во объектов. Если в фильтрах указан тип - то вычисления проводятся относительно указанного типа.">Средняя ставка по занятым</abbr></p>').appendTo($div_average_price_busy);
 
         // коэф-ты занятости
         $div_busy_coef = $("<div id='coef'></div>").appendTo($div_index_adds);
@@ -180,10 +180,15 @@ var fPstatsIndex = function () {
                     fDrawChartRadialSq(data["graph_radial_sq"]);
                 }
 
-                $p_average_price.text('200,12 руб');
-                $p_average_price_busy.text('179,12 руб');
+                if (data["average_price"] != undefined && data["average_price_busy"] != undefined) {
+                    $p_average_price.text(data["average_price"]);
+                    $p_average_price_busy.text(data["average_price_busy"]);
+                    $div_row_average_prices.css('opacity','1.0');
+                } else {
+                    $div_row_average_prices.css('display','none');
+                }
 
-                $h2_page_title.text(data["title"]);
+                $h2_page_title.html(data["title"]);
                 $h2_page_title.css('opacity', '1.0');
                 $(document).attr('title', data["title"]);
 

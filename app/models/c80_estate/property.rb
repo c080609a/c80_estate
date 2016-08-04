@@ -4,13 +4,13 @@ module C80Estate
     belongs_to :owner, :polymorphic => true
     belongs_to :assigned_person, :polymorphic => true
     # has_many :item_props, :dependent => :destroy
-    has_many :pphotos, :dependent => :destroy   # одна или несколько фоток
+    has_many :pphotos, :dependent => :destroy # одна или несколько фоток
     accepts_nested_attributes_for :pphotos,
                                   :reject_if => lambda { |attributes|
                                     !attributes.present?
                                   },
                                   :allow_destroy => true
-    has_many :plogos, :dependent => :destroy   # одна или несколько фоток
+    has_many :plogos, :dependent => :destroy # одна или несколько фоток
     accepts_nested_attributes_for :plogos,
                                   :reject_if => lambda { |attributes|
                                     !attributes.present?
@@ -41,46 +41,77 @@ module C80Estate
       ac
     end
 
-    # применим для коллекций
-    # def self.average_price
-    #
-    #   areas_counter = 0
-    #   price_sum = 0
-    #
-    #   self.all.each do |prop|
-    #     prop.areas.all.each do |area|
-    #       price_sum += area.price_value
-    #       areas_counter += 1
-    #     end
-    #   end
-    #
-    #   if areas_counter != 0
-    #     price_sum*1.0 / areas_counter
-    #   else
-    #     0
-    #   end
-    # end
+    # посчитает среднее значение средних цен по коллекции
+    def self.average_price(atype_id: nil)
 
-    def average_price
+      res = 0.0
+      sum = 0.0
+
+      c = self.all.count
+      if c > 0
+        self.all.each do |prop|
+          sum += prop.average_price(atype_id:atype_id)
+        end
+        res = sum / c
+      end
+
+      res
+    end
+
+    # посчитает среднее значение средних цен ЗАНЯТЫХ ПЛОЩАДЕЙ по коллекции
+    # можно указать тип
+    def self.average_price_busy(atype_id: nil)
+
+      res = 0.0
+      sum = 0.0
+
+      c = self.all.count
+      if c > 0
+        self.all.each do |prop|
+          sum += prop.average_price_busy(atype_id:atype_id)
+        end
+        res = sum / c
+      end
+
+      res
+    end
+
+    def average_price(atype_id: nil)
+
+      if atype_id.nil?
+        ars = areas.all
+      else
+        ars = areas.where_atype(atype_id)
+      end
+
       price_sum = 0.0
-      areas.all.each do |area|
+
+      ars.each do |area|
         price_sum += area.price_value
       end
 
-      if areas.all.count != 0
-        price_sum*1.0 / areas.all.count
+      if ars.count != 0
+        price_sum*1.0 / ars.count
       else
         0.0
       end
 
     end
 
-    def average_price_busy
+    # рассчитать среднюю цену среди занятых у конкретного объекта
+    # можно указать дополнительно тип
+    def average_price_busy(atype_id: nil)
+
+      if atype_id.nil?
+        ars = areas.all
+      else
+        ars = areas.where_atype(atype_id)
+      end
 
       busy_areas_count = 0
       price_sum = 0.0
 
-      areas.all.each do |area|
+      ars.each do |area|
         if area.is_busy?
           busy_areas_count += 1
           price_sum += area.price_value

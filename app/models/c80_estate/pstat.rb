@@ -137,6 +137,8 @@ module C80Estate
 
         # common
 
+        result[:average_price] = "#{Property.all.average_price.to_s(:rounded, :precision => 2)} руб"  #'123,50 руб'
+        result[:average_price_busy] = "#{Property.all.average_price_busy.to_s(:rounded, :precision => 2)} руб" # '73,50 руб'
         result[:title] = 'Статистика - Все объекты недвижимости'
         # Rails.logger.debug "result ============= #{result}"
 
@@ -301,8 +303,12 @@ module C80Estate
             result[:raw_props_sq][:busy_areas_atnow_sq] = busy_areas_atnow_sq
 
             # common
-
+            result[:average_price] = "#{property.average_price(atype_id:atype_id).to_s(:rounded, :precision => 2)} руб" #'123,50 руб'
+            result[:average_price_busy] = "#{property.average_price_busy(atype_id:atype_id).to_s(:rounded, :precision => 2)} руб" #'73,50 руб'
             result[:title] = "Статистика - Объект - #{property.title}"
+            if atype_id.present?
+              result[:title] += " <span class='h2_title_span'>// фильтр по типу: #{Atype.find(atype_id).title}</span>"
+            end
             # result[:graph] = _parse_for_js_radial_graph(free_areas_atnow,busy_areas_atnow)
 
 
@@ -390,14 +396,19 @@ module C80Estate
 
         # Занятость
 
-        tt = _calc_free_busy_areas(pstats)
-
-        free_areas_atnow = tt[:sum_free_areas] #*1.0/all_props.count #pstats.last.free_areas
-        busy_areas_atnow = tt[:sum_busy_areas] #*1.0/all_props.count #pstats.last.busy_areas
-
+=begin
+        # tt = _calc_free_busy_areas(pstats)
+        #
+        # free_areas_atnow = tt[:sum_free_areas] #*1.0/all_props.count #pstats.last.free_areas
+        # busy_areas_atnow = tt[:sum_busy_areas] #*1.0/all_props.count #pstats.last.busy_areas
+        #
         # Rails.logger.debug("\t\t atype_id = #{atype_id}")
         # Rails.logger.debug("\t\t free_areas_atnow = #{free_areas_atnow}")
         # Rails.logger.debug("\t\t busy_areas_atnow = #{busy_areas_atnow}")
+=end
+
+        free_areas_atnow = pstats.last.free_areas
+        busy_areas_atnow = pstats.last.busy_areas
 
         # защищаемся от деления на ноль
         if free_areas_atnow + busy_areas_atnow == 0
@@ -456,8 +467,9 @@ module C80Estate
         result[:raw_props_sq][:busy_areas_atnow_sq] = busy_areas_atnow_sq
 
         # common
-
-        result[:title] = "Статистика - Объекты - Фильтр по типу площади '#{ Atype.find(atype_id).title }'"
+        result[:average_price] = "#{Property.all.average_price(atype_id: atype_id).to_s(:rounded, :precision => 2)} руб"  #'123,50 руб'
+        result[:average_price_busy] = "#{Property.all.average_price_busy(atype_id: atype_id).to_s(:rounded, :precision => 2)} руб" # '73,50 руб'
+        result[:title] = "Статистика - Все объекты <span class='h2_title_span'>// фильтр по типу: #{Atype.find(atype_id).title}</span>"
 
         # if atype_id.present?
         #   result[:title] += " (#{Atype.find(atype_id).title})"

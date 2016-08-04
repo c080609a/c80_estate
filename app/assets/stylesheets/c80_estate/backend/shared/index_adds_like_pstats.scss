@@ -134,6 +134,12 @@ div.index_adds_like_pstats {
       height: auto;
       margin-bottom: 15px;
       padding: 0;
+      opacity: 0;
+      -webkit-transition: opacity .2s ease-in;
+      -moz-transition: opacity .2s ease-in;
+      -ms-transition: opacity .2s ease-in;
+      -o-transition: opacity .2s ease-in;
+      transition: opacity .2s ease-in;
 
       > div {
         border: none !important;
