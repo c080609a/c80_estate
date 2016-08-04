@@ -23,7 +23,7 @@ module C80Estate
 
       area.atype.prop_names.each do |atype_propname|
           title = atype_propname.title
-          if atype_propname.id == 1 || atype_propname.id == 9
+          if atype_propname.id == 1 || atype_propname.id == 9 || atype_propname.id == 14
             next
           end
           # value = prop.value

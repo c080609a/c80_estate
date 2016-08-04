@@ -259,12 +259,39 @@ module C80Estate
       sevents.last.auser.email
     end
 
+    # выдать цену за м.кв. в месяц
     def price_value
+
       res = 0.0
-      p = item_props.where(:prop_name_id => 1)
-      if p.count > 0
-        res = p.first.value.to_f
+      mark_use_usual_price = false
+
+      # если указана "цена за площадь",
+      # то цену за м кв. в месяц высчитываем
+      pa = item_props.where(:prop_name_id => 14)
+      if pa.count > 0
+        pa_val = pa.first.value.to_f
+
+        if pa_val == 0
+          # если руками было проставлено 0 - т.е. свойство как бы было удалено, выключено
+          mark_use_usual_price = true
+        else
+          if square_value != 0
+            # результат получаем только тогда, когда указана площадь и когда указана цена за площадь
+            res = pa_val / square_value
+          else
+            # если не указана площадь - то берём обычную цену
+            mark_use_usual_price = true
+          end
+        end
       end
+
+      if mark_use_usual_price
+        p = item_props.where(:prop_name_id => 1)
+        if p.count > 0
+          res = p.first.value.to_f
+        end
+      end
+
       res
     end
 
