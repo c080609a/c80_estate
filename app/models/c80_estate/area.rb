@@ -283,6 +283,8 @@ module C80Estate
             mark_use_usual_price = true
           end
         end
+      else
+        mark_use_usual_price = true
       end
 
       if mark_use_usual_price
@@ -315,6 +317,19 @@ module C80Estate
         url = aphotos.first.image.thumb512
       end
       url
+    end
+
+    # вернёт true, если вручную указана цена за всю площадь
+    def is_locked_area_price?
+      res = false
+      pa = item_props.where(:prop_name_id => 14)
+      if pa.count > 0
+        pa_val = pa.first.value.to_f
+        if pa_val > 0
+          res = true
+        end
+      end
+      res
     end
 
     ransacker :item_prop_price_val,
