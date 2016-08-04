@@ -195,11 +195,11 @@ var jsinit = {
                     $iselprop.attr("disabled", true); // NOTE:: но в момент нажатия кнопки "Отправить" мы "разлачиваем" селект, чтобы параметры формы "правильно" отправлялись;
 
                     // в input "производитель" - ставим "-1" и прячем его от пользователя
-                    if (ielem["id"] == 36) {
-                        $iinputprop.val("-1");
-                        $ifs.css("display",'none');
-                    }
-
+                    //if (ielem["id"] == 36) {
+                    //    $iinputprop.val("-1");
+                    //    $ifs.css("display",'none');
+                    //}
+                    $ifs.find("> ol").addClass('v_' + ielem["id"]);
                 }
 
                 fLoadingHide();
@@ -309,6 +309,7 @@ var fEdit = function () {
                         //console.log(this);
                         return $(this).val() == ielem["id"]; //return $(this).text() == ielem["title"];
                     }).prop('selected', true);
+                    //$ifs.addClass('v_'+ielem["id"]);
                     $iselprop.attr("disabled", true); // NOTE:: но в момент нажатия кнопки "Отправить" мы "разлачиваем" селект, чтобы параметры формы "правильно" отправлялись
 
                 }
@@ -338,22 +339,26 @@ var fEdit = function () {
                         return t;
                     });
 
+                    // находим опцию id=36 селекта "имя свойства"
+                    var $opt = $iselprop.find("option").filter(function () {
+                        var $t = $(this);
+                        //return $t.val() == 36 && $t.prop('selected');
+                        return $t.val() == ielem["id"] && $t.prop('selected');
+                    });
+                    // из этой опции добираемся до fieldset, который её содержит
+                    var $fieldset = $opt.parent().parent().parent();
+
+                    //console.log($fieldset);
+
                     // в input "производитель" - ставим "-1" и прячем весь fieldset от пользователя
-                    if (ielem["id"] == 36) {
-                        // находим опцию id=36 селекта "имя свойства"
-                        var $opt = $iselprop.find("option").filter(function () {
-                            var $t = $(this);
-                            return $t.val() == 36 && $t.prop('selected');
-                        });
-                        // из этой опции добираемся до fieldset, который её содержит
-                        var $fieldset = $opt.parent().parent().parent();
+                    //if (ielem["id"] == 36) {
                         // а затем уже находим input
-                        $fieldset.find("input").val("-1");
+                        //$fieldset.find("input").val("-1");
                         // прячем
-                        $fieldset.css('display','none');
+                        //$fieldset.css('display','none');
+                    //}
 
-                    }
-
+                    $fieldset.addClass('v_'+ielem["id"]);
                 }
 
                 fLoadingHide();

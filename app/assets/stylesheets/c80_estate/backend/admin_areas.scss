@@ -109,9 +109,24 @@ body.admin_areas {
     .fieldset_item_props {
       background-color: white !important;
       box-shadow: none !important;
+
       legend {
         display: none !important;
       }
+
+      fieldset.has_many_fields {
+        background-color: transparent !important;
+        box-shadow: none !important;
+      }
+
+      ol.v_1, ol.v_9, ol.v_14 {
+        li.input.optional {
+          input {
+            background-color: rgba(255, 200, 127, 0.26) !important;
+          }
+        }
+      }
+
     }
 
   }
