@@ -151,7 +151,13 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       "#{area.price_value.to_s(:rounded, :precision => 2)} руб"
     end
     column '<abbr title="Стоимость всей площади в месяц. Число PxS, где P - цена за м.кв. в месяц, S - метраж площади в м.кв.">Цена площади</abbr>'.html_safe do |area|
-      "#{area.power_price_value.to_s(:rounded, :precision => 2)} руб"
+      klass = ''
+      title = 'Цена за площадь рассчитана'
+      if area.is_locked_area_price?
+        klass = 'locked'
+        title = 'Явно указана цена за площадь, цена за метр рассчитана от этого числа'
+      end
+      "<span title='#{title}' class='#{klass}'>#{area.power_price_value.to_s(:rounded, :precision => 2)} руб</span>".html_safe
     end
     column 'Метраж' do |area|
       "#{area.square_value.to_s(:rounded, :precision => 2)} м<sup>2</sup>".html_safe
