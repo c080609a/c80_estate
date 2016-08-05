@@ -88,6 +88,18 @@ module C80Estate
       res
     end
 
+    # для селекта формы админки Area выдать
+    # список объектов, на которые назначен пользователь
+    # если юзер - админ - ему выдаются все объекты
+    def self.where_assig_user(user)
+      if user.can_create_properties?
+        C80Estate::Property.all
+      else
+        C80Estate::Property.where(:assigned_person_id => current_admin_user.id)
+      end
+
+    end
+
     def average_price(atype_id: nil)
 
       if atype_id.nil?
