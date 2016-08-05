@@ -192,7 +192,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       f.input :atype, :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'}
       f.input :property,
               :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'},
-              :collection => C80Estate::Property.where(:assigned_person_id => current_admin_user.id).map { |p| ["#{p.title}", p.id] }
+              :collection => C80Estate::Property.where_assig_user(current_admin_user).map { |p| ["#{p.title}", p.id] }
       # f.input :assigned_person,
       #         :input_html => {:class => 'selectpicker', 'data-size' => "10", 'data-width' => '400px'},
       #         :collection => AdminUser.all.map { |u| ["#{u.email}", u.id] }
