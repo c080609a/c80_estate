@@ -238,6 +238,10 @@ var fEdit = function () {
     var atype_id;           // id подкатегории, которой принадлежит редактируемый предмет, извлекается из селекта $select_area_atype
     var $btn_add_area_prop;     // кнопка "добавить свойство"
 
+    var init_price;
+    var init_price_area;
+    var init_square;
+
     // вернёт true, если найдёт в $item_props_container селект свойства atype_id
     var _fCheckSelect = function (atype_id) {
         var result = false;
@@ -248,6 +252,22 @@ var fEdit = function () {
             }
         });
         return result;
+    };
+
+    // при входе на страницу - запомнить начальные значения
+    // они потом пригодятся если будем менять тип
+    var fGrabInitValues = function () {
+      init_price = $('ol.v_1').find('input[type=text]').val();
+      init_price_area = $('ol.v_14').find('input[type=text]').val();
+      init_square = $('ol.v_9').find('input[type=text]').val();
+    };
+
+    // когда сменили тип, необходимо установить сохранённые значения
+    // в соотв. текстовые поля
+    var fSetInitValuesToInputs = function () {
+      $('ol.v_1').find('input[type=text]').val(init_price);
+      $('ol.v_14').find('input[type=text]').val(init_price_area);
+      $('ol.v_9').find('input[type=text]').val(init_square);
     };
 
     var fReqPropList = function (atype_id) {
@@ -361,6 +381,9 @@ var fEdit = function () {
                     $fieldset.addClass('v_'+ielem["id"]);
                 }
 
+                /*фиксируем начальные значения избранных свойств*/
+                fGrabInitValues();
+
                 fLoadingHide();
 
             } else {
@@ -372,7 +395,6 @@ var fEdit = function () {
     };
 
     var fInitSelectListening = function () {
-
 
         // допишем поясняющий текст "сначала выберите подкатегорию"
         //var __fWelcomeTextAdd = function () {
@@ -481,6 +503,8 @@ var fEdit = function () {
                     }
 
                     fLoadingHide();
+
+                    fSetInitValuesToInputs();
 
                 } else {
                     alert( "done: не удалось получить данные о свойствах выбранной подкатегории." );
