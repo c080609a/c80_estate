@@ -12,17 +12,30 @@ module C80Estate
         list = []
 
         props.each do |prop|
-          pp = Pstat.busy_coef(prop_id: prop.id, atype_id: atype_id)
+
+          # pp = Pstat.busy_coef(prop_id: prop.id, atype_id: atype_id)
           # Rails.logger.debug "<render_table_prop_busy_coef> pp = #{pp}"
-          busy_coef = pp[:busy_coef]
-          props = pp[:raw_props]
-          list << {
-              id: prop.id,
-              title: prop.title,
-              busy_coef: busy_coef,
-              props: props
-          }
-          # Rails.logger.debug "<render_table_prop_busy_coef> #{prop.title}"
+          # busy_coef = pp[:busy_coef]
+          # props = pp[:raw_props]
+
+          # фиксируем последнее известное событие Pstat
+          # и извлекаем из него уже рассчитанные числа
+          pstat = prop.last_known_stats
+          if pstat.present? # pstat может не быть у площади, которая была создана во время испытаний с ошибкой
+            busy_coef = pstat.coef_busy
+
+            list << {
+                id: prop.id,
+                title: prop.title,
+                busy_coef: busy_coef,
+                props: {
+                    all_areas: pstat.free_areas + pstat.busy_areas,
+                    free_areas: pstat.free_areas,
+                    busy_areas: pstat.busy_areas
+                }
+            }
+            # Rails.logger.debug "<render_table_prop_busy_coef> #{prop.title}"
+          end
         end
 
         render :partial => 'c80_estate/shared/table_properties_coef_busy',
@@ -33,25 +46,37 @@ module C80Estate
     end
 
     def render_table_prop_busy_coef_sq(atype_id: nil)
-      # Rails.logger.debug "<render_table_prop_busy_coef_sq> atype_id = #{atype_id}"
+      # Rails.logger.debug "<render_table_prop_busy_coef> atype_id = #{atype_id}"
 
       props = Property.sorted_chart
-
       if props.count > 0
         list = []
 
         props.each do |prop|
-          pp = Pstat.busy_coef(prop_id: prop.id, atype_id: atype_id)
+
+          # pp = Pstat.busy_coef(prop_id: prop.id, atype_id: atype_id)
           # Rails.logger.debug "<render_table_prop_busy_coef> pp = #{pp}"
-          busy_coef_sq = pp[:busy_coef_sq]
-          props = pp[:raw_props_sq]
-          list << {
-              id: prop.id,
-              title: prop.title,
-              busy_coef: busy_coef_sq,
-              props: props
-          }
-          # Rails.logger.debug "<render_table_prop_busy_coef> #{prop.title}"
+          # busy_coef = pp[:busy_coef]
+          # props = pp[:raw_props]
+
+          # фиксируем последнее известное событие Pstat
+          # и извлекаем из него уже рассчитанные числа
+          pstat = prop.last_known_stats
+          if pstat.present? # pstat может не быть у площади, которая была создана во время испытаний с ошибкой
+            busy_coef = pstat.coef_busy_sq
+
+            list << {
+                id: prop.id,
+                title: prop.title,
+                busy_coef: busy_coef,
+                props: {
+                    all_areas_sq: pstat.free_areas_sq + pstat.busy_areas_sq,
+                    free_areas: pstat.free_areas_sq,
+                    busy_areas: pstat.busy_areas_sq
+                }
+            }
+            # Rails.logger.debug "<render_table_prop_busy_coef> #{prop.title}"
+          end
         end
 
         render :partial => 'c80_estate/shared/table_properties_coef_busy_sq',

@@ -24,12 +24,24 @@ module C80Estate
     # scope :sort_chart, -> {order(:ord => :asc)}
 
     def self.sorted_chart
-      self.all.sort_by(&:busy_koef).reverse!
+      self.all.sort_by(&:busy_coef).reverse!
     end
 
-    def busy_koef
-      pp = Pstat.busy_coef(prop_id: self.id, atype_id: nil)
-      pp[:busy_coef].to_f
+    # вернуть самый свежий объект с данными события Pstat
+    def last_known_stats(atype_id: nil)
+      pstats.where(:atype_id => atype_id).ordered_by_created_at.last
+    end
+
+    # выдать действующий на данный момент коэф-т занятости
+    def busy_coef(atype_id: nil)
+      # необходимо обратиться к самому последнему (общему?) событию Pstat
+      pstats.where(:atype_id => atype_id).ordered_by_created_at.last.coef_busy
+    end
+
+    # выдать действующий на данный момент коэф-т занятости в метрах
+    def busy_coef_sq(atype_id: nil)
+      # необходимо обратиться к самому последнему (общему?) событию Pstat
+      pstats.where(:atype_id => atype_id).ordered_by_created_at.last.coef_busy_sq
     end
 
     # этот метод для ActiveRecordCollection of Properties
