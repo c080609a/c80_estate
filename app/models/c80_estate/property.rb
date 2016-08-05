@@ -95,7 +95,7 @@ module C80Estate
       if user.can_create_properties?
         C80Estate::Property.all
       else
-        C80Estate::Property.where(:assigned_person_id => current_admin_user.id)
+        C80Estate::Property.where(:assigned_person_id => user.id)
       end
 
     end
