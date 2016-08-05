@@ -27,7 +27,7 @@ module C80Estate
             list << {
                 id: prop.id,
                 title: prop.title,
-                busy_coef: busy_coef,
+                busy_coef: "#{busy_coef.to_s(:rounded, :precision => 2)} %",
                 props: {
                     all_areas: pstat.free_areas + pstat.busy_areas,
                     free_areas: pstat.free_areas,
@@ -68,11 +68,11 @@ module C80Estate
             list << {
                 id: prop.id,
                 title: prop.title,
-                busy_coef: busy_coef,
+                busy_coef: "#{busy_coef.to_s(:rounded, :precision => 2)} %",
                 props: {
                     all_areas_sq: pstat.free_areas_sq + pstat.busy_areas_sq,
-                    free_areas: pstat.free_areas_sq,
-                    busy_areas: pstat.busy_areas_sq
+                    free_areas_sq: pstat.free_areas_sq.to_s(:rounded, :precision => 2),
+                    busy_areas_sq: pstat.busy_areas_sq.to_s(:rounded, :precision => 2)
                 }
             }
             # Rails.logger.debug "<render_table_prop_busy_coef> #{prop.title}"
