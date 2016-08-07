@@ -238,6 +238,10 @@ var fEdit = function () {
     var atype_id;           // id подкатегории, которой принадлежит редактируемый предмет, извлекается из селекта $select_area_atype
     var $btn_add_area_prop;     // кнопка "добавить свойство"
 
+    var init_price;
+    var init_price_area;
+    var init_square;
+
     // вернёт true, если найдёт в $item_props_container селект свойства atype_id
     var _fCheckSelect = function (atype_id) {
         var result = false;
@@ -248,6 +252,22 @@ var fEdit = function () {
             }
         });
         return result;
+    };
+
+    // при входе на страницу - запомнить начальные значения
+    // они потом пригодятся если будем менять тип
+    var fGrabInitValues = function () {
+      init_price = $('ol.v_1').find('input[type=text]').addClass('highl').val();
+      init_price_area = $('ol.v_14').find('input[type=text]').addClass('highl').val();
+      init_square = $('ol.v_9').find('input[type=text]').addClass('highl').val();
+    };
+
+    // когда сменили тип, необходимо установить сохранённые значения
+    // в соотв. текстовые поля
+    var fSetInitValuesToInputs = function () {
+      $('ol.v_1').find('input[type=text]').val(init_price).addClass('highl');
+      $('ol.v_14').find('input[type=text]').val(init_price_area).addClass('highl');
+      $('ol.v_9').find('input[type=text]').val(init_square).addClass('highl');
     };
 
     var fReqPropList = function (atype_id) {
@@ -361,6 +381,9 @@ var fEdit = function () {
                     $fieldset.addClass('v_'+ielem["id"]);
                 }
 
+                /*фиксируем начальные значения избранных свойств*/
+                fGrabInitValues();
+
                 fLoadingHide();
 
             } else {
@@ -369,6 +392,152 @@ var fEdit = function () {
         }).fail(function(jqXHR, textStatus) {
             alert( "fail: не удалось получить данные о свойствах выбранной подкатегории: " + textStatus );
         });
+    };
+
+    var fInitSelectListening = function () {
+
+        // допишем поясняющий текст "сначала выберите подкатегорию"
+        //var __fWelcomeTextAdd = function () {
+        //    jsinit.$item_props_container_span.text("Характеристики [сначала выберите подкатегорию, тогда появятся свойства, присущие выбранной категории]");
+        //};
+        //
+        //удалим поясняющий текст "сначала выберите подкатегорию"
+        //var __fWelcomeTextRemove = function () {
+        //    jsinit.$item_props_container_span.text("Характеристики");
+        //};
+
+        // удалим, возможно уже добавленные в форму, свойства
+        var __removeMayBeAddedProps = function () {
+            //$("a.has_many_remove").click();
+            $item_props_container.find('.inputs.has_many_fields').remove();
+        };
+
+        // запрашиваем список имён свойств указанной подкатегории
+        var __reqStrsubcatPropnames = function (atype_id) {
+            //jsinit._log("[_reqStrsubcatPropnames]: atype_id = " + atype_id);
+
+            $.ajax({
+                url: "/estate/get_atype_propnames",
+                data: { atype_id:atype_id },
+                dataType: "json",
+                type: 'POST'
+            }).done(function(data,result) {
+                //jsinit._log( data );
+
+                if (result == "success") {
+                    console.log( "Кол-во свойств: " + data.length );
+
+                    // удалим, возможно уже добавленные в форму, свойства
+                    __removeMayBeAddedProps();
+                    //return;
+
+                    // количество свойств
+                    var n = data.length;
+
+                    // "цикловые" переменные
+                    var $ifs,        // fieldset,
+                        $iselprop,   // очередной селект "имя свойства"
+                        $iinputprop, // очередной input "значение свойства"
+                        $ifindbyid,  // вспомогательная переменная: содержит результат поиска по id с помощью регулярки
+                        ielem;      // очередной элемент из data
+
+                    for (var i=0; i<n; i++) {
+
+                        // фиксируем объект с данными, описывающий свойство предмета
+                        ielem = data[i];
+
+                        // нажмём кнопку "Добавить Item prop"
+                        $btn_add_area_prop.click();
+
+                        // фиксируем добавленный в форму fieldset
+
+                        //<fieldset class="inputs has_many_fields processed">
+                        //    <ol>
+                        //        <li id="area_item_props_attributes_37_prop_name_input">
+                        //            <select id="area_item_props_attributes_37_prop_name_id">
+                        //                <option value="37">Артикул</option>
+                        //            </select>
+                        //        </li>
+                        //        <li id="area_item_props_attributes_37_value_input">
+                        //            <input id="area_item_props_attributes_37_value" type="text">
+                        //        </li>
+                        //    </ol>
+                        //</fieldset>
+
+                        $ifs = $item_props_container.find("fieldset").not(".processed");
+                        $ifs.addClass("processed");
+
+                        $ifindbyid = $ifs.find('[id^="area_item_props_attributes_"]');
+
+                        // находим в ifs селект, отвечающий за имя свойства
+                        $iselprop = $ifindbyid.find('select');
+                        //console.log(iselprop);
+
+                        // находим в ifs input, отвечающий за значение свойства
+                        $iinputprop = $ifindbyid.find('input');
+
+                        // в этот селект жестоко предустанавливаем значение из data, дописываем единицу измерения
+                        $iselprop.find("option")
+                            .filter(function () {
+                                //console.log($(this).val() + " vs " + ielem["id"]);
+                                return $(this).val() == ielem["id"]; //return $(this).text() == ielem["title"];
+                            })
+                            .prop('selected', true)
+                            .text(function () {
+                                var t = $(this).text();
+                                if (ielem["uom_title"] != null) {
+                                    t += ", " + ielem["uom_title"];
+                                }
+                                return t;
+                            }); // дописываем в конец единицу измерения
+
+                        //делаем его readonly
+                        $iselprop.attr("disabled", true); // NOTE:: но в момент нажатия кнопки "Отправить" мы "разлачиваем" селект, чтобы параметры формы "правильно" отправлялись;
+
+                        // в input "производитель" - ставим "-1" и прячем его от пользователя
+                        //if (ielem["id"] == 36) {
+                        //    $iinputprop.val("-1");
+                        //    $ifs.css("display",'none');
+                        //}
+                        $ifs.find("> ol").addClass('v_' + ielem["id"]);
+                    }
+
+                    fLoadingHide();
+
+                    fSetInitValuesToInputs();
+
+                } else {
+                    alert( "done: не удалось получить данные о свойствах выбранной подкатегории." );
+                }
+
+            })
+                .fail(function(jqXHR, textStatus) {
+                    alert( "fail: не удалось получить данные о свойствах выбранной подкатегории: " + textStatus );
+                })
+                .always(function() {
+                    //alert( "complete" );
+                });
+        };
+
+        // слушает изменения селекта с типами
+        // инициирует запрос за "Именами Свойств" выбранного в селекте "Типа"
+        // показывает загрузчик
+        var __onSelectStrSubcatChange = function () {
+            var atype_id = $select_area_atype[0].value;
+            //console.log("[_onSelectStrSubcatChange]: atype_id = " + atype_id);
+            if (atype_id == '') {
+                __removeMayBeAddedProps();
+                //__fWelcomeTextAdd();
+            } else {
+                fLoadingShow();
+                __reqStrsubcatPropnames(atype_id);
+                //__fWelcomeTextRemove();
+            }
+        };
+
+        // начинаем слушать изменение селекта "тип" -
+        $select_area_atype.on("change", __onSelectStrSubcatChange);
+
     };
 
     $(document).ready(function () {
@@ -392,7 +561,7 @@ var fEdit = function () {
         $btn_add_area_prop = $item_props_container.find("a.has_many_add");
 
         // блокируем селект "тип"
-        $select_area_atype.attr("disabled", true);
+        //$select_area_atype.attr("disabled", true);
 
         // блокируем селекты "свойства товара"
         $item_props_container.find("select").attr("disabled", true);
@@ -416,6 +585,8 @@ var fEdit = function () {
                 e.preventDefault();
             }
         });
+
+        fInitSelectListening();
 
     });
 

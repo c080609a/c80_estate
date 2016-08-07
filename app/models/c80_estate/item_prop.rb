@@ -7,6 +7,13 @@ module C80Estate
 
     before_save :before_save_format_value
 
+    def save(*args)
+      super
+    rescue ActiveRecord::RecordNotUnique => error
+      # post.errors[:base] << "You can only have one photo be your header photo"
+      false
+    end
+
     def self.all_uniq_values(prop_name_id)
       r = self.where(prop_name_id: prop_name_id)
           .map { |ip| ip.value.to_i }.uniq

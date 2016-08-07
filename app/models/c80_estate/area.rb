@@ -31,6 +31,7 @@ module C80Estate
     validate :has_astatus?
 
     after_create :create_initial_sevent
+    after_update :check_and_remove_item_props, :if => :atype_id_changed?
     after_update :check_and_generate_sevent
 
     def self.all_areas
@@ -473,6 +474,15 @@ module C80Estate
 
     end
 
+    def check_and_remove_item_props
+      Rails.logger.debug '<check_and_remove_item_props> BEGIN'
+
+      clean_unrelated_item_props
+      clean_duplicated_item_props
+
+      Rails.logger.debug '<check_and_remove_item_props> END'
+    end
+
     private
 
     def self.open_spreadsheet(file)
@@ -483,6 +493,61 @@ module C80Estate
           Roo::Excelx.new(file.path)
         else
           raise "Неизвестный формат файла: #{file.original_filename}"
+      end
+    end
+
+    def clean_unrelated_item_props
+      # item_props = [ {area,prop_name} ]
+      # item_props.delete_all
+
+      # на этом этапе в запись уже помещены данные о новых свойствах
+      # тут необходимо пройтись по свойствам, выбрать те, которые не присущи новому типу,
+      # и удалить их
+
+      # находим PropNames присущие Типу
+      atype_prop_names = Atype.get_propnames(atype.id)
+      # [ {"id"=>37, "title"=>"Артикул", "is_excluded_from_filtering"=>1, "uom_title"=>nil},... ]
+
+      # составляем массив айдишников
+      atype_prop_names_ids = []
+      atype_prop_names.each do |prop_name|
+        # Rails.logger.debug "<clean_unrelated_item_props> prop_name = #{prop_name}"
+        # begin
+        atype_prop_names_ids << prop_name['id'].to_i
+        # rescue => e
+        # Rails.logger.debug "<clean_unrelated_item_props> [ERROR]: #{e}"
+        # end
+
+      end
+      # Rails.logger.debug "<clean_unrelated_item_props> atype_prop_names_ids = #{atype_prop_names_ids}"
+
+      # теперь обходим Item Props
+      # если айдишника PropName очередного ItemProp нет в списке PropNames присущих Типу,
+      # удаляем это ItemProp
+      item_props.each do |item_prop|
+        # Rails.logger.debug "<clean_unrelated_item_props> item_prop.prop_name.id = #{item_prop.prop_name.id}"
+        unless atype_prop_names_ids.include?(item_prop.prop_name.id.to_i)
+          Rails.logger.debug "<clean_unrelated_item_props> Удаляем '#{item_prop.prop_name.title}' из площади типа '#{atype.title}'."
+          item_prop.destroy
+        end
+      end
+
+    end
+
+    def clean_duplicated_item_props
+      # удаляем дубликаты
+      Rails.logger.debug "<clean_dublicated_item_props>"
+      item_props.each do |item_prop|
+        duplicates = item_props
+                         .where(area_id: item_prop.area_id)
+                         .where(prop_name_id: item_prop.prop_name_id)
+                         .where.not(id: item_prop.id)
+        Rails.logger.debug "<clean_dublicated_item_props> #{item_prop.prop_name.title}: dublicates.count = #{duplicates.count}"
+
+        if duplicates.count > 0
+          Rails.logger.debug "<clean_dublicated_item_props> delete '#{item_prop.prop_name.title}', val: #{item_prop.value}"
+          duplicates.delete_all
+        end
       end
     end
 
