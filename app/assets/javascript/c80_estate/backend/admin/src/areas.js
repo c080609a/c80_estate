@@ -257,17 +257,17 @@ var fEdit = function () {
     // при входе на страницу - запомнить начальные значения
     // они потом пригодятся если будем менять тип
     var fGrabInitValues = function () {
-      init_price = $('ol.v_1').find('input[type=text]').val();
-      init_price_area = $('ol.v_14').find('input[type=text]').val();
-      init_square = $('ol.v_9').find('input[type=text]').val();
+      init_price = $('ol.v_1').find('input[type=text]').addClass('highl').val();
+      init_price_area = $('ol.v_14').find('input[type=text]').addClass('highl').val();
+      init_square = $('ol.v_9').find('input[type=text]').addClass('highl').val();
     };
 
     // когда сменили тип, необходимо установить сохранённые значения
     // в соотв. текстовые поля
     var fSetInitValuesToInputs = function () {
-      $('ol.v_1').find('input[type=text]').val(init_price);
-      $('ol.v_14').find('input[type=text]').val(init_price_area);
-      $('ol.v_9').find('input[type=text]').val(init_square);
+      $('ol.v_1').find('input[type=text]').val(init_price).addClass('highl');
+      $('ol.v_14').find('input[type=text]').val(init_price_area).addClass('highl');
+      $('ol.v_9').find('input[type=text]').val(init_square).addClass('highl');
     };
 
     var fReqPropList = function (atype_id) {
