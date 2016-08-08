@@ -2,6 +2,9 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
   # scope_to :current_admin_user, association_method: :sites_list
 
+  config.sort_order = 'title_asc'
+  config.per_page = 100
+
   menu :label => 'Площади', priority: 3
 
   permit_params :title,

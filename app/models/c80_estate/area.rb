@@ -313,7 +313,8 @@ module C80Estate
     end
 
     def main_image_url
-      url = 'no_thumb.png'
+      url = "no_thumb_#{atype.id}.jpg"
+
       if aphotos.count > 0
         url = aphotos.first.image.thumb512
       end

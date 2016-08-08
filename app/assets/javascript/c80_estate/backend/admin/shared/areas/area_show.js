@@ -366,3 +366,28 @@ var fAreasShow = function () {
     });
 
 };
+
+// hardcode
+// вызовется в can_edit_area.js.erb
+var fAreasShow__minorCssFix = function (property_id) {
+
+    setTimeout(function () {
+
+        var $div_vendor_logo = $('div#div_vendor_logo');
+        var $a_img = $div_vendor_logo.find('a.no-clickable').find('img');
+        console.log($a_img);
+
+        if (property_id == 1) { // строительный
+            $div_vendor_logo.css('top','148px');
+        }
+
+        if (property_id == 5) { // терминал
+            $div_vendor_logo.css('left','-172px');
+            $a_img.css('width', '106px');
+        }
+
+        $div_vendor_logo.css('opacity','1.0');
+
+    }, 500);
+};
+

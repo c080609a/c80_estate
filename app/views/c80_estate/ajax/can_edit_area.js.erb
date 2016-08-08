@@ -1,5 +1,8 @@
 <% if @res %>
     fAreasShow_initActionItems(<%= @area.id %>);
+
+    fAreasShow__minorCssFix(<%= @area.property.id %>);
+
 <% else %>
 //    $main_content.css('opacity', '1.0');
 <% end %>

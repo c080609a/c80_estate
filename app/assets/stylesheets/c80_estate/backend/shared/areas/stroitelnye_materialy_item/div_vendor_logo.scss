@@ -5,6 +5,17 @@ div#div_vendor_logo {
   float: left;
   padding-top: 0;
 
+  position: absolute;
+  top: 157px;
+  left: -192px;
+
+  opacity: 0;
+  -webkit-transition: opacity .2s ease-in;
+  -moz-transition: opacity .2s ease-in;
+  -ms-transition: opacity .2s ease-in;
+  -o-transition: opacity .2s ease-in;
+  transition: opacity .2s ease-in;
+
   > a {
     width: 150px !important;
     border: none !important;
