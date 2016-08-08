@@ -68,7 +68,7 @@ module C80Estate
     end
 
     #
-    def ph_render_price_props(property)
+    def ph_render_price_props(property, mark_draw_statistics = false)
 
       result = ''
 
@@ -87,26 +87,30 @@ module C80Estate
               abbr: 'Количество площадей на объекте',
               value: property.areas.count,
               uom: ''
-          },
-          {
-              title: 'Цена объекта',
-              abbr: 'Сумма всех цен площадей объекта',
-              value: property.power_price_value.to_s(:rounded, precision: 2),
-              uom: 'руб'
-          },
-          {
-              title: 'Средняя ставка',
-              abbr: 'Средняя арендная ставка за 1 кв. м',
-              value: property.average_price.to_s(:rounded, precision: 2),
-              uom: 'руб'
-          },
-          {
-              title: 'Средняя ставка занятых',
-              abbr: ' Средняя арендная ставка за 1 кв. м занятых площадей',
-              value: property.average_price_busy.to_s(:rounded, precision: 2),
-              uom: 'руб'
           }
       ]
+
+      if mark_draw_statistics
+        rows << {
+            title: 'Цена объекта',
+            abbr: 'Сумма всех цен площадей объекта',
+            value: property.power_price_value.to_s(:rounded, precision: 2),
+            uom: 'руб'
+        }
+        rows << {
+            title: 'Средняя ставка',
+            abbr: 'Средняя арендная ставка за 1 кв. м',
+            value: property.average_price.to_s(:rounded, precision: 2),
+            uom: 'руб'
+        }
+        rows << {
+            title: 'Средняя ставка занятых',
+            abbr: ' Средняя арендная ставка за 1 кв. м занятых площадей',
+            value: property.average_price_busy.to_s(:rounded, precision: 2),
+            uom: 'руб'
+        }
+      end
+
       rows.each do |row|
 
         title = row[:title]

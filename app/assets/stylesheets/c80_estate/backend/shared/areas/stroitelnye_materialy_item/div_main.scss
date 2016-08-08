@@ -32,7 +32,8 @@ div#div_main_show_area {
     float: left;
     margin-right: 30px;
     width: calc(621px * 0.7);
-    height: calc(377px * 0.7);
+    /*height: calc(377px * 0.7);*/
+    height: auto;
     border: 3px solid #F2F2F2;
 
     img {
@@ -46,7 +47,8 @@ div#div_main_show_area {
 
   div#main_props {
     float: left;
-    overflow: hidden;
+    /*overflow: hidden;*/
+    position: relative;
 
     ul {
       list-style: none;
