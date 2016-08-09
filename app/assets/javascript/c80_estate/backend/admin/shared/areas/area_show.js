@@ -375,7 +375,7 @@ var fAreasShow__minorCssFix = function (property_id) {
 
         var $div_vendor_logo = $('div#div_vendor_logo');
         var $a_img = $div_vendor_logo.find('a.no-clickable').find('img');
-        console.log($a_img);
+        //console.log($a_img);
 
         if (property_id == 1) { // строительный
             $div_vendor_logo.css('top','148px');
