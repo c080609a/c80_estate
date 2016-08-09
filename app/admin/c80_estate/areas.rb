@@ -61,7 +61,8 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
               #   super.where(account_id: account.id).order(:date_sent)
 
       # включаем atypes и properties.logos: http://stackoverflow.com/a/24397716
-      C80Estate::Area.includes(:astatuses, :atype, property: :plogos)#.includes(property: :assigned_person) #.where(c80_estate_properties: {id:1})
+      C80Estate::Area
+          .includes(:astatuses, :atype, property: :plogos) ##[1]
 
     end
 
