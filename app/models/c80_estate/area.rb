@@ -192,45 +192,29 @@ module C80Estate
       errors.add_to_base 'Укажите статус площади' if self.astatuses.blank?
     end
 
+    # --------
+
     def atype_title
-      res = "-"
-      if atype.present?
-        res = atype.title
-      end
-      res
+      atype.title
     end
 
     def property_title
-      res = "-"
-      if property.present?
-        res = property.title
-      end
-      res
+      property.title
     end
 
     def astatus_title
-      res = "-"
-      if astatuses.count > 0
-        res = astatuses.first.title
-      end
-      res
+      astatuses.first.title
     end
 
     def astatus_id
-      res = -1
-      if astatuses.count > 0
-        res = astatuses.first.id
-      end
-      res
+      astatuses.first.id
     end
 
     def astatus_tag
-      res = -1
-      if astatuses.count > 0
-        res = astatuses.first.tag
-      end
-      res
+      astatuses.first.tag
     end
+
+    # --------
 
     def is_free?
       astatus_tag == 'free'
@@ -261,6 +245,7 @@ module C80Estate
     end
 
     # выдать цену за м.кв. в месяц
+    # TODO_MY:: добавить модели Area столбец price_value и before_update метод, который высчитывал бы значение
     def price_value
 
       res = 0.0
@@ -298,6 +283,7 @@ module C80Estate
       res
     end
 
+    # TODO_MY:: добавить модели Area столбец square_value и before_update метод, который высчитывал бы значение
     def square_value
       res = 0.0
       p = item_props.where(:prop_name_id => 9)
@@ -308,6 +294,7 @@ module C80Estate
       res
     end
 
+    # TODO_MY:: добавить модели Area столбец power_price_value и before_update метод, который высчитывал бы значение
     def power_price_value
       price_value * 1.0 * square_value
     end

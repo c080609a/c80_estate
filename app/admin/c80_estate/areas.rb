@@ -46,6 +46,28 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
 
   config.clear_action_items!
 
+  controller do
+
+
+    def scoped_collection
+
+      # 1. оптимизируем выдачу на index, согласно
+          # http://activeadmin.info/docs/2-resource-customization.html#customizing-resource-retrieval
+          # https://github.com/activeadmin/activeadmin/commit/f8ef8ca7f9ce6dc70a4761d6269477f0dff448ec
+          # http://www.rubydoc.info/gems/activeadmin/file/docs/2-resource-customization.md
+
+      # 2. решаем задачу с "чужими незанятыми" и "чужими занятыми".
+          # * http://stackoverflow.com/a/23788089
+          #   способ реализации с дописанным кастомным where
+          #   super.where(account_id: account.id).order(:date_sent)
+
+      # включаем atypes и properties.logos: http://stackoverflow.com/a/24397716
+      C80Estate::Area.includes(:astatuses, :atype, property: :plogos)#.includes(property: :assigned_person) #.where(c80_estate_properties: {id:1})
+
+    end
+
+  end
+
   action_item :new_model, :only => :index do
     if current_admin_user.can_create_areas?
       link_to I18n.t("active_admin.new_model"), '/admin/areas/new', method: :get
@@ -71,6 +93,8 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
   end
 
   config.sort_order = 'id_asc'
+
+  # before_filter :skip_sidebar!, :only => :index
 
   filter :atype_id,
          :label => 'Тип площади',
@@ -143,12 +167,12 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
   scope "Busy", :busy_areas
 
   index do
-    selectable_column
+    # selectable_column
     column :title do |area|
       link_to area.title, "/admin/areas/#{area.id}", title: I18n.t("active_admin.view")
     end
     column :atype do |area|
-      area.atype_title
+      area.atype.title
     end
     column '<abbr title="За м.кв. в месяц">Цена м.кв.</abbr>'.html_safe do |area|
       "#{area.price_value.to_s(:rounded, :precision => 2)} руб"
@@ -168,8 +192,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
     column :property do |area|
       "<div class='image_vertical properties_index_logo'>
       <span></span><a href='/admin/areas?utf8=✓&q%5Bproperty_id_eq%5D=#{area.property.id}&commit=Фильтровать&order=id_asc'><img src='#{image_path(area.property.logo_path)}'>
-      </div><span class='properties_index_logo_title'>#{area.property_title}</span></a>".html_safe
-
+      </div><span class='properties_index_logo_title'>#{area.property.title}</span></a>".html_safe
     end
     column :astatuses do |area|
       "<span class='status_#{area.astatus_tag}'>#{area.astatus_title}</span>".html_safe
@@ -177,10 +200,6 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
     column :assigned_person do |area|
       area.property.assigned_person_title
     end
-    # actions
-    # column '' do |area|
-    #   link_to I18n.t("active_admin.view"), "/admin/areas/#{area.id}", class: 'member_link'
-    # end
     column '' do |area|
       if current_admin_user.can_edit_area?(area)
         link_to I18n.t("active_admin.edit"), "/admin/areas/#{area.id}/edit", class: 'member_link'
