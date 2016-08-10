@@ -13,6 +13,8 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
                 :owner_type,
                 :assigned_person_id,
                 :assigned_person_type,
+                :last_updater_id,
+                :last_updater_type,
                 :atype_id,
                 :property_id,
                 :astatus_ids => [],
@@ -244,6 +246,8 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
         f.input :owner_id, :input_html => {:value => current_admin_user.id}, as: :hidden
         f.input :owner_type, :input_html => {:value => "AdminUser"}, as: :hidden
       end
+      f.input :last_updater_id, :input_html => {:value => current_admin_user.id}, as: :hidden
+      f.input :last_updater_type, :input_html => {:value => "AdminUser"}, as: :hidden
 
     end
 
