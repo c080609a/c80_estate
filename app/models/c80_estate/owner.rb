@@ -35,9 +35,10 @@ module C80Estate
           # эта взаимосвязь трактуется, как "площадь, назначенная сотруднику"
           has_many :assigned_areas, :as => :assigned_person, :class_name => 'C80Estate::Area', :dependent => :nullify
 
-          # эта взаимосвязь трактуется, как "площадь, назначенная сотруднику"
+          # эта взаимосвязь трактуется, как "объект, назначенная сотруднику"
           has_many :assigned_properties, :as => :assigned_person, :class_name => 'C80Estate::Property', :dependent => :nullify
 
+          # эта взаимосвязь трактуется как "Пользователь, создавая\меняя\удаяя площади, генерит Sevent события"
           has_many :sevents, :as => :auser, :class_name => 'C80Estate::Sevent', :dependent => :nullify
 
           after_create :create_role
@@ -85,7 +86,6 @@ module C80Estate
             r1.count > 0 || mark_is_assigned # || mark_is_owner
             # true
           end
-
 
           def can_edit_property?(property)
             r1 = roles.where(role_type: 1)

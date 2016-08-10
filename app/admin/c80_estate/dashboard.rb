@@ -35,6 +35,18 @@ ActiveAdmin.register_page "Dashboard" do
 
     end
 
+    if current_admin_user.can_view_statistics?
+      section '' do
+        columns do
+          column do
+            panel "10 последних событий изменения статуса площадей (<a class='white_link' href='/admin/sevents'>Просмотреть все</a>)".html_safe do
+              render_table_last_sevents
+            end
+          end
+        end
+      end
+    end
+
     # section '', if: -> { current_admin_user.email == 'tz007@mail.ru' } do
     #   columns do
     #     column do

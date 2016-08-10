@@ -1,0 +1,28 @@
+body.admin_dashboard {
+
+  table.index_table {
+
+    a {
+
+      // обычные ссылки без стилизации
+      text-decoration: none !important;
+      color: #323537 !important;
+      &:hover {
+        text-decoration: underline !important;
+        color: #124068 !important;
+      }
+
+      // чтобы стилизовать - надо явно указывать класс
+      &.link {
+        text-decoration: underline !important;
+        color: #3e7de5 !important;
+        &:hover {
+          text-decoration: underline !important;
+          color: #4498ff !important;
+        }
+      }
+    }
+
+  }
+
+}

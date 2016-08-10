@@ -58,7 +58,7 @@ module C80Estate
           { title: 'Кто создал', value: area.owner.email },
           { title: 'Время создания', value: area.created_at.strftime('%Y/%m/%d %H:%M:%S') },
           { title: 'Время последнего изменения', value: area.updated_at.strftime('%Y/%m/%d %H:%M:%S') },
-          { title: 'Кто последний раз вносил изменения', value: area.last_updater },
+          { title: 'Кто последний раз вносил изменения', value: area.last_updater_title },
           { title: 'Ответственный', value: area.assigned_person_title }
       ]
 

@@ -54,7 +54,8 @@ ActiveAdmin.register C80Estate::Sevent, as: 'Sevent' do
     end
     column :created_at
     column :property do |sevent|
-      sevent.property_title
+      # sevent.property_title
+      link_to sevent.property.title, "/admin/properties/#{sevent.property.id}"
     end
     actions
   end

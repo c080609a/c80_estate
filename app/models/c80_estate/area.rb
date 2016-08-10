@@ -4,6 +4,7 @@ module C80Estate
     belongs_to :atype
     belongs_to :owner, :polymorphic => true
     belongs_to :assigned_person, :polymorphic => true
+    belongs_to :last_updater, :polymorphic => true
     has_many :item_props, :dependent => :destroy
     accepts_nested_attributes_for :item_props,
                                   :reject_if => lambda { |attributes|
@@ -312,8 +313,10 @@ module C80Estate
       res
     end
 
-    def last_updater
-      sevents.last.auser.email
+    def last_updater_title
+      if last_updater.present?
+        last_updater.email
+      end
     end
 
     # выдать цену за м.кв. в месяц
@@ -443,13 +446,13 @@ module C80Estate
 
     protected
 
-    # при создании площади генерится начальное событие
+    # после создания площади генерится начальное событие
     def create_initial_sevent
-      Rails.logger.debug "<Area.create_initial_sevent> self.astatuses.count = #{self.astatuses.count}"
+      # Rails.logger.debug "<Area.create_initial_sevent> self.astatuses.count = #{self.astatuses.count}"
 
       # [**]
       if self.astatuses.count > 0
-        Rails.logger.debug "<Area.create_initial_sevent> aga: self.astatuses.first.title = #{self.astatuses.first.title}"
+        # Rails.logger.debug "<Area.create_initial_sevent> aga: self.astatuses.first.title = #{self.astatuses.first.title}"
 
         s = Sevent.create!({
                                area_id: self.id,
@@ -477,6 +480,7 @@ module C80Estate
 
     end
 
+    # после обновления данных площади генерится Sevent событие
     def check_and_generate_sevent
 
       # находим последнее известное событие
@@ -491,13 +495,13 @@ module C80Estate
       Rails.logger.debug "<Area.check_and_generate_sevent> last_known_sevent = #{last_known_sevent}, self.astatuses.first.tag = #{self.astatuses.first.tag}"
 
       if last_known_sevent != self.astatuses.first.tag
-        Rails.logger.debug "<Area.check_and_generate_sevent> aga"
+        Rails.logger.debug "<Area.check_and_generate_sevent> [STATUS_CHANGED] self.last_updater_id = #{self.last_updater_id}"
         sparams = {
             area_id: self.id,
             atype_id: self.atype_id,
             property_id: self.property_id,
             astatus_id: self.astatus_id,
-            auser_id: self.owner_id, # инициатор события - редактор Площади
+            auser_id: self.last_updater_id, # инициатор события - редактор Площади
             auser_type: 'AdminUser'
         }
 
