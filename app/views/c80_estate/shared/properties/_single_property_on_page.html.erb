@@ -7,7 +7,7 @@
 <div class="clearfix">
   <div id="div_main_show_area" class="clearfix">
     <%= link_to image_tag('w227x182px.gif',
-                          :alt=>item_title,
+                          :alt => item_title,
                           :data => {:original => image_path(@item.main_image_url)},
                           :class => 'lazy'),
                 image_path(@item.main_image_url),
@@ -37,15 +37,17 @@
   <%= ph_render_tech_props(@item) %>
 </div>
 
-<div id="div_all_areas_table" class="wrap_collapse">
-  <button type="button" class="btn" data-toggle="collapse" data-target="#iid">
-    <span class="fa fa-chevron-right"></span>
-    Площади объекта <%= @item.title %> (<%= @item.areas.count %>)
-  </button>
-  <div class="collapse" id="iid">
-    <%= ph_render_areas_table(@item) %>
-  </div>
-</div>
+<% if current_admin_user.can_edit_property?(@item) %>
+    <div id="div_all_areas_table" class="wrap_collapse">
+      <button type="button" class="btn" data-toggle="collapse" data-target="#iid">
+        <span class="fa fa-chevron-right"></span>
+        Площади объекта <%= @item.title %> (<%= @item.areas.count %>)
+      </button>
+      <div class="collapse" id="iid">
+        <%= ph_render_areas_table(@item) %>
+      </div>
+    </div>
+<% end %>
 
 <div id="related_items" class="hidden">
   <%# smiph_render_related_items(@item) %>
