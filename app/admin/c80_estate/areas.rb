@@ -63,6 +63,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       # включаем atypes и properties.logos: http://stackoverflow.com/a/24397716
       C80Estate::Area
           .includes(:astatuses, :atype, property: :plogos) ##[1]
+          .all_except_busy_alien(current_admin_user)
 
     end
 
@@ -165,6 +166,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
   scope "All", :all_areas
   scope "Free", :free_areas
   scope "Busy", :busy_areas
+  # scope 'My', :my_areas
 
   index do
     # selectable_column

@@ -43,6 +43,7 @@ Or install it yourself as:
   gem 'friendly_id'
   gem 'babosa'
   gem 'bootstrap-select-rails'
+  gem 'c80_active_record_union'
 ```
 
 ### Seeds
