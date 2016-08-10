@@ -1,0 +1,26 @@
+a.white_link {
+  color: #ddd !important;
+  text-decoration: underline !important;
+
+  -webkit-transition: opacity .2s ease-out;
+  -moz-transition: opacity .2s ease-out;
+  -ms-transition: opacity .2s ease-out;
+  -o-transition: opacity .2s ease-out;
+  transition: opacity .2s ease-out;
+
+  &:hover {
+    color: #ffd7a7 !important;
+    text-decoration: underline !important;
+  }
+  &:focus {
+    color: #a3ff96 !important;
+  }
+  &:active {
+    color: #7affe4 !important;
+  }
+}
+
+// в dashboard в заголовке панели это встречается
+h3 a.white_link {
+  font-size: 12px;
+}

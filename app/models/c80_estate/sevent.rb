@@ -10,19 +10,8 @@ module C80Estate
     # нужен только при заполнении из rake db:seed:85_fill_sevents
     after_create :generate_pstat
 
-=begin
-    def self.all_areas
-      self.all
-    end
-
-    def self.free_areas
-      self.joins(:astatuses).where(:c80_estate_astatuses => { tag: 'free'})
-    end
-
-    def self.busy_areas
-      self.joins(:astatuses).where(:c80_estate_astatuses => { tag: 'busy'})
-    end
-=end
+    scope :created_at_asc, -> {order(:created_at => :asc)}
+    scope :created_at_desc, -> {order(:created_at => :desc)}
 
     def self.ecoef(area_id: nil, prop_id: nil, atype_id: nil, start_date: nil, end_date: nil)
       # start_date: строка вида 2015-12-12

@@ -164,5 +164,38 @@ module C80Estate
       render :partial => 'c80_estate/shared/properties/single_property_on_page'
     end
 
+    def render_table_last_sevents(area = nil, limit = nil)
+      # Rails.logger.debug "[TRACE] <AppHelper.render_table_last_sevents> current_admin_user.can_view_statistics? = #{current_admin_user.can_view_statistics?}"
+
+      # покажем тольк тем, кому можно
+      if current_admin_user.can_view_statistics?
+        # Rails.logger.debug "[TRACE] go"
+
+        # сначал выберем из базы
+
+        sevents_list = Sevent.all.created_at_desc
+
+        if area.present?
+          sevents_list = sevents_list.where(area_id => area.id)
+        end
+
+        lim = 10
+
+        if limit.present?
+          lim = limit
+        end
+
+        sevents_list = sevents_list.limit(lim)
+
+        # теперь нарисуем
+        render :partial => 'c80_estate/shared/table_last_sevents',
+               :locals => {
+                   sevents_list: sevents_list
+               }
+
+      end
+
+    end
+
   end
 end

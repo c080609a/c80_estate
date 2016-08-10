@@ -1,0 +1,25 @@
+<%# AppHelper.render_table_last_sevents %>
+
+<table border="0" cellspacing="0" cellpadding="0" id="table_last_sevents" class="index_table index sortable">
+  <thead>
+  <tr>
+    <th><abbr title="Показано время события изменения статуса">Время</abbr></th>
+    <th><abbr title="Площадь, чей статус был изменён">Площадь</abbr></th>
+    <th><abbr title="Статус, который приобрела площадь">Статус</abbr></th>
+    <th><abbr title="Показан актуальный тип площади ПОСЛЕ события изменения статуса">Тип площади</abbr></th>
+    <th><abbr title="Пользователь, который изменил статус площади">Инициатор</abbr></th>
+    <th><abbr title="Объект недвижимости, которому принадлежит площадь">Объект</abbr></th>
+  </tr>
+  </thead>
+  <% sevents_list.each do |sevent| %>
+      <tr>
+        <%# Rails.logger.debug "[TRACE] <_table_last_sevents.html.erb> #{sevent}" %>
+        <td><%= "<span class='span_date'>#{sevent.created_at.strftime('%d/%b/%Y')}</span> <span class='span_time'>#{sevent.created_at.strftime('%H:%M:%S')}</span> ".html_safe %></td>
+        <td><%= link_to sevent.area_title, "/admin/areas/#{sevent.area.id}", class:'link' %></td>
+        <td><%= sevent.astatus_title %></td>
+        <td><%= sevent.atype.title %></td>
+        <td><%= sevent.auser_title %></td>
+        <td><%= link_to sevent.property.title, "/admin/properties/#{sevent.property.id}", class:'link' %></td>
+      </tr>
+  <% end %>
+</table>

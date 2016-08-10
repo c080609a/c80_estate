@@ -14,15 +14,4 @@ body.admin_dashboard {
     }
   }
 
-  table.index_table {
-    a {
-      text-decoration: none !important;
-      color: #323537 !important;
-      &:hover {
-        text-decoration: underline !important;
-        color: #124068 !important;
-      }
-    }
-  }
-
 }
