@@ -14,7 +14,9 @@ div.properties_index_logo {
 span.properties_index_logo_title {
 }
 
-body.admin_properties {
+body.admin_properties,
+body.admin_areas // т.к. подобную кнопку я теперь стал рисовать и на странице просмотра площади
+{
 
   button {
     span.fa.fa-chevron-right {

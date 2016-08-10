@@ -48,6 +48,18 @@
   <%= smiph_render_common_props(@item) %>
 </div>
 
+<% if current_admin_user.can_view_statistics? %>
+    <div id="div_all_sevents_table" class="wrap_collapse">
+      <button type="button" class="btn" data-toggle="collapse" data-target="#iid2">
+        <span class="fa fa-chevron-right"></span>
+        Все события изменения статуса (<%= @item.sevents.count %>)
+      </button>
+      <div class="collapse" id="iid2">
+        <%= render_table_last_sevents(nil, @item, 99999) %>
+      </div>
+    </div>
+<% end %>
+
 <div id="related_items" class="hidden">
   <%# smiph_render_related_items(@item) %>
 </div>
