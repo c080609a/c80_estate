@@ -166,6 +166,7 @@ module C80Estate
       res
     end
 
+    # TODO:: при построении индексной таблицы из 100 строк происходит 100 запросов к базе типа COUNT(*). Добавить before_update метод и поле logo_path и вычислять путь к лого в before update
     def logo_path
       url = 'property_default_logo.png'
       if plogos.count > 0

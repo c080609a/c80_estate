@@ -42,6 +42,13 @@ module C80Estate
       self.joins(:astatuses).where(:c80_estate_astatuses => {tag: 'free'})
     end
 
+    # def self.my_areas
+    #   self.joins(:property)
+    #       .where(:c80_estate_properties => {assigned_person_id: current_admin_user.id})
+    # end
+
+    # scope :my_areas, lambda { |t| t.joins(:property).where(:c80_estate_properties => {assigned_person_id: current_admin_user.id}) }
+
     # посчитает кол-во свободных метров
     def self.free_areas_sq
       Rails.logger.debug "<Area.free_areas_sq>"
@@ -188,49 +195,98 @@ module C80Estate
       self.where(:atype_id => atype_id)
     end
 
+    # Не отображать "чужие" занятые площади (для менеждеров) (задача №1748)
+    def self.all_except_busy_alien(admin_user)
+      if admin_user.can_view_statistics?
+        # админам покажем всё
+        self.all
+      else
+
+        # http://stackoverflow.com/questions/9540801/combine-two-activerecordrelation-objects
+        # двумя независимыми запросами получим мои площади и немои свободные площади, сложим их, и отдадим
+
+=begin
+        # ВАРИАНТ 1
+
+        # извлечём немои свободные площади
+        # этот код я написал, смотря на уже существующий where_assigned_person_id
+        not_my_free_areas = self.free_areas
+                      .joins(:property)
+                      .where.not(:c80_estate_properties => {assigned_person_id: admin_user.id})
+
+        # извлечём все мои площади
+        all_my_areas = self.joins(:property)
+                           .where(:c80_estate_properties => {assigned_person_id: admin_user.id})
+
+        # это вернёт только то, что находится в ПЕРЕСЕЧЕНИИ результатов, а нужен union
+        not_my_free_areas.merge(all_my_areas)
+=end
+
+=begin
+        # ВАРИАНТ 2
+        # http://stackoverflow.com/a/28358592
+        # User.where(
+        #     User.arel_table[:first_name].eq('Tobias').or(
+        #         User.arel_table[:last_name].eq('Fünke')
+        #     )
+        # )
+=end
+
+=begin
+        # ВАРИАНТ 3
+        # http://stackoverflow.com/a/31528499
+        # first_name_relation = User.where(:first_name => 'Tobias') # ActiveRecord::Relation
+        # last_name_relation  = User.where(:last_name  => 'Fünke') # ActiveRecord::Relation
+        #
+        # all_name_relations = User.none
+        # first_name_relation.each do |ar|
+        #   all_name_relations.new(ar)
+        # end
+        # last_name_relation.each do |ar|
+        #   all_name_relations.new(ar)
+        # end
+=end
+
+        # попробуем 3-й вариант
+        not_my_free_areas = self.free_areas
+                                .joins(:property)
+                                .where.not(:c80_estate_properties => {assigned_person_id: admin_user.id})
+
+        all_my_areas = self.joins(:property)
+                           .where(:c80_estate_properties => {assigned_person_id: admin_user.id})
+
+        all_my_areas.union(not_my_free_areas)
+
+      end
+    end
+
     def has_astatus?
       errors.add_to_base 'Укажите статус площади' if self.astatuses.blank?
     end
 
+    # --------
+
     def atype_title
-      res = "-"
-      if atype.present?
-        res = atype.title
-      end
-      res
+      atype.title
     end
 
     def property_title
-      res = "-"
-      if property.present?
-        res = property.title
-      end
-      res
+      property.title
     end
 
     def astatus_title
-      res = "-"
-      if astatuses.count > 0
-        res = astatuses.first.title
-      end
-      res
+      astatuses.first.title
     end
 
     def astatus_id
-      res = -1
-      if astatuses.count > 0
-        res = astatuses.first.id
-      end
-      res
+      astatuses.first.id
     end
 
     def astatus_tag
-      res = -1
-      if astatuses.count > 0
-        res = astatuses.first.tag
-      end
-      res
+      astatuses.first.tag
     end
+
+    # --------
 
     def is_free?
       astatus_tag == 'free'
@@ -261,6 +317,7 @@ module C80Estate
     end
 
     # выдать цену за м.кв. в месяц
+    # TODO_MY:: добавить модели Area столбец price_value и before_update метод, который высчитывал бы значение
     def price_value
 
       res = 0.0
@@ -298,6 +355,7 @@ module C80Estate
       res
     end
 
+    # TODO_MY:: добавить модели Area столбец square_value и before_update метод, который высчитывал бы значение
     def square_value
       res = 0.0
       p = item_props.where(:prop_name_id => 9)
@@ -308,6 +366,7 @@ module C80Estate
       res
     end
 
+    # TODO_MY:: добавить модели Area столбец power_price_value и before_update метод, который высчитывал бы значение
     def power_price_value
       price_value * 1.0 * square_value
     end
