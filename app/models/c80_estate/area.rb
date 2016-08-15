@@ -32,6 +32,9 @@ module C80Estate
     validate :has_astatus?
 
     after_create :create_initial_sevent
+    after_update :calc_square_value
+    after_update :calc_price_value
+    after_update :calc_power_price_value
     after_update :check_and_remove_item_props, :if => :atype_id_changed?
     after_update :check_and_generate_sevent
 
@@ -319,61 +322,6 @@ module C80Estate
       end
     end
 
-    # выдать цену за м.кв. в месяц
-    # TODO_MY:: добавить модели Area столбец price_value и before_update метод, который высчитывал бы значение
-    def price_value
-
-      res = 0.0
-      mark_use_usual_price = false
-
-      # если указана "цена за площадь",
-      # то цену за м кв. в месяц высчитываем
-      pa = item_props.where(:prop_name_id => 14)
-      if pa.count > 0
-        pa_val = pa.first.value.to_f
-
-        if pa_val == 0
-          # если руками было проставлено 0 - т.е. свойство как бы было удалено, выключено
-          mark_use_usual_price = true
-        else
-          if square_value != 0
-            # результат получаем только тогда, когда указана площадь и когда указана цена за площадь
-            res = pa_val / square_value
-          else
-            # если не указана площадь - то берём обычную цену
-            mark_use_usual_price = true
-          end
-        end
-      else
-        mark_use_usual_price = true
-      end
-
-      if mark_use_usual_price
-        p = item_props.where(:prop_name_id => 1)
-        if p.count > 0
-          res = p.first.value.to_f
-        end
-      end
-
-      res
-    end
-
-    # TODO_MY:: добавить модели Area столбец square_value и before_update метод, который высчитывал бы значение
-    def square_value
-      res = 0.0
-      p = item_props.where(:prop_name_id => 9)
-      if p.count > 0
-        res = p.first.value.to_f
-      end
-      Rails.logger.debug "<Area.square_value> res = #{res}"
-      res
-    end
-
-    # TODO_MY:: добавить модели Area столбец power_price_value и before_update метод, который высчитывал бы значение
-    def power_price_value
-      price_value * 1.0 * square_value
-    end
-
     def main_image_url
       url = "no_thumb_#{atype.id}.jpg"
 
@@ -394,6 +342,31 @@ module C80Estate
         end
       end
       res
+    end
+
+    # метод добавлен для того, чтобы можно было из консоли дёрнуть его и обновить поле с ценой
+    # сначала считаем площадь, затем цену (иначе, цена не посчитается)
+    def recalc_price
+      calc_price_value
+    end
+
+    # метод добавлен для того, чтобы можно было из консоли дёрнуть его и обновить поле с площадью
+    # сначала считаем площадь, затем цену (иначе, цена не посчитается)
+    def recalc_square
+      calc_square_value
+    end
+
+    # метод добавлен для того, чтобы можно было из консоли дёрнуть его и обновить поле с ценой за площадь
+    def recalc_power_price_value
+      calc_power_price_value
+    end
+
+    # перерассчитать все рассчитываемые переменные
+    # сначала считаем площадь, затем цену (иначе, цена не посчитается)
+    def recalc_all
+      recalc_square
+      recalc_price
+      recalc_power_price_value
     end
 
     ransacker :item_prop_price_val,
@@ -492,10 +465,10 @@ module C80Estate
 
       # если статус этого события отличен
       # от нового статуса - генерим события
-      Rails.logger.debug "<Area.check_and_generate_sevent> last_known_sevent = #{last_known_sevent}, self.astatuses.first.tag = #{self.astatuses.first.tag}"
+      Rails.logger.debug "[TRACE] <Area.check_and_generate_sevent> last_known_sevent = #{last_known_sevent}, self.astatuses.first.tag = #{self.astatuses.first.tag}"
 
       if last_known_sevent != self.astatuses.first.tag
-        Rails.logger.debug "<Area.check_and_generate_sevent> [STATUS_CHANGED] self.last_updater_id = #{self.last_updater_id}"
+        Rails.logger.debug "[TRACE] <Area.check_and_generate_sevent> [STATUS_CHANGED] self.last_updater_id = #{self.last_updater_id}"
         sparams = {
             area_id: self.id,
             atype_id: self.atype_id,
@@ -561,6 +534,8 @@ module C80Estate
     end
 
     def clean_unrelated_item_props
+      Rails.logger.debug "[TRACE] <Area.clean_unrelated_item_props>"
+
       # item_props = [ {area,prop_name} ]
       # item_props.delete_all
 
@@ -591,7 +566,7 @@ module C80Estate
       item_props.each do |item_prop|
         # Rails.logger.debug "<clean_unrelated_item_props> item_prop.prop_name.id = #{item_prop.prop_name.id}"
         unless atype_prop_names_ids.include?(item_prop.prop_name.id.to_i)
-          Rails.logger.debug "<clean_unrelated_item_props> Удаляем '#{item_prop.prop_name.title}' из площади типа '#{atype.title}'."
+          Rails.logger.debug "[TRACE] <Area.clean_unrelated_item_props> Удаляем '#{item_prop.prop_name.title}' из площади типа '#{atype.title}'."
           item_prop.destroy
         end
       end
@@ -600,19 +575,83 @@ module C80Estate
 
     def clean_duplicated_item_props
       # удаляем дубликаты
-      Rails.logger.debug "<clean_dublicated_item_props>"
+      Rails.logger.debug "[TRACE] <Area.clean_dublicated_item_props>"
+
       item_props.each do |item_prop|
         duplicates = item_props
                          .where(area_id: item_prop.area_id)
                          .where(prop_name_id: item_prop.prop_name_id)
                          .where.not(id: item_prop.id)
-        Rails.logger.debug "<clean_dublicated_item_props> #{item_prop.prop_name.title}: dublicates.count = #{duplicates.count}"
+        Rails.logger.debug "[TRACE] <Area.clean_dublicated_item_props> #{item_prop.prop_name.title}: dublicates.count = #{duplicates.count}"
 
         if duplicates.count > 0
-          Rails.logger.debug "<clean_dublicated_item_props> delete '#{item_prop.prop_name.title}', val: #{item_prop.value}"
+          Rails.logger.debug "[TRACE] <Area.clean_dublicated_item_props> delete '#{item_prop.prop_name.title}', val: #{item_prop.value}"
           duplicates.delete_all
         end
       end
+    end
+
+    # рассчитать цену за м.кв. в месяц
+    # updated_at Не изменится
+    def calc_price_value
+      # Rails.logger.debug '[TRACE] <Area.calc_price_value> begin...'
+
+      res = 0.0
+      mark_use_usual_price = false
+
+      # если указана "цена за площадь",
+      # то цену за м кв. в месяц высчитываем
+      pa = self.item_props.where(:prop_name_id => 14)
+      if pa.count > 0
+        pa_val = pa.first.value.to_f
+
+        if pa_val == 0
+          # если руками было проставлено 0 - т.е. свойство как бы было удалено, выключено
+          mark_use_usual_price = true
+        else
+          if self.square_value.present? && self.square_value != 0
+            # результат получаем только тогда, когда указана площадь и когда указана цена за площадь
+            res = pa_val / self.square_value
+            Rails.logger.debug '[TRACE] <Area.calc_price_value> Рассчитываем цену за метр из цены за площадь.'
+          else
+            # если не указана площадь - то берём обычную цену
+            mark_use_usual_price = true
+          end
+        end
+      else
+        mark_use_usual_price = true
+      end
+
+      if mark_use_usual_price
+        p = self.item_props.where(:prop_name_id => 1)
+        if p.count > 0
+          res = p.first.value.to_f
+        end
+      end
+
+      Rails.logger.debug "[TRACE] <Area.calc_price_value> end. result = #{res}."
+      # self.price_value = res
+      self.update_column(:price_value, res)
+    end
+
+    # добавляем модели Area столбец square_value и before_update метод, который высчитывает значение
+    # updated_at Не изменится
+    def calc_square_value
+      res = 0.0
+      p = item_props.where(:prop_name_id => 9)
+      if p.count > 0
+        res = p.first.value.to_f
+      end
+      Rails.logger.debug "[TRACE] <Area.square_value> res = #{res}"
+      # res
+      self.update_column(:square_value, res)
+    end
+
+    # добавляем модели Area столбец square_value и before_update метод, который высчитывает значение
+    # updated_at Не изменится
+    def calc_power_price_value
+      v = self.price_value * self.square_value
+      self.update_column(:power_price_value, v)
     end
 
   end

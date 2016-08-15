@@ -178,10 +178,11 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
     column :atype do |area|
       area.atype.title
     end
-    column '<abbr title="За м.кв. в месяц">Цена м.кв.</abbr>'.html_safe do |area|
+    column '<abbr title="За м.кв. в месяц">Цена м.кв.</abbr>'.html_safe, sortable: :price_value do |area|
       "#{area.price_value.to_s(:rounded, :precision => 2)} руб"
     end
-    column '<abbr title="Стоимость всей площади в месяц. Число PxS, где P - цена за м.кв. в месяц, S - метраж площади в м.кв.">Цена площади</abbr>'.html_safe do |area|
+
+    column '<abbr title="Стоимость всей площади в месяц. Число PxS, где P - цена за м.кв. в месяц, S - метраж площади в м.кв.">Цена площади</abbr>'.html_safe, sortable: :power_price_value do |area|
       klass = ''
       title = 'Цена за площадь рассчитана'
       if area.is_locked_area_price?
@@ -190,7 +191,8 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       end
       "<span title='#{title}' class='#{klass}'>#{area.power_price_value.to_s(:rounded, :precision => 2)} руб</span>".html_safe
     end
-    column 'Метраж' do |area|
+
+    column 'Метраж', sortable: :square_value do |area|
       "#{area.square_value.to_s(:rounded, :precision => 2)} м<sup>2</sup>".html_safe
     end
     column :property do |area|
