@@ -31,6 +31,7 @@ module C80Estate
     validates :atype, :presence => true
     validate :has_astatus?
 
+    before_update :calc_square_value
     before_update :calc_price_value
     after_create :create_initial_sevent
     after_update :check_and_remove_item_props, :if => :atype_id_changed?
@@ -320,17 +321,6 @@ module C80Estate
       end
     end
 
-    # TODO_MY:: добавить модели Area столбец square_value и before_update метод, который высчитывал бы значение
-    def square_value
-      res = 0.0
-      p = item_props.where(:prop_name_id => 9)
-      if p.count > 0
-        res = p.first.value.to_f
-      end
-      Rails.logger.debug "<Area.square_value> res = #{res}"
-      res
-    end
-
     # TODO_MY:: добавить модели Area столбец power_price_value и before_update метод, который высчитывал бы значение
     def power_price_value
       price_value * 1.0 * square_value
@@ -356,6 +346,25 @@ module C80Estate
         end
       end
       res
+    end
+
+    # метод добавлен для того, чтобы можно было из консоли дёрнуть его и обновить поле с ценой
+    # сначала считаем площадь, затем цену (иначе, цена не посчитается)
+    def recalc_price
+      calc_price_value
+    end
+
+    # метод добавлен для того, чтобы можно было из консоли дёрнуть его и обновить поле с площадью
+    # сначала считаем площадь, затем цену (иначе, цена не посчитается)
+    def recalc_square
+      calc_square_value
+    end
+
+    # перерассчитать все рассчитываемые переменные
+    # сначала считаем площадь, затем цену (иначе, цена не посчитается)
+    def recalc_all
+      recalc_square
+      recalc_price
     end
 
     ransacker :item_prop_price_val,
@@ -581,6 +590,7 @@ module C80Estate
     end
 
     # рассчитать цену за м.кв. в месяц
+    # updated_at Не изменится
     def calc_price_value
       # Rails.logger.debug '[TRACE] <Area.calc_price_value> begin...'
 
@@ -597,7 +607,7 @@ module C80Estate
           # если руками было проставлено 0 - т.е. свойство как бы было удалено, выключено
           mark_use_usual_price = true
         else
-          if self.square_value != 0
+          if self.square_value.present? && self.square_value != 0
             # результат получаем только тогда, когда указана площадь и когда указана цена за площадь
             res = pa_val / self.square_value
             Rails.logger.debug '[TRACE] <Area.calc_price_value> Рассчитываем цену за метр из цены за площадь.'
@@ -618,7 +628,21 @@ module C80Estate
       end
 
       Rails.logger.debug "[TRACE] <Area.calc_price_value> end. result = #{res}."
-      self.price_value = res
+      # self.price_value = res
+      self.update_column(:price_value, res)
+    end
+
+    # добавляем модели Area столбец square_value и before_update метод, который высчитывал бы значение
+    # updated_at Не изменится
+    def calc_square_value
+      res = 0.0
+      p = item_props.where(:prop_name_id => 9)
+      if p.count > 0
+        res = p.first.value.to_f
+      end
+      Rails.logger.debug "[TRACE] <Area.square_value> res = #{res}"
+      # res
+      self.update_column(:square_value, res)
     end
 
   end

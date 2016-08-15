@@ -190,7 +190,7 @@ ActiveAdmin.register C80Estate::Area, as: 'Area' do
       end
       "<span title='#{title}' class='#{klass}'>#{area.power_price_value.to_s(:rounded, :precision => 2)} руб</span>".html_safe
     end
-    column 'Метраж' do |area|
+    column 'Метраж', sortable: :square_value do |area|
       "#{area.square_value.to_s(:rounded, :precision => 2)} м<sup>2</sup>".html_safe
     end
     column :property do |area|
