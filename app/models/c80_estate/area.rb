@@ -31,9 +31,10 @@ module C80Estate
     validates :atype, :presence => true
     validate :has_astatus?
 
-    before_update :calc_square_value
-    before_update :calc_price_value
     after_create :create_initial_sevent
+    after_update :calc_square_value
+    after_update :calc_price_value
+    after_update :calc_power_price_value
     after_update :check_and_remove_item_props, :if => :atype_id_changed?
     after_update :check_and_generate_sevent
 
