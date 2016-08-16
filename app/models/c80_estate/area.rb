@@ -294,6 +294,33 @@ module C80Estate
 
     # --------
 
+    # выдать строку с площадью для показа, очень поможет вью
+    def square_value_to_s
+      s = 0
+      if self.square_value.present?
+        s = self.square_value
+      end
+      s.to_s(:rounded, precision: 2)
+    end
+
+    # выдать строку с ценой для показа, очень поможет вью
+    def price_value_to_s
+      s = 0
+      if self.price_value.present?
+        s = self.price_value
+      end
+      s.to_s(:rounded, precision: 2)
+    end
+
+    # выдать строку с ценой площади для показа, очень поможет вью
+    def power_price_value_to_s
+      s = 0
+      if self.power_price_value.present?
+        s = self.power_price_value
+      end
+      s.to_s(:rounded, precision: 2)
+    end
+
     def is_free?
       astatus_tag == 'free'
     end
