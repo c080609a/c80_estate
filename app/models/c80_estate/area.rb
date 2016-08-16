@@ -76,7 +76,9 @@ module C80Estate
       self.busy_areas.each do |area|
         area_prop_square = area.item_props.where(:prop_name_id => 9)
         if area_prop_square.present?
-          sum += area_prop_square.first.value.to_f
+          if area_prop_square.count > 0
+            sum += area_prop_square.first.value.to_f
+          end
         end
       end
       sum
