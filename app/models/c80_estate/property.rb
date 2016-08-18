@@ -62,7 +62,9 @@ module C80Estate
       c = self.all.count
       if c > 0
         self.all.each do |prop|
-          sum += prop.average_price(atype_id:atype_id)
+          if prop.average_price.present?
+            sum += prop.average_price(atype_id: atype_id)
+          end
         end
         res = sum / c
       end
@@ -80,7 +82,9 @@ module C80Estate
       c = self.all.count
       if c > 0
         self.all.each do |prop|
-          sum += prop.average_price_busy(atype_id:atype_id)
+          if prop.average_price_busy.present?
+            sum += prop.average_price_busy(atype_id: atype_id)
+          end
         end
         res = sum / c
       end
@@ -111,7 +115,9 @@ module C80Estate
       price_sum = 0.0
 
       ars.each do |area|
-        price_sum += area.price_value
+        if area.price_value.present?
+          price_sum += area.price_value
+        end
       end
 
       if ars.count != 0
@@ -138,7 +144,9 @@ module C80Estate
       ars.each do |area|
         if area.is_busy?
           busy_areas_count += 1
-          price_sum += area.price_value
+          if area.price_value.present?
+            price_sum += area.price_value
+          end
         end
       end
 
@@ -193,7 +201,9 @@ module C80Estate
     def square_value
       sum = 0.0
       areas.all.each do |area|
-        sum += area.square_value
+        if area.square_value.present?
+          sum += area.square_value
+        end
       end
       sum
     end
@@ -201,7 +211,9 @@ module C80Estate
     def power_price_value
       sum = 0.0
       areas.all.each do |area|
-        sum += area.power_price_value
+        if area.power_price_value.present?
+          sum += area.power_price_value
+        end
       end
       sum
     end
