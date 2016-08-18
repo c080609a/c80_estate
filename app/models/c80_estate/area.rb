@@ -31,10 +31,13 @@ module C80Estate
     validates :atype, :presence => true
     validate :has_astatus?
 
+    after_create :calc_square_value       # эти три метода вызовем также и после создания записи,
+    after_create :calc_price_value        # чтобы при создании sevent\pstat были уже рассчитаны
+    after_create :calc_power_price_value  # все необходимые числа
     after_create :create_initial_sevent
-    after_update :calc_square_value
-    after_update :calc_price_value
-    after_update :calc_power_price_value
+    after_update :calc_square_value       # пересчитаем после того, как запись обновится
+    after_update :calc_price_value        #
+    after_update :calc_power_price_value  #
     after_update :check_and_remove_item_props, :if => :atype_id_changed?
     after_update :check_and_generate_sevent
 
